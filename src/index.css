@@ -1,0 +1,210 @@
+/* ==========================================================================
+   CineScope Design System Tokens, Modern Typography & Theme Definitions
+   ========================================================================== */
+
+:root {
+  /* Common Accent Colors */
+  --accent-primary: #6366f1;
+  --accent-secondary: #ec4899;
+  --accent-cyan: #06b6d4;
+  --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+  --accent-gradient-hover: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #c026d3 100%);
+  
+  --color-gold: #f59e0b;
+  --color-gold-bg: rgba(245, 158, 11, 0.15);
+  --color-crimson: #ef4444;
+  --color-emerald: #10b981;
+
+  /* Typography Scale */
+  --font-family-primary: 'Outfit', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-size-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.82rem);
+  --font-size-sm: clamp(0.85rem, 0.8rem + 0.25vw, 0.92rem);
+  --font-size-base: clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem);
+  --font-size-lg: clamp(1.15rem, 1.05rem + 0.5vw, 1.35rem);
+  --font-size-xl: clamp(1.4rem, 1.25rem + 0.75vw, 1.75rem);
+  --font-size-2xl: clamp(1.85rem, 1.5rem + 1.5vw, 2.5rem);
+  --font-size-3xl: clamp(2.35rem, 1.85rem + 2.25vw, 3.5rem);
+
+  /* Border Radii */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Default Dark Theme */
+:root, [data-theme="dark"] {
+  --bg-primary: #080c14;
+  --bg-secondary: #0d1322;
+  --bg-surface: rgba(15, 23, 42, 0.85);
+  --bg-surface-hover: rgba(30, 41, 59, 0.95);
+  --bg-surface-elevated: rgba(15, 23, 42, 0.95);
+  
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-border-hover: rgba(99, 102, 241, 0.5);
+
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.35);
+
+  --hero-glow-1: rgba(99, 102, 241, 0.3);
+  --hero-glow-2: rgba(245, 158, 11, 0.25);
+  --navbar-bg: rgba(8, 12, 20, 0.96);
+}
+
+/* Light Theme (Refined Grayish-White with High Contrast) */
+[data-theme="light"] {
+  --bg-primary: #edf2f7;
+  --bg-secondary: #e2e8f0;
+  --bg-surface: #ffffff;
+  --bg-surface-hover: #f8fafc;
+  --bg-surface-elevated: #ffffff;
+  
+  --text-primary: #090d16;
+  --text-secondary: #1e293b;
+  --text-muted: #475569;
+  
+  --glass-border: rgba(15, 23, 42, 0.14);
+  --glass-border-hover: rgba(99, 102, 241, 0.6);
+
+  --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 8px 16px rgba(15, 23, 42, 0.1), 0 2px 4px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 16px 32px rgba(15, 23, 42, 0.12), 0 4px 8px rgba(15, 23, 42, 0.08);
+  --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.25);
+
+  --hero-glow-1: rgba(99, 102, 241, 0.2);
+  --hero-glow-2: rgba(245, 158, 11, 0.2);
+  --navbar-bg: rgba(237, 242, 247, 0.96);
+}
+
+/* Base Document Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body, #root, .app-container {
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-family-primary);
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE & Edge */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Completely remove default scrollbars across all WebKit browsers while maintaining smooth scrolling */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+#root::-webkit-scrollbar,
+.app-container::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+* {
+  scrollbar-width: none;
+}
+
+/* Background Ambient Lighting */
+body::before {
+  content: '';
+  position: fixed;
+  top: -20%;
+  left: 20%;
+  width: 60vw;
+  height: 60vh;
+  background: radial-gradient(circle, var(--hero-glow-1) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -10%;
+  right: 10%;
+  width: 40vw;
+  height: 40vh;
+  background: radial-gradient(circle, var(--hero-glow-2) 0%, transparent 70%);
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Typography & Links */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+input {
+  font-family: inherit;
+  outline: none;
+}
+
+/* Utility Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scale-up {
+  animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
