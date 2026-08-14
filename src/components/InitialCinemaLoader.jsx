@@ -1,11 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { SPOTLIGHT_MOVIES } from './Sections';
+import {
+  SPOTLIGHT_MOVIES,
+  LATEST_RELEASES_ALL,
+  POPULAR_HITS_ALL,
+  TOP_SERIES_ALL,
+  TOP_ANIME_ALL,
+  SCIFI_EXPANDED_ALL,
+  CRITIC_RECOMMENDED_ALL,
+  GENRE_LIST
+} from '../services/catalogData';
 
-const MIN_LOAD_TIME_MS = 2000; // Minimum 2s on hard page refresh
-const MAX_LOAD_TIME_MS = 8000; // Maximum 8s timeout
+// Detect mobile viewport / touch or cached session for ultra-fast startup
+const isMobileDevice = () => {
+  if (typeof window === 'undefined') return false;
+  return window.innerWidth <= 768 || ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+};
 
 const InitialCinemaLoader = ({ onComplete }) => {
-  const [progress, setProgress] = useState(10);
+  const [progress, setProgress] = useState(25);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const onCompleteRef = useRef(onComplete);
 
@@ -13,20 +25,42 @@ const InitialCinemaLoader = ({ onComplete }) => {
     onCompleteRef.current = onComplete;
   }, [onComplete]);
 
+  const handleSkip = () => {
+    setIsFadingOut(true);
+    setTimeout(() => {
+      if (onCompleteRef.current) onCompleteRef.current();
+    }, 200);
+  };
+
   useEffect(() => {
     let isMounted = true;
     const startTime = Date.now();
+    const isMobile = isMobileDevice();
+    const isReturning = typeof sessionStorage !== 'undefined' && sessionStorage.getItem('cinescope_session_initialized') === 'true';
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.setItem('cinescope_session_initialized', 'true');
+    }
 
-    // 1. Gather critical hero backdrops, posters, and assets to preload
-    const urlsToPreload = [
-      ...SPOTLIGHT_MOVIES.map((m) => m.backdrop),
-      ...SPOTLIGHT_MOVIES.map((m) => m.poster),
-      'https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg',
-      'https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg',
-      'https://image.tmdb.org/t/p/w500/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg',
-      'https://image.tmdb.org/t/p/w500/7O4iVfOMQmdCSxhOg1WNzG1AgYT.jpg',
-      'https://image.tmdb.org/t/p/w500/AnsZuLpE8Jj571wQpLz267rW1bN.jpg'
-    ].filter(Boolean);
+    // Set responsive timing thresholds (mobile / returning visits load fast)
+    const minLoadTimeMs = isMobile || isReturning ? 250 : 600;
+    const maxLoadTimeMs = isMobile ? 2500 : 5000;
+
+    // 1. Select lightweight set of URLs to preload (Top Hero Spotlights only on Mobile)
+    const heroSpotlights = (SPOTLIGHT_MOVIES || []).slice(0, isMobile ? 2 : 4);
+    const urlsToPreload = Array.from(
+      new Set([
+        ...heroSpotlights.map((m) => m.secondaryPoster || m.poster),
+        ...heroSpotlights.map((m) => m.poster),
+        ...(isMobile
+          ? []
+          : [
+              ...(LATEST_RELEASES_ALL || []).slice(0, 4).map((m) => m.poster),
+              ...(POPULAR_HITS_ALL || []).slice(0, 4).map((m) => m.poster),
+              ...(TOP_SERIES_ALL || []).slice(0, 4).map((m) => m.poster),
+              ...(TOP_ANIME_ALL || []).slice(0, 4).map((m) => m.poster)
+            ])
+      ])
+    ).filter(Boolean);
 
     let loadedCount = 0;
     const totalAssets = urlsToPreload.length || 1;
@@ -55,23 +89,21 @@ const InitialCinemaLoader = ({ onComplete }) => {
     const interval = setInterval(() => {
       if (!isMounted) return;
       const elapsed = Date.now() - startTime;
-
       const assetRatio = Math.min(1, loadedCount / totalAssets);
 
       let currentPct;
-      if (elapsed < MIN_LOAD_TIME_MS) {
-        currentPct = Math.min(90, Math.floor(15 + (elapsed / MIN_LOAD_TIME_MS) * 55 + assetRatio * 20));
+      if (elapsed < minLoadTimeMs) {
+        currentPct = Math.min(90, Math.floor(30 + (elapsed / minLoadTimeMs) * 50 + assetRatio * 15));
       } else {
-        const timeFactor = Math.min(1, (elapsed - MIN_LOAD_TIME_MS) / (MAX_LOAD_TIME_MS - MIN_LOAD_TIME_MS));
+        const timeFactor = Math.min(1, (elapsed - minLoadTimeMs) / Math.max(1, maxLoadTimeMs - minLoadTimeMs));
         currentPct = Math.min(100, Math.floor(90 + Math.max(assetRatio * 10, timeFactor * 10)));
       }
 
       setProgress(currentPct);
-    }, 40);
+    }, 30);
 
-    // Finish loader when assets are ready (guaranteed >= 2s and <= 8s)
-    const timeoutPromise = new Promise((resolve) => setTimeout(resolve, MAX_LOAD_TIME_MS));
-    const minDelayPromise = new Promise((resolve) => setTimeout(resolve, MIN_LOAD_TIME_MS));
+    const timeoutPromise = new Promise((resolve) => setTimeout(resolve, maxLoadTimeMs));
+    const minDelayPromise = new Promise((resolve) => setTimeout(resolve, minLoadTimeMs));
 
     Promise.all([
       minDelayPromise,
@@ -85,8 +117,8 @@ const InitialCinemaLoader = ({ onComplete }) => {
         setIsFadingOut(true);
         setTimeout(() => {
           if (onCompleteRef.current) onCompleteRef.current();
-        }, 350);
-      }, 150);
+        }, 250);
+      }, 100);
     });
 
     return () => {
@@ -126,9 +158,16 @@ const InitialCinemaLoader = ({ onComplete }) => {
         </div>
 
         <div className="loader-meta-row">
-          <span className="loader-meta-badge">IMAX 4K UHD</span>
+          <span className="loader-meta-badge">FAST LOCAL MEMORY</span>
           <span className="loader-pct-badge">{progress}%</span>
-          <span className="loader-meta-badge">LIVE CDN</span>
+          <button
+            type="button"
+            className="loader-skip-btn"
+            onClick={handleSkip}
+            title="Skip directly to app"
+          >
+            Skip ⚡
+          </button>
         </div>
       </div>
     </div>

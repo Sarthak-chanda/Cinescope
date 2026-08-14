@@ -221,7 +221,7 @@ const HeroSection = ({
     }, ROTATION_INTERVAL);
 
     return () => clearInterval(rotationTimer);
-  }, [totalSpotlights, timerKey]);
+  }, [totalSpotlights]);
 
   const isWatchlisted = (movie) => {
     const movieId = movie.id || movie.imdbID;
@@ -269,7 +269,17 @@ const HeroSection = ({
         {/* ==========================================
             LEFT: CINEMA COCKPIT CONSOLE (Clean, Minimalist)
             ========================================== */}
-        <div className="cinema-cockpit-console" key={`cockpit-${currentSpotlight.imdbID}`}>
+        <div
+          className="cinema-cockpit-console"
+          key={`cockpit-${currentSpotlight.imdbID}`}
+          onClick={handleOpenMovie}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') handleOpenMovie();
+          }}
+          title={`Explore ${currentSpotlight.name}`}
+        >
           {/* Cinematic Title */}
           <h2 className="cockpit-title">
             {currentSpotlight.name}{' '}
@@ -312,7 +322,10 @@ const HeroSection = ({
             <button
               type="button"
               className="cockpit-primary-explore-btn"
-              onClick={handleOpenMovie}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpenMovie();
+              }}
               title="Explore full movie details, cast & reviews"
             >
               <span>Explore Cinema Details</span>

@@ -65,7 +65,7 @@ const Nav = ({
             <input
               type="text"
               className="search-input"
-              placeholder="Search movies, TV shows, anime, directors..."
+              placeholder="Search shows..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               id="movie-search-input"
@@ -85,6 +85,10 @@ const Nav = ({
 
             {/* Standard Search Button */}
             <button type="submit" className="search-submit-btn" id="search-submit-btn" aria-label="Submit search">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="search-btn-icon">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
               <span className="search-btn-text">Search</span>
             </button>
           </form>

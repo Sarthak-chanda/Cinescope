@@ -124,7 +124,7 @@ const Body = ({
           <div className="section-header-bar">
             <h2 className="section-title">
               <span>Results for</span>
-              <span style={{ color: '#a5b4fc' }}>"{searchTerm}"</span>
+              <span className="query-highlight">"{searchTerm}"</span>
             </h2>
             <span className="results-count-badge">
               {processedResults.length} {processedResults.length === 1 ? 'Title' : 'Titles'} Shown

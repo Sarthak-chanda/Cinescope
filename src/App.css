@@ -3552,6 +3552,14 @@
   gap: 0.5rem;
 }
 
+.query-highlight {
+  color: #a5b4fc;
+}
+
+[data-theme="light"] .query-highlight {
+  color: #4f46e5;
+}
+
 .results-count-badge {
   font-size: 0.8rem;
   font-weight: 600;
@@ -4389,24 +4397,30 @@
 
 @media (max-width: 640px) {
   .navbar {
-    padding: 0.65rem 0.85rem;
+    padding: 0.55rem 0.75rem;
     display: grid;
     grid-template-columns: 1fr auto;
-    gap: 0.65rem;
+    grid-template-areas:
+      "brand actions"
+      "search search";
+    gap: 0.55rem 0.5rem;
     align-items: center;
   }
 
   .brand {
-    grid-column: 1 / 2;
+    grid-area: brand;
   }
 
   .nav-actions {
-    grid-column: 2 / 3;
+    grid-area: actions;
     margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
   }
 
   .search-container {
-    grid-column: 1 / -1;
+    grid-area: search;
     max-width: 100%;
     width: 100%;
   }
@@ -6675,8 +6689,8 @@
 .cinema-cockpit-console {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 1.15rem;
+  justify-content: flex-start;
+  gap: 0.85rem;
   height: 100%;
   max-height: 100%;
   overflow: visible;
@@ -6684,15 +6698,18 @@
   z-index: 15;
 }
 
-/* Massive Cinematic Title */
+/* Massive Cinematic Title - Fixed Slot Height */
 .cockpit-title {
   font-size: clamp(2.2rem, 1.8rem + 1.8vw, 3.4rem);
   font-weight: 900;
   line-height: 1.12;
   letter-spacing: -0.025em;
   color: #ffffff !important;
-  margin: 0 0 0.1rem 0;
+  margin: 0;
   text-shadow: 0 3px 20px rgba(0, 0, 0, 0.95);
+  min-height: 3.5rem;
+  display: flex;
+  align-items: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -6702,15 +6719,16 @@
   font-size: 0.62em;
   color: #a5b4fc !important;
   font-weight: 700;
+  margin-left: 0.4rem;
 }
 
-/* Tagline */
+/* Tagline - Fixed Slot Height */
 .cockpit-tagline {
   font-size: clamp(0.98rem, 0.9rem + 0.25vw, 1.18rem);
   font-style: italic;
   font-weight: 600;
   color: #e0e7ff !important;
-  line-height: 1.45;
+  line-height: 1.4;
   border-left: 3.5px solid var(--accent-primary);
   padding-left: 0.85rem;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
@@ -6719,14 +6737,17 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   margin: 0;
+  min-height: 2.8rem;
+  align-content: center;
 }
 
-/* Technical Specs Row */
+/* Technical Specs Row - Fixed Slot Height */
 .cockpit-spec-row {
   display: flex;
   align-items: center;
   gap: 0.6rem;
   flex-wrap: wrap;
+  min-height: 2.2rem;
 }
 
 .spec-badge-gold {
@@ -6765,7 +6786,7 @@
   border-radius: var(--radius-sm);
 }
 
-/* Director & Cast */
+/* Director & Cast - Fixed Slot Height */
 .cockpit-credits-row {
   display: flex;
   align-items: center;
@@ -6773,18 +6794,20 @@
   flex-wrap: wrap;
   font-size: 0.86rem;
   color: #cbd5e1 !important;
+  min-height: 2.2rem;
 }
 
 .credits-director strong, .credits-cast strong {
   color: #ffffff !important;
 }
 
-/* Genre Chips */
+/* Genre Chips - Fixed Slot Height */
 .cockpit-genre-chips {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
+  min-height: 2.2rem;
 }
 
 .cockpit-genre-pill {
@@ -9343,6 +9366,1107 @@
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
+/* ==========================================================================
+   WATCHLIST MODAL & DRAWER SYSTEM
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 6, 12, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 2500;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fadeIn 0.2s ease-out;
+}
 
+@media (min-width: 640px) {
+  .modal-backdrop {
+    align-items: center;
+    padding: 1.5rem;
+  }
+}
 
+.drawer-panel {
+  width: 100%;
+  max-width: 520px;
+  max-height: 85vh;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px 24px 0 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.75);
+  animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
+@media (min-width: 640px) {
+  .drawer-panel {
+    border-radius: var(--radius-xl);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 40px rgba(99, 102, 241, 0.2);
+  }
+}
+
+[data-theme="light"] .drawer-panel {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.14);
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18), 0 0 35px rgba(99, 102, 241, 0.15);
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.15rem 1.35rem;
+  border-bottom: 1px solid var(--glass-border);
+  background: var(--bg-surface);
+}
+
+[data-theme="light"] .drawer-header {
+  background: #f8fafc;
+  border-bottom-color: rgba(15, 23, 42, 0.1);
+}
+
+.drawer-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+[data-theme="light"] .drawer-title {
+  color: #0f172a;
+}
+
+.drawer-close-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.drawer-close-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+[data-theme="light"] .drawer-close-btn {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.14);
+  color: #475569;
+}
+
+.drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 1.25rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.empty-watchlist {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--text-muted);
+}
+
+.watchlist-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.watchlist-item:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-surface-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="light"] .watchlist-item {
+  background: #f8fafc;
+  border-color: rgba(15, 23, 42, 0.12);
+}
+
+[data-theme="light"] .watchlist-item:hover {
+  background: #ffffff;
+  border-color: #6366f1;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.15);
+}
+
+.watchlist-item-poster {
+  width: 50px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  background: #0b101d;
+  flex-shrink: 0;
+  border: 1px solid var(--glass-border);
+}
+
+.watchlist-item-details {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 0.3rem;
+}
+
+.watchlist-item-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  text-align: left;
+  margin: 0;
+}
+
+[data-theme="light"] .watchlist-item-title {
+  color: #0f172a;
+}
+
+.watchlist-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+  text-align: left;
+}
+
+[data-theme="light"] .watchlist-item-meta {
+  color: #64748b;
+}
+
+.watchlist-item-remove {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+
+.watchlist-item-remove:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* ==========================================================================
+   MASTER MOBILE RESPONSIVE ENGINE (300px to 500px)
+   Ultra-polished, cohesive, classic styling for every small screen device
+   ========================================================================== */
+
+@media (max-width: 500px) {
+  /* 1. Reset, Viewport & Main Container */
+  html, body, #root, .app-container {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+
+  .main-content {
+    padding: 0.85rem 0.65rem 3rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* 2. Top Navigation Bar: Brand & Actions in Top Row, Search in Second Row */
+  .navbar-wrapper {
+    width: 100% !important;
+  }
+
+  .navbar {
+    padding: 0.55rem 0.75rem !important;
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    grid-template-areas:
+      "brand actions"
+      "search search" !important;
+    gap: 0.55rem 0.5rem !important;
+    align-items: center !important;
+  }
+
+  .brand {
+    grid-area: brand !important;
+    gap: 0.45rem !important;
+  }
+
+  .brand-icon {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 1rem !important;
+  }
+
+  .brand-title {
+    font-size: 1.05rem !important;
+    letter-spacing: -0.02em !important;
+  }
+
+  .brand-tagline {
+    font-size: 0.58rem !important;
+    letter-spacing: 0.03em !important;
+  }
+
+  .nav-actions {
+    grid-area: actions !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.45rem !important;
+    margin-left: auto !important;
+  }
+
+  .theme-toggle-btn {
+    padding: 0.35rem 0.6rem !important;
+    min-height: 34px !important;
+    font-size: 0.78rem !important;
+    border-radius: var(--radius-full) !important;
+  }
+
+  .theme-toggle-label {
+    display: none !important;
+  }
+
+  .watchlist-nav-btn {
+    padding: 0.35rem 0.75rem !important;
+    min-height: 34px !important;
+    font-size: 0.78rem !important;
+    border-radius: var(--radius-full) !important;
+  }
+
+  .watchlist-btn-text {
+    display: inline-block !important;
+    font-size: 0.76rem !important;
+  }
+
+  .search-container {
+    grid-area: search !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .search-form {
+    padding: 0.2rem 0.25rem 0.2rem 0.75rem !important;
+    border-radius: var(--radius-full) !important;
+    min-height: 40px !important;
+  }
+
+  .search-input {
+    font-size: 16px !important; /* 16px prevents iOS browser auto-zoom on input focus */
+    padding: 0.35rem 0 !important;
+  }
+
+  .search-submit-btn .search-btn-text {
+    display: none !important;
+  }
+
+  .search-submit-btn {
+    padding: 0.38rem 0.65rem !important;
+    font-size: 0.8rem !important;
+    min-height: 34px !important;
+    min-width: 34px !important;
+    border-radius: var(--radius-full) !important;
+    justify-content: center !important;
+  }
+
+  .search-submit-btn .search-btn-icon {
+    display: block !important;
+  }
+
+  .nav-substrip {
+    padding: 0.35rem 0.65rem !important;
+  }
+
+  .substrip-content {
+    padding: 0 !important;
+    gap: 0.5rem !important;
+  }
+
+  .substrip-label {
+    font-size: 0.68rem !important;
+  }
+
+  .chips-scroll-container {
+    gap: 0.35rem !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .quick-chip {
+    padding: 0.18rem 0.6rem !important;
+    font-size: 0.72rem !important;
+  }
+
+  /* Fix poster tops cutting out across all movie cards on mobile */
+  .movie-card-poster,
+  .movie-poster-card img,
+  .sidebar-poster-card img,
+  .gallery-thumb-card img,
+  .carousel-movie-item img,
+  .deck-poster-card img,
+  .deck-poster-card {
+    object-fit: cover !important;
+    object-position: top center !important;
+  }
+
+  /* 3. Uncluttered Flagship Cinema Hero Section */
+  .flagship-cinema-stage,
+  .reimagined-cinema-theater-stage {
+    min-height: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    padding: 1rem 0.75rem 1.15rem !important;
+    border-radius: var(--radius-lg) !important;
+    margin-bottom: 1.75rem !important;
+  }
+
+  .stage-inner-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+
+  .cinema-cockpit-console {
+    gap: 0.55rem !important;
+    padding: 0 !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    justify-content: flex-start !important;
+  }
+
+  .cockpit-title {
+    font-size: clamp(1.2rem, 5vw, 1.48rem) !important;
+    white-space: normal !important;
+    line-height: 1.2 !important;
+    word-break: break-word !important;
+    margin-bottom: 0.05rem !important;
+    min-height: 2.2rem !important;
+    align-items: center !important;
+  }
+
+  .cockpit-year-tag {
+    font-size: 0.78em !important;
+  }
+
+  .cockpit-tagline {
+    font-size: 0.8rem !important;
+    line-height: 1.35 !important;
+    padding-left: 0.55rem !important;
+    border-left-width: 2.5px !important;
+    -webkit-line-clamp: 2 !important;
+    min-height: 2.2rem !important;
+  }
+
+  .cockpit-spec-row {
+    gap: 0.25rem !important;
+    min-height: 1.8rem !important;
+  }
+
+  .spec-badge-gold,
+  .spec-badge-neon,
+  .spec-badge-age {
+    font-size: 0.65rem !important;
+    padding: 0.18rem 0.45rem !important;
+  }
+
+  .spec-votes-count {
+    font-size: 0.65rem !important;
+  }
+
+  .cockpit-credits-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.15rem !important;
+    font-size: 0.74rem !important;
+  }
+
+  .cockpit-genre-chips {
+    gap: 0.25rem !important;
+  }
+
+  .cockpit-genre-pill {
+    font-size: 0.68rem !important;
+    padding: 0.18rem 0.55rem !important;
+  }
+
+  /* Unclutter: Remove explore cinema, trailer, and watchlist button cluster on mobile */
+  .cockpit-cta-group {
+    display: none !important;
+  }
+
+  /* 3D Poster Deck Mobile Optimization */
+  .cinema-3d-deck-stage {
+    perspective: 750px !important;
+    padding: 0.5rem 0 !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+
+  .trio-poster-deck-container {
+    height: clamp(215px, 58vw, 245px) !important;
+    max-width: 100% !important;
+    perspective: 700px !important;
+    overflow: visible !important;
+  }
+
+  .deck-poster-card {
+    width: clamp(118px, 34vw, 140px) !important;
+    aspect-ratio: 2 / 3 !important;
+    border-radius: var(--radius-md) !important;
+  }
+
+  .deck-poster-card.slot-center {
+    transform: translate(-50%, -50%) translateZ(30px) scale(1) rotateY(0deg) !important;
+    opacity: 1 !important;
+    z-index: 20 !important;
+  }
+
+  .deck-poster-card.slot-left {
+    transform: translate(-50%, -50%) translateX(-85px) scale(0.82) translateZ(-20px) rotateY(14deg) !important;
+    opacity: 0.82 !important;
+    filter: brightness(0.88) !important;
+    z-index: 10 !important;
+  }
+
+  .deck-poster-card.slot-right {
+    transform: translate(-50%, -50%) translateX(85px) scale(0.82) translateZ(-20px) rotateY(-14deg) !important;
+    opacity: 0.82 !important;
+    filter: brightness(0.88) !important;
+    z-index: 10 !important;
+  }
+
+  .deck-poster-card.slot-far-left,
+  .deck-poster-card.slot-far-right,
+  .deck-poster-card.slot-hidden {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .hero-poster-gallery {
+    gap: 0.35rem !important;
+    padding: 0.35rem 0.1rem !important;
+    margin-top: 0.25rem !important;
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    width: 100% !important;
+  }
+
+  .gallery-thumb-card {
+    width: clamp(34px, 9.5vw, 42px) !important;
+    aspect-ratio: 2 / 3 !important;
+    border-radius: 5px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* 4. Home Sections, Section Gaps & Headings-Only for Categories */
+  .home-sections-container {
+    gap: 3.25rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  .home-section {
+    gap: 1rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  .section-title-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 0.75rem !important;
+    margin-bottom: 0.45rem !important;
+    padding: 0 0.15rem !important;
+  }
+
+  .home-section-title {
+    font-size: 1.1rem !important;
+    font-weight: 800 !important;
+    line-height: 1.25 !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  /* Keep category clean: headings only, hide subtitle description */
+  .section-subtitle-tag {
+    display: none !important;
+  }
+
+  .section-see-more-btn,
+  .top-see-more-btn,
+  .view-all-btn {
+    font-size: 0.72rem !important;
+    padding: 0.22rem 0.55rem !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  .genre-cards-drag-row {
+    gap: 0.6rem !important;
+    padding: 0.4rem 0.15rem 0.75rem !important;
+    margin: -0.25rem -0.25rem !important;
+    width: calc(100% + 0.5rem) !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .genre-explore-card {
+    width: 125px !important;
+    min-width: 125px !important;
+    height: 68px !important;
+    border-radius: var(--radius-sm) !important;
+  }
+
+  .genre-card-content {
+    padding: 0.5rem 0.6rem !important;
+  }
+
+  .genre-card-name {
+    font-size: 0.78rem !important;
+  }
+
+  .movie-cards-drag-row {
+    gap: 0.65rem !important;
+    padding: 0.55rem 0.15rem 0.95rem !important;
+    margin: -0.25rem -0.25rem !important;
+    width: calc(100% + 0.5rem) !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .carousel-movie-item {
+    width: clamp(125px, 35vw, 145px) !important;
+    min-width: clamp(125px, 35vw, 145px) !important;
+    max-width: clamp(125px, 35vw, 145px) !important;
+    padding: 0.1rem !important;
+  }
+
+  /* 5. Movie Card & Grid Aesthetics */
+  .movies-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.6rem !important;
+    padding: 0.25rem 0 1.25rem !important;
+  }
+
+  .movie-card {
+    border-radius: 12px !important;
+  }
+
+  .movie-card-badge {
+    top: 0.4rem !important;
+    left: 0.4rem !important;
+    font-size: 0.62rem !important;
+    padding: 0.15rem 0.4rem !important;
+  }
+
+  .movie-card-watchlist-btn {
+    top: 0.4rem !important;
+    right: 0.4rem !important;
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.82rem !important;
+  }
+
+  .movie-card-content {
+    padding: 0.55rem 0.6rem !important;
+    gap: 0.25rem !important;
+  }
+
+  .movie-card-title {
+    font-size: 0.8rem !important;
+    font-weight: 800 !important;
+    line-height: 1.22 !important;
+    margin-bottom: 0.15rem !important;
+  }
+
+  .movie-card-meta {
+    gap: 0.3rem !important;
+    font-size: 0.7rem !important;
+  }
+
+  .movie-card-year {
+    font-size: 0.7rem !important;
+  }
+
+  .movie-card-genre-pill {
+    font-size: 0.64rem !important;
+    padding: 0.1rem 0.35rem !important;
+  }
+
+  .movie-card-rating-pill {
+    font-size: 0.68rem !important;
+    padding: 0.1rem 0.35rem !important;
+  }
+
+  /* 6. Search Results & Filter / Sort Bar */
+  .section-header-bar {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.35rem !important;
+    margin-bottom: 0.85rem !important;
+  }
+
+  .section-title {
+    font-size: 1.15rem !important;
+  }
+
+  .filter-sort-bar {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.65rem !important;
+    padding: 0.65rem 0.75rem !important;
+    border-radius: var(--radius-md) !important;
+    margin-bottom: 1.15rem !important;
+  }
+
+  .type-filter-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.3rem !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 2px !important;
+    width: 100% !important;
+  }
+
+  .type-pill {
+    font-size: 0.74rem !important;
+    padding: 0.32rem 0.65rem !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  .sort-group {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    gap: 0.5rem !important;
+  }
+
+  .sort-label {
+    font-size: 0.74rem !important;
+    white-space: nowrap !important;
+  }
+
+  .sort-select {
+    flex: 1 !important;
+    max-width: 190px !important;
+    padding: 0.35rem 0.65rem !important;
+    font-size: 0.78rem !important;
+  }
+
+  /* 7. Movie Details Full Explorer Page */
+  .movie-page-inner-content {
+    padding: 1rem 0.65rem 4rem !important;
+    width: 100% !important;
+  }
+
+  .floating-glass-back-btn {
+    top: auto !important;
+    bottom: 1rem !important;
+    left: 0.85rem !important;
+    padding: 0.45rem 0.85rem !important;
+    font-size: 0.76rem !important;
+    z-index: 200 !important;
+  }
+
+  .movie-page-main-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.35rem !important;
+  }
+
+  .details-title {
+    font-size: clamp(1.35rem, 5.5vw, 1.75rem) !important;
+    line-height: 1.18 !important;
+    word-break: break-word !important;
+  }
+
+  .details-year-tag {
+    font-size: 1.05rem !important;
+  }
+
+  .details-tagline {
+    font-size: 0.85rem !important;
+    line-height: 1.38 !important;
+  }
+
+  .sidebar-poster-card {
+    max-width: clamp(180px, 54vw, 230px) !important;
+    margin: 0 auto !important;
+    aspect-ratio: 2 / 3 !important;
+    border-radius: var(--radius-lg) !important;
+  }
+
+  .interactive-status-box {
+    padding: 0.85rem !important;
+    gap: 0.55rem !important;
+  }
+
+  .watch-status-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.35rem !important;
+  }
+
+  .status-chip-btn {
+    padding: 0.45rem 0.4rem !important;
+    font-size: 0.72rem !important;
+  }
+
+  .sidebar-watchlist-btn {
+    padding: 0.72rem !important;
+    font-size: 0.86rem !important;
+  }
+
+  .sidebar-btn-row {
+    gap: 0.45rem !important;
+  }
+
+  .sidebar-secondary-btn {
+    padding: 0.55rem !important;
+    font-size: 0.76rem !important;
+  }
+
+  .user-rating-box,
+  .movie-vibe-meter-box,
+  .sidebar-specs-box,
+  .user-notes-box {
+    padding: 0.85rem !important;
+  }
+
+  .star-pick-btn {
+    font-size: 1.2rem !important;
+    padding: 0.1rem !important;
+  }
+
+  .details-interactive-nav-bar {
+    gap: 0.4rem !important;
+    padding: 0.2rem 0.1rem 0.6rem !important;
+    margin-bottom: 1rem !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .nav-tab-pill {
+    padding: 0.42rem 0.85rem !important;
+    font-size: 0.76rem !important;
+  }
+
+  .details-block {
+    padding: 0.85rem !important;
+    border-radius: var(--radius-md) !important;
+  }
+
+  .block-title {
+    font-size: 0.92rem !important;
+  }
+
+  .details-plot-body {
+    font-size: 0.85rem !important;
+    line-height: 1.55 !important;
+  }
+
+  .cast-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.5rem !important;
+  }
+
+  .cast-member-card {
+    padding: 0.55rem !important;
+    gap: 0.45rem !important;
+  }
+
+  .cast-avatar {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .cast-name {
+    font-size: 0.76rem !important;
+  }
+
+  .cast-character {
+    font-size: 0.68rem !important;
+  }
+
+  .season-tabs-row {
+    gap: 0.35rem !important;
+    padding: 0.2rem 0.1rem 0.6rem !important;
+    margin-bottom: 1rem !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .season-tab-btn {
+    padding: 0.38rem 0.75rem !important;
+    font-size: 0.76rem !important;
+  }
+
+  .episodes-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  .episode-card {
+    border-radius: var(--radius-md) !important;
+  }
+
+  .episode-title {
+    font-size: 0.85rem !important;
+  }
+
+  .episode-summary {
+    font-size: 0.78rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .watch-providers-card {
+    padding: 0.85rem !important;
+  }
+
+  .providers-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.55rem !important;
+  }
+
+  .provider-item {
+    padding: 0.55rem 0.65rem !important;
+    gap: 0.55rem !important;
+  }
+
+  /* 8. Trailer Modal & Preloader */
+  .trailer-modal-backdrop {
+    padding: 0.5rem !important;
+  }
+
+  .trailer-modal-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 14px !important;
+  }
+
+  .trailer-modal-header {
+    padding: 0.75rem 0.85rem !important;
+  }
+
+  .trailer-title {
+    font-size: 0.9rem !important;
+  }
+
+  .trailer-top-corner-controls {
+    top: 0.4rem !important;
+    right: 0.4rem !important;
+    gap: 0.3rem !important;
+  }
+
+  .corner-ctrl-pill {
+    padding: 0.22rem 0.5rem !important;
+    font-size: 0.65rem !important;
+  }
+
+  .trailer-modal-footer {
+    padding: 0.65rem 0.85rem !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.55rem !important;
+  }
+
+  .trailer-specs {
+    justify-content: center !important;
+    gap: 0.3rem !important;
+  }
+
+  .trailer-spec-tag {
+    font-size: 0.62rem !important;
+    padding: 0.18rem 0.45rem !important;
+  }
+
+  .trailer-done-btn {
+    width: 100% !important;
+    padding: 0.55rem !important;
+    font-size: 0.8rem !important;
+    text-align: center !important;
+  }
+
+  .loader-content-card {
+    padding: 1.6rem 1.15rem !important;
+    max-width: 90vw !important;
+    border-radius: 18px !important;
+  }
+
+  .loader-reel-wrapper {
+    width: 56px !important;
+    height: 56px !important;
+    margin-bottom: 0.9rem !important;
+  }
+
+  .loader-film-icon {
+    font-size: 1.4rem !important;
+  }
+
+  .loader-brand-title {
+    font-size: 1.35rem !important;
+  }
+
+  .loader-status-text {
+    font-size: 0.76rem !important;
+    margin-bottom: 1rem !important;
+  }
+}
+
+/* Specific Extra Refinement for Very Small Mobile Screens (300px to 360px) */
+@media (max-width: 360px) {
+  .navbar {
+    padding: 0.45rem 0.55rem !important;
+  }
+
+  .brand-tagline {
+    display: none !important;
+  }
+
+  .watchlist-btn-text {
+    display: none !important;
+  }
+
+  .watchlist-nav-btn {
+    padding: 0.35rem 0.55rem !important;
+  }
+
+  .search-submit-btn .search-btn-text {
+    display: none !important;
+  }
+
+  .search-submit-btn {
+    padding: 0.35rem 0.55rem !important;
+  }
+
+  .search-submit-btn::after {
+    content: none !important;
+  }
+
+  .cockpit-title {
+    font-size: 1.15rem !important;
+  }
+
+  .trio-poster-deck-container {
+    height: 195px !important;
+  }
+
+  .deck-poster-card {
+    width: 110px !important;
+  }
+
+  .deck-poster-card.slot-left {
+    transform: translate(-50%, -50%) translateX(-68px) scale(0.78) translateZ(-20px) rotateY(12deg) !important;
+    opacity: 0.8 !important;
+  }
+
+  .deck-poster-card.slot-right {
+    transform: translate(-50%, -50%) translateX(68px) scale(0.78) translateZ(-20px) rotateY(-12deg) !important;
+    opacity: 0.8 !important;
+  }
+
+  .movies-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.45rem !important;
+  }
+
+  .movie-card-content {
+    padding: 0.45rem 0.5rem !important;
+  }
+
+  .movie-card-title {
+    font-size: 0.75rem !important;
+  }
+
+  .carousel-movie-item {
+    width: 115px !important;
+    min-width: 115px !important;
+    max-width: 115px !important;
+  }
+}
+
+/* ==========================================================================
+   HEADER ROW SINGLE TEXT & ARROW BUTTON: "SEE MORE →"
+   ========================================================================== */
+.top-see-more-btn {
+  background: rgba(99, 102, 241, 0.14);
+  border: 1px solid rgba(129, 140, 248, 0.4);
+  color: #a5b4fc;
+  font-size: 0.82rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  padding: 0.32rem 0.75rem;
+  border-radius: var(--radius-full, 9999px);
+  white-space: nowrap;
+  flex-shrink: 0;
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(8px);
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, border-color 0.2s ease;
+}
+
+.top-see-more-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.top-see-more-btn:hover {
+  background: var(--accent-gradient, linear-gradient(135deg, #6366f1, #a855f7));
+  border-color: transparent;
+  color: #ffffff;
+  transform: translateX(2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+}
+
+.top-see-more-btn.visible:hover {
+  transform: translateX(2px);
+}
+
+.top-see-more-btn .see-more-arrow {
+  font-size: 0.92rem;
+  transition: transform 0.2s ease;
+}
+
+.top-see-more-btn:hover .see-more-arrow {
+  transform: translateX(3px);
+}

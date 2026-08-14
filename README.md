@@ -176,7 +176,6 @@ Movie-Search-Project/
 │   │   ├── InitialCinemaLoader.jsx # Cinematic initialization loader
 │   │   ├── Loading.jsx           # Skeleton placeholders for async states
 │   │   ├── MovieCard.jsx         # Theatrical card with hover animations
-│   │   ├── MovieDetail.jsx       # Detailed title meta view
 │   │   ├── MoviePage.jsx         # Full luxury dedicated title page
 │   │   ├── Nav.jsx               # Top navigation bar, search, & theme toggle
 │   │   ├── Notfound.jsx          # Custom 404 & empty state fallback
@@ -185,7 +184,8 @@ Movie-Search-Project/
 │   │   ├── WatchProviders.jsx    # "Where to Stream" platform resolver
 │   │   └── WatchlistModal.jsx    # Personal cinema hub & journal modal
 │   ├── services/
-│   │   └── movieApi.js           # Multi-source API federation & cache engine
+│   │   ├── movieApi.js           # Multi-source API federation & cache engine
+│   │   └── soundEffects.js       # Web Audio API procedural sound engine
 │   ├── App.css                   # Master stylesheet & glassmorphic tokens
 │   ├── App.jsx                   # Global state management & routing
 │   ├── index.css                 # Base typography & CSS resets

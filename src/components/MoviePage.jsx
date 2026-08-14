@@ -159,18 +159,7 @@ const MoviePage = ({
     }
   });
 
-  // Re-check trailer availability whenever movie changes
-  useEffect(() => {
-    const vid = resolveTrailerVideoId(movie);
-    if (vid) {
-      setIsPlayingTrailer(true);
-      setTrailerError(false);
-      setIsMuted(false); // Unmuted auto-play
-    } else {
-      setIsPlayingTrailer(false);
-      setTrailerError(false);
-    }
-  }, [movie]);
+
 
   // Interactive Confetti Effect for Ratings
   const [confettiBurst, setConfettiBurst] = useState([]);

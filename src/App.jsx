@@ -4,17 +4,18 @@ import Body from './components/Body';
 import WatchlistModal from './components/WatchlistModal';
 import TrailerModal from './components/TrailerModal';
 import InitialCinemaLoader from './components/InitialCinemaLoader';
-import { fetchMovieDetails, searchMoviesList } from './services/movieApi';
+import { fetchMovieDetails, searchMoviesList, loadWishlistFromLocalMemory, saveWishlistToLocalMemory } from './services/movieApi';
 import './App.css';
 
 const THEME_KEY = 'cinescope_theme_v4';
 const WATCHLIST_KEY = 'cinescope_watchlist_v4';
+const WISHLIST_KEY = 'cinescope_wishlist_v4';
 const RECENT_KEY = 'cinescope_recent_searches_v4';
 const NOTES_KEY = 'cinescope_user_notes_v4';
 const RATINGS_KEY = 'cinescope_user_ratings_v4';
 
 const App = () => {
-  // Initial 2-second cinema startup and asset preloader
+  // Initial cinema startup and asset preloader
   const [initialLoading, setInitialLoading] = useState(true);
   const handleLoaderComplete = useCallback(() => setInitialLoading(false), []);
 
@@ -52,18 +53,31 @@ const App = () => {
     }
   }, [theme]);
 
+  // Handle scroll restoration and body scroll lock during initial loading on page refresh
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
+    if (initialLoading) {
+      document.body.style.overflow = 'hidden';
+      window.scrollTo(0, 0);
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [initialLoading]);
+
   const toggleTheme = () => {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
-  // Load watchlist from localStorage
+  // Load wishlist from local memory (localStorage)
   const [watchlist, setWatchlist] = useState(() => {
-    try {
-      const saved = localStorage.getItem(WATCHLIST_KEY);
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
+    return loadWishlistFromLocalMemory();
   });
 
   // Load recent searches
@@ -96,13 +110,9 @@ const App = () => {
     }
   });
 
-  // Save watchlist
+  // Save wishlist to local memory whenever updated
   useEffect(() => {
-    try {
-      localStorage.setItem(WATCHLIST_KEY, JSON.stringify(watchlist));
-    } catch {
-      // Storage fail-safe
-    }
+    saveWishlistToLocalMemory(watchlist);
   }, [watchlist]);
 
   // Save recent searches
@@ -151,6 +161,17 @@ const App = () => {
     });
   };
 
+  const selectedMovieRef = useRef(selectedMovie);
+  selectedMovieRef.current = selectedMovie;
+  const searchResultsRef = useRef(searchResults);
+  searchResultsRef.current = searchResults;
+  const searchTermRef = useRef(searchTerm);
+  searchTermRef.current = searchTerm;
+  const activeGenreRef = useRef(activeGenre);
+  activeGenreRef.current = activeGenre;
+  const totalResultsRef = useRef(totalResults);
+  totalResultsRef.current = totalResults;
+
   // Dedicated in-app navigation history stack for 100% reliable "navigate -1"
   const navHistoryRef = useRef([]);
 
@@ -162,8 +183,15 @@ const App = () => {
     if (!trimmed) return;
 
     // Track history state
-    if (selectedMovie) {
-      navHistoryRef.current.push({ type: 'movie', movie: selectedMovie, searchResults, searchTerm, activeGenre, totalResults });
+    if (selectedMovieRef.current) {
+      navHistoryRef.current.push({
+        type: 'movie',
+        movie: selectedMovieRef.current,
+        searchResults: searchResultsRef.current,
+        searchTerm: searchTermRef.current,
+        activeGenre: activeGenreRef.current,
+        totalResults: totalResultsRef.current
+      });
     }
 
     setLoading(true);
@@ -210,7 +238,7 @@ const App = () => {
     } finally {
       setLoading(false);
     }
-  }, [selectedMovie, searchResults, searchTerm, activeGenre, totalResults]);
+  }, []);
 
   // Load a movie or TV show directly by ID (for deep links / hash navigation)
   const loadMovieById = useCallback(async (id) => {
@@ -247,8 +275,15 @@ const App = () => {
    */
   const handleSelectGenre = useCallback(async (genreQuery) => {
     // Record current context in history stack before switching
-    if (selectedMovie) {
-      navHistoryRef.current.push({ type: 'movie', movie: selectedMovie, searchResults, searchTerm, activeGenre, totalResults });
+    if (selectedMovieRef.current) {
+      navHistoryRef.current.push({
+        type: 'movie',
+        movie: selectedMovieRef.current,
+        searchResults: searchResultsRef.current,
+        searchTerm: searchTermRef.current,
+        activeGenre: activeGenreRef.current,
+        totalResults: totalResultsRef.current
+      });
     }
 
     setActiveGenre(genreQuery);
@@ -280,7 +315,7 @@ const App = () => {
     } finally {
       setLoading(false);
     }
-  }, [selectedMovie, searchResults, searchTerm, activeGenre, totalResults]);
+  }, []);
 
   // Handle URL Hash Navigation
   useEffect(() => {
@@ -288,26 +323,27 @@ const App = () => {
       const hash = window.location.hash.replace(/^#/, '');
 
       if (!hash || hash === '') {
-        setSelectedMovie(null);
-        setSearchResults([]);
-        setSearchTerm('');
-        setActiveGenre(null);
+        if (selectedMovieRef.current) setSelectedMovie(null);
+        if (searchResultsRef.current?.length > 0) setSearchResults([]);
+        if (searchTermRef.current) setSearchTerm('');
+        if (activeGenreRef.current) setActiveGenre(null);
         return;
       }
 
       if (hash.startsWith('movie/')) {
         const id = hash.replace('movie/', '');
-        if (id && (!selectedMovie || (selectedMovie.imdbID !== id && selectedMovie.id !== id))) {
+        const curr = selectedMovieRef.current;
+        if (id && (!curr || (curr.imdbID !== id && curr.id !== id))) {
           loadMovieById(id);
         }
       } else if (hash.startsWith('category/')) {
         const cat = decodeURIComponent(hash.replace('category/', ''));
-        if (cat && cat !== activeGenre) {
+        if (cat && cat !== activeGenreRef.current) {
           handleSelectGenre(cat);
         }
       } else if (hash.startsWith('search/')) {
         const query = decodeURIComponent(hash.replace('search/', ''));
-        if (query && query !== searchTerm) {
+        if (query && query !== searchTermRef.current) {
           setSearchTerm(query);
           handleSearch(query);
         }
@@ -317,7 +353,7 @@ const App = () => {
     handleHashChange();
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
-  }, [loadMovieById, handleSearch, handleSelectGenre, selectedMovie, searchTerm, activeGenre]);
+  }, [loadMovieById, handleSearch, handleSelectGenre]);
 
   // Select a specific movie from search grid or sections (instant when available)
   const handleSelectMovie = async (movieSummary) => {

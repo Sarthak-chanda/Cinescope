@@ -63,6 +63,7 @@ const MovieCard = ({
           alt={name || 'Poster'}
           className="movie-card-poster"
           loading="lazy"
+          decoding="async"
           referrerPolicy="no-referrer"
           onError={handleImageError}
         />

@@ -13,9 +13,14 @@ const WatchlistModal = ({
     <div className="modal-backdrop" onClick={onClose}>
       <div className="drawer-panel" onClick={(e) => e.stopPropagation()}>
         <div className="drawer-header">
-          <h3 className="drawer-title">
-            <span>★</span> My Watchlist ({watchlist.length})
-          </h3>
+          <div>
+            <h3 className="drawer-title">
+              <span>★</span> My Wishlist / Watchlist ({watchlist.length})
+            </h3>
+            <span style={{ fontSize: '0.72rem', color: '#10b981', display: 'inline-flex', alignItems: 'center', gap: '4px', marginTop: '2px', fontWeight: '500' }}>
+              💾 Saved in Local Memory
+            </span>
+          </div>
           <button
             className="drawer-close-btn"
             onClick={onClose}
