@@ -3,6 +3,7 @@ import Nav from './components/Nav';
 import Body from './components/Body';
 import WatchlistModal from './components/WatchlistModal';
 import TrailerModal from './components/TrailerModal';
+import CinemaStreamModal from './components/CinemaStreamModal';
 import InitialCinemaLoader from './components/InitialCinemaLoader';
 import { fetchMovieDetails, searchMoviesList, loadWishlistFromLocalMemory, saveWishlistToLocalMemory } from './services/movieApi';
 import './App.css';
@@ -15,14 +16,18 @@ const NOTES_KEY = 'cinescope_user_notes_v4';
 const RATINGS_KEY = 'cinescope_user_ratings_v4';
 
 const App = () => {
-  // Initial cinema startup and asset preloader
-  const [initialLoading, setInitialLoading] = useState(true);
+  // Initial cinema startup and asset preloader (0ms Instant Load)
+  const [initialLoading, setInitialLoading] = useState(false);
   const handleLoaderComplete = useCallback(() => setInitialLoading(false), []);
 
-  // Theme State (Dark / Light)
+  // Theme State (Dark Theme Default)
   const [theme, setTheme] = useState(() => {
     try {
-      return localStorage.getItem(THEME_KEY) || 'dark';
+      const saved = localStorage.getItem(THEME_KEY);
+      if (saved === 'light') {
+        localStorage.setItem(THEME_KEY, 'dark');
+      }
+      return 'dark';
     } catch {
       return 'dark';
     }
@@ -38,6 +43,10 @@ const App = () => {
   const [activeGenre, setActiveGenre] = useState(null);
   const [isWatchlistOpen, setIsWatchlistOpen] = useState(false);
   const [toasts, setToasts] = useState([]);
+
+  // Cinema Stream Modal State
+  const [streamMovie, setStreamMovie] = useState(null);
+  const [isStreamOpen, setIsStreamOpen] = useState(false);
 
   // Trailer Modal State
   const [trailerMovie, setTrailerMovie] = useState(null);
@@ -389,44 +398,40 @@ const App = () => {
       });
     }
 
-    if (movieSummary.plot && movieSummary.ratings && (movieSummary.castMembers || movieSummary.actors)) {
-      setSelectedMovie(movieSummary);
-      const navId = movieSummary.imdbID || movieSummary.id;
-      if (navId) {
-        window.location.hash = `movie/${navId}`;
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
-    setLoading(true);
+    // 1. Instantly set selectedMovie so dedicated page opens IMMEDIATELY (0ms latency!)
+    setSelectedMovie(movieSummary);
     setNotfound(false);
+    setErrorMessage('');
 
-    try {
-      const res = await fetchMovieDetails({
-        imdbID: movieSummary.imdbID,
-        title: movieSummary.name,
-        tvmazeId: movieSummary.tvmazeId || (String(movieSummary.id).startsWith('tv_') ? parseInt(movieSummary.id.replace('tv_', ''), 10) : null)
-      });
+    const navId = movieSummary.imdbID || movieSummary.id;
+    if (navId) {
+      window.location.hash = `movie/${navId}`;
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      if (res?.aborted) return;
+    // 2. Fetch enriched details in background (if needed) without blocking dedicated page navigation
+    if (!movieSummary.plot || !movieSummary.ratings || (!movieSummary.castMembers && !movieSummary.actors)) {
+      try {
+        const res = await fetchMovieDetails({
+          imdbID: movieSummary.imdbID || (String(movieSummary.id).startsWith('tt') ? movieSummary.id : ''),
+          title: movieSummary.name || movieSummary.title,
+          tvmazeId: movieSummary.tvmazeId || (String(movieSummary.id).startsWith('tv_') ? parseInt(movieSummary.id.replace('tv_', ''), 10) : null)
+        });
 
-      if (res?.data) {
-        setSelectedMovie(res.data);
-        const navId = res.data.imdbID || res.data.id;
-        if (navId) {
-          window.location.hash = `movie/${navId}`;
+        if (res?.data) {
+          setSelectedMovie((current) => {
+            if (!current) return res.data;
+            const currId = current.imdbID || current.id;
+            const newId = res.data.imdbID || res.data.id;
+            if (currId === newId || current.name === res.data.name) {
+              return { ...current, ...res.data };
+            }
+            return current;
+          });
         }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        setNotfound(true);
-        setErrorMessage(res?.error || 'Failed to load details.');
+      } catch {
+        // Silently preserve current movieSummary view
       }
-    } catch (err) {
-      setNotfound(true);
-      setErrorMessage(err.message || 'Error loading details.');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -541,6 +546,13 @@ const App = () => {
     setIsTrailerOpen(true);
   };
 
+  // Open Cinema Live Stream modal
+  const handleOpenStream = (movie) => {
+    if (!movie) return;
+    setStreamMovie(movie);
+    setIsStreamOpen(true);
+  };
+
   // Share movie details via clipboard
   const handleShare = async (movie) => {
     if (!movie) return;
@@ -577,6 +589,8 @@ const App = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const isSubScreen = Boolean(selectedMovie || (searchResults && searchResults.length > 0) || notfound || activeGenre);
+
   return (
     <div className="app-container">
       {/* Top Navigation */}
@@ -591,21 +605,12 @@ const App = () => {
         onResetToHome={handleResetToHome}
         theme={theme}
         onToggleTheme={toggleTheme}
+        selectedMovie={selectedMovie}
+        onBack={handleNavigateBack}
+        canGoBack={isSubScreen}
+        hasSearchResults={searchResults && searchResults.length > 1}
       />
 
-      {/* Floating Glass Left Back Navigation Button (navigate -1) */}
-      {selectedMovie && (
-        <button
-          className="floating-glass-back-btn animate-fade-in"
-          onClick={handleNavigateBack}
-          title="Go back"
-          type="button"
-          aria-label="Back"
-        >
-          <span className="floating-btn-icon">←</span>
-          <span className="floating-btn-label">Back</span>
-        </button>
-      )}
 
       {/* Main Content Area */}
       <Body
@@ -641,6 +646,13 @@ const App = () => {
         watchlist={watchlist}
         onSelectMovie={handleSelectMovie}
         onRemoveFromWatchlist={handleRemoveFromWatchlist}
+      />
+
+      {/* Live Cinema Stream Player Modal */}
+      <CinemaStreamModal
+        isOpen={isStreamOpen}
+        onClose={() => setIsStreamOpen(false)}
+        movie={streamMovie}
       />
 
       {/* Trailer Streaming Modal */}

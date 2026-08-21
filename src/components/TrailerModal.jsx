@@ -78,11 +78,11 @@ const TrailerModal = ({ isOpen, onClose, movie }) => {
   };
 
   const knownVideoId = resolveModalTrailerId(movie);
-  const hasTrailer = Boolean(knownVideoId) && !trailerError;
+  const hasTrailer = !trailerError;
 
   const embedUrl = knownVideoId
-    ? `https://www.youtube-nocookie.com/embed/${knownVideoId}?autoplay=1&mute=0&enablejsapi=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&showinfo=0&playsinline=1`
-    : null;
+    ? `https://www.youtube-nocookie.com/embed/${knownVideoId}?autoplay=1&mute=0&enablejsapi=1&controls=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`
+    : `https://www.youtube-nocookie.com/embed?listType=search&list=${encodeURIComponent(`${movieTitle} ${movieYear} official trailer`)}&autoplay=1&mute=0&controls=1&rel=0&modestbranding=1&playsinline=1`;
 
   // Auto-unmute postMessage effect
   useEffect(() => {

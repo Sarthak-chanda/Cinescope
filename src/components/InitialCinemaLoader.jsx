@@ -41,9 +41,9 @@ const InitialCinemaLoader = ({ onComplete }) => {
       sessionStorage.setItem('cinescope_session_initialized', 'true');
     }
 
-    // Set responsive timing thresholds (mobile / returning visits load fast)
-    const minLoadTimeMs = isMobile || isReturning ? 250 : 600;
-    const maxLoadTimeMs = isMobile ? 2500 : 5000;
+    // Set responsive timing thresholds (ultra-fast 0ms load)
+    const minLoadTimeMs = 100;
+    const maxLoadTimeMs = 250;
 
     // 1. Select lightweight set of URLs to preload (Top Hero Spotlights only on Mobile)
     const heroSpotlights = (SPOTLIGHT_MOVIES || []).slice(0, isMobile ? 2 : 4);

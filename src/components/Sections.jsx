@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MovieCard from './MovieCard';
 import HeroSection from './HeroSection';
-import { UpcomingMovieRow } from './UpcomingMovieRow';
-import { HOLLYWOOD_UPCOMING, BOLLYWOOD_UPCOMING, BENGALI_UPCOMING, fetchLiveTMDBUpcoming } from '../services/upcomingApi';
 import { playSound } from '../services/soundEffects';
 import { fetchDynamicCategoryTitles } from '../services/movieApi';
 import { fetchBollywoodSubcategory } from '../services/bollywoodApi';
@@ -26,7 +24,8 @@ import {
   INDIAN_SERIES_ALL,
   PUNJABI_HITS_ALL,
   KANNADA_HITS_ALL,
-  INDIAN_CLASSICS_ALL
+  INDIAN_CLASSICS_ALL,
+  OPEN_SOURCE_MOVIES_ALL
 } from '../services/catalogData';
 
 // Custom hook for natural, responsive, 1:1 physical drag scrolling
@@ -212,6 +211,7 @@ const Sections = ({
   const [nollywoodMovies, setNollywoodMovies] = useState(NOLLYWOOD_HITS_ALL);
   const [indianSeriesList, setIndianSeriesList] = useState(INDIAN_SERIES_ALL);
   const [punjabiMovies, setPunjabiMovies] = useState(PUNJABI_HITS_ALL);
+  const [openSourceMovies, setOpenSourceMovies] = useState(OPEN_SOURCE_MOVIES_ALL);
   const [kannadaMovies, setKannadaMovies] = useState(KANNADA_HITS_ALL);
   const [classicsMovies, setClassicsMovies] = useState(INDIAN_CLASSICS_ALL);
   const [bollyAction, setBollyAction] = useState([]);
@@ -223,30 +223,6 @@ const Sections = ({
   const [malayalamBlockbusters, setMalayalamBlockbusters] = useState([]);
   const [tamilAction, setTamilAction] = useState([]);
   const [tamilThrillers, setTamilThrillers] = useState([]);
-
-  const [hollywoodUpcoming, setHollywoodUpcoming] = useState(HOLLYWOOD_UPCOMING);
-  const [bollywoodUpcoming, setBollywoodUpcoming] = useState(BOLLYWOOD_UPCOMING);
-  const [bengaliUpcoming, setBengaliUpcoming] = useState(BENGALI_UPCOMING);
-
-  useEffect(() => {
-    let active = true;
-    const loadLiveUpcoming = async () => {
-      try {
-        const [holl, boll, beng] = await Promise.all([
-          fetchLiveTMDBUpcoming('Hollywood'),
-          fetchLiveTMDBUpcoming('Bollywood'),
-          fetchLiveTMDBUpcoming('Bengali')
-        ]);
-        if (active) {
-          if (holl && holl.length > 0) setHollywoodUpcoming(holl);
-          if (boll && boll.length > 0) setBollywoodUpcoming(boll);
-          if (beng && beng.length > 0) setBengaliUpcoming(beng);
-        }
-      } catch {}
-    };
-    loadLiveUpcoming();
-    return () => { active = false; };
-  }, []);
 
   // Live Background Category Enrichment from Specific APIs (AniList, TVmaze, OMDb, Regional APIs)
   useEffect(() => {
@@ -442,18 +418,7 @@ const Sections = ({
         </div>
       </section>
 
-      {/* =========================================================================
-          1. HOLLYWOOD UPCOMING BLOCKBUSTERS (TOP FEATURED CATEGORY)
-          ========================================================================= */}
-      <UpcomingMovieRow
-        title="Hollywood Upcoming Blockbusters"
-        subtitle="Most anticipated 2025–2026 theatrical spectacles, superhero epics, and trailers"
-        movies={hollywoodUpcoming}
-        onSelectMovie={onSelectMovie}
-        onWatchTrailer={onWatchTrailer}
-        watchlist={watchlist}
-        onToggleWatchlist={onToggleWatchlist}
-      />
+
 
       {/* =========================================================================
           2. LATEST BLOCKBUSTER HITS
@@ -471,80 +436,7 @@ const Sections = ({
       />
 
       {/* =========================================================================
-          3. POPULAR ALL-TIME HITS
-          ========================================================================= */}
-      <DraggableMovieRow
-        title="Popular Cinema Hits"
-        subtitle="Audience favorites and legendary box office milestones"
-        movies={getUniformRowMovies(popularMovies)}
-        onSeeMore={() => onSelectGenre('Popular Cinema Hits')}
-        seeMoreLabel="See More Popular Hits →"
-        onSelectMovie={onSelectMovie}
-        watchlist={watchlist}
-        onToggleWatchlist={onToggleWatchlist}
-        handleImageError={handleImageError}
-      />
-
-      {/* =========================================================================
-          4. TOP RATED SHOWS
-          ========================================================================= */}
-      <DraggableMovieRow
-        title="Top Rated Shows"
-        subtitle="Multi-season shows powered by live metadata & episode guides"
-        movies={getUniformRowMovies(tvSeries)}
-        onSeeMore={() => onSelectGenre('Top Rated Shows')}
-        seeMoreLabel="See More TV Shows →"
-        onSelectMovie={onSelectMovie}
-        watchlist={watchlist}
-        onToggleWatchlist={onToggleWatchlist}
-        handleImageError={handleImageError}
-      />
-
-      {/* =========================================================================
-          5. LEGENDARY ANIME SHOWS
-          ========================================================================= */}
-      <DraggableMovieRow
-        title="Legendary Anime Shows"
-        subtitle="Live AniList HD catalog & Studio Ghibli masterpieces"
-        movies={getUniformRowMovies(animeList)}
-        onSeeMore={() => onSelectGenre('Legendary Anime Shows')}
-        seeMoreLabel="See More Anime →"
-        onSelectMovie={onSelectMovie}
-        watchlist={watchlist}
-        onToggleWatchlist={onToggleWatchlist}
-        handleImageError={handleImageError}
-      />
-
-      {/* =========================================================================
-          6. SCI-FI ODYSSEYS
-          ========================================================================= */}
-      <DraggableMovieRow
-        title="Sci Fi Odysseys"
-        subtitle="Mind-bending cinematic journeys across galaxies and AI futures"
-        movies={getUniformRowMovies(scifiMovies)}
-        onSeeMore={() => onSelectGenre('Sci Fi Odysseys')}
-        seeMoreLabel="See More Sci-Fi →"
-        onSelectMovie={onSelectMovie}
-        watchlist={watchlist}
-        onToggleWatchlist={onToggleWatchlist}
-        handleImageError={handleImageError}
-      />
-
-      {/* =========================================================================
-          7. BOLLYWOOD UPCOMING BLOCKBUSTERS
-          ========================================================================= */}
-      <UpcomingMovieRow
-        title="Bollywood Upcoming Blockbusters"
-        subtitle="Most awaited Hindi theatrical sagas, spy universe thrillers, and release dates"
-        movies={bollywoodUpcoming}
-        onSelectMovie={onSelectMovie}
-        onWatchTrailer={onWatchTrailer}
-        watchlist={watchlist}
-        onToggleWatchlist={onToggleWatchlist}
-      />
-
-      {/* =========================================================================
-          7A. BOLLYWOOD HINDI BLOCKBUSTERS
+          3. BOLLYWOOD HINDI BLOCKBUSTERS
           ========================================================================= */}
       <DraggableMovieRow
         title="Bollywood Hindi Blockbusters"
@@ -559,7 +451,97 @@ const Sections = ({
       />
 
       {/* =========================================================================
-          7A. BOLLYWOOD ACTION HITS
+          4. SOUTH CINEMA LEGENDS
+          ========================================================================= */}
+      <DraggableMovieRow
+        title="South Cinema Legends"
+        subtitle="High-octane Telugu, Tamil & South Indian action epics and box office records"
+        movies={getUniformRowMovies(southMovies)}
+        onSeeMore={() => onSelectGenre('South Cinema Legends')}
+        seeMoreLabel="See More South Cinema →"
+        onSelectMovie={onSelectMovie}
+        watchlist={watchlist}
+        onToggleWatchlist={onToggleWatchlist}
+        handleImageError={handleImageError}
+      />
+
+      {/* =========================================================================
+          5. POPULAR ALL-TIME HITS
+          ========================================================================= */}
+      <DraggableMovieRow
+        title="Popular Cinema Hits"
+        subtitle="Audience favorites and legendary box office milestones"
+        movies={getUniformRowMovies(popularMovies)}
+        onSeeMore={() => onSelectGenre('Popular Cinema Hits')}
+        seeMoreLabel="See More Popular Hits →"
+        onSelectMovie={onSelectMovie}
+        watchlist={watchlist}
+        onToggleWatchlist={onToggleWatchlist}
+        handleImageError={handleImageError}
+      />
+
+      {/* =========================================================================
+          6. TOP RATED SHOWS
+          ========================================================================= */}
+      <DraggableMovieRow
+        title="Top Rated Shows"
+        subtitle="Multi-season shows powered by live metadata & episode guides"
+        movies={getUniformRowMovies(tvSeries)}
+        onSeeMore={() => onSelectGenre('Top Rated Shows')}
+        seeMoreLabel="See More TV Shows →"
+        onSelectMovie={onSelectMovie}
+        watchlist={watchlist}
+        onToggleWatchlist={onToggleWatchlist}
+        handleImageError={handleImageError}
+      />
+
+      {/* =========================================================================
+          7. LEGENDARY ANIME SHOWS
+          ========================================================================= */}
+      <DraggableMovieRow
+        title="Legendary Anime Shows"
+        subtitle="Live AniList HD catalog & Studio Ghibli masterpieces"
+        movies={getUniformRowMovies(animeList)}
+        onSeeMore={() => onSelectGenre('Legendary Anime Shows')}
+        seeMoreLabel="See More Anime →"
+        onSelectMovie={onSelectMovie}
+        watchlist={watchlist}
+        onToggleWatchlist={onToggleWatchlist}
+        handleImageError={handleImageError}
+      />
+
+      {/* =========================================================================
+          7. OPEN SOURCE & FREE LICENSE-FREE CINEMA
+          ========================================================================= */}
+      <DraggableMovieRow
+        title="Open Source & Free License-Free Cinema"
+        subtitle="100% free open-source Blender Foundation movies, Creative Commons classics, and public domain films"
+        movies={getUniformRowMovies(openSourceMovies)}
+        onSeeMore={() => onSelectGenre('Open Source & Free Cinema')}
+        seeMoreLabel="See More Open Source Cinema →"
+        onSelectMovie={onSelectMovie}
+        watchlist={watchlist}
+        onToggleWatchlist={onToggleWatchlist}
+        handleImageError={handleImageError}
+      />
+
+      {/* =========================================================================
+          8. SCI-FI ODYSSEYS
+          ========================================================================= */}
+      <DraggableMovieRow
+        title="Sci Fi Odysseys"
+        subtitle="Mind-bending cinematic journeys across galaxies and AI futures"
+        movies={getUniformRowMovies(scifiMovies)}
+        onSeeMore={() => onSelectGenre('Sci Fi Odysseys')}
+        seeMoreLabel="See More Sci-Fi →"
+        onSelectMovie={onSelectMovie}
+        watchlist={watchlist}
+        onToggleWatchlist={onToggleWatchlist}
+        handleImageError={handleImageError}
+      />
+
+      {/* =========================================================================
+          8A. BOLLYWOOD ACTION HITS
           ========================================================================= */}
       {bollyAction && bollyAction.length > 0 && (
         <DraggableMovieRow
@@ -576,7 +558,7 @@ const Sections = ({
       )}
 
       {/* =========================================================================
-          7B. HINDI CRIME THRILLERS
+          8B. HINDI CRIME THRILLERS
           ========================================================================= */}
       {bollyCrime && bollyCrime.length > 0 && (
         <DraggableMovieRow
@@ -724,18 +706,7 @@ const Sections = ({
         />
       )}
 
-      {/* =========================================================================
-          10. BENGALI UPCOMING CINEMA
-          ========================================================================= */}
-      <UpcomingMovieRow
-        title="Bengali Upcoming Cinema"
-        subtitle="Upcoming Kolkata mysteries, Feluda sagas, and 2025 theatrical release dates"
-        movies={bengaliUpcoming}
-        onSelectMovie={onSelectMovie}
-        onWatchTrailer={onWatchTrailer}
-        watchlist={watchlist}
-        onToggleWatchlist={onToggleWatchlist}
-      />
+
 
       {/* =========================================================================
           10A. BENGALI CINEMA HITS

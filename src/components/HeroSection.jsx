@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { playSound } from '../services/soundEffects';
 
 export const SPOTLIGHT_MOVIES_DATA = [
@@ -7,18 +7,18 @@ export const SPOTLIGHT_MOVIES_DATA = [
     name: 'Dune: Part Two',
     year: '2024',
     rating: '8.5',
-    votes: '610,000+',
+    votes: '620,000+',
     rated: 'PG-13',
     runtime: '2h 46m',
-    rankBadge: '#1 Global Sci-Fi Epic',
+    rankBadge: '#1 Hollywood Sci-Fi',
     director: 'Denis Villeneuve',
     cast: 'Timothée Chalamet, Zendaya, Rebecca Ferguson',
     genres: ['Sci-Fi', 'Adventure', 'Action'],
-    mood: 'Hollywood',
-    poster: 'https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg',
-    secondaryPoster: 'https://image.tmdb.org/t/p/w780/6wLztf23Z9kHqjN2eN9Lh3WlXN5.jpg',
+    mood: 'Hollywood Cinema',
+    poster: 'https://images.weserv.nl/?url=https://m.media-amazon.com/images/M/MV5BNTc0YmQxMjEtODI5MC00NjFiLTlkMWUtOGQ5NjFmYWUyZGJhXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
+    secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BNTc0YmQxMjEtODI5MC00NjFiLTlkMWUtOGQ5NjFmYWUyZGJhXkEyXkFqcGc@._V1_SX300.jpg',
     tagline: 'Long live the fighters of Arrakis.',
-    plot: 'Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family, fulfilling his destiny across the stars.',
+    plot: 'Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family.',
     liveViewers: 3420
   },
   {
@@ -26,114 +26,133 @@ export const SPOTLIGHT_MOVIES_DATA = [
     name: 'Kalki 2898 AD',
     year: '2024',
     rating: '7.6',
-    votes: '85,000+',
+    votes: '95,000+',
     rated: 'PG-13',
     runtime: '3h 0m',
-    rankBadge: '#1 Indian Sci-Fi Blockbuster',
+    rankBadge: '#1 Indian Sci-Fi Epic',
     director: 'Nag Ashwin',
-    cast: 'Prabhas, Amitabh Bachchan, Kamal Haasan, Deepika Padukone',
+    cast: 'Prabhas, Amitabh Bachchan, Deepika Padukone',
     genres: ['Sci-Fi', 'Action', 'Fantasy'],
     mood: 'Indian Cinema',
-    poster: 'https://m.media-amazon.com/images/M/MV5BMTM3ZGUwYTEtZTI5NS00ZmMyLTk2YmQtMWU4YjlhZTI3NjRjXkEyXkFqcGc@._V1_SX300.jpg',
+    poster: 'https://images.weserv.nl/?url=https://m.media-amazon.com/images/M/MV5BMTM3ZGUwYTEtZTI5NS00ZmMyLTk2YmQtMWU4YjlhZTI3NjRjXkEyXkFqcGc@._V1_SX300.jpg',
     secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BMTM3ZGUwYTEtZTI5NS00ZmMyLTk2YmQtMWU4YjlhZTI3NjRjXkEyXkFqcGc@._V1_SX300.jpg',
     tagline: 'When darkness engulfs humanity, a savior rises.',
-    plot: 'In a dystopian future 2898 AD, a modern avatar of Vishnu descends to Earth to protect the unborn child of Sumati from evil supreme commander Yaskin.',
+    plot: 'In a dystopian future 2898 AD, a modern avatar of Vishnu descends to Earth to protect humanity from dark forces.',
     liveViewers: 4120
   },
   {
     imdbID: 'tt15398776',
     name: 'Oppenheimer',
     year: '2023',
-    rating: '8.8',
-    votes: '780,000+',
+    rating: '8.9',
+    votes: '820,000+',
     rated: 'R',
     runtime: '3h 0m',
     rankBadge: '7 Academy Awards Winner',
     director: 'Christopher Nolan',
     cast: 'Cillian Murphy, Emily Blunt, Robert Downey Jr.',
     genres: ['Biography', 'Drama', 'History'],
-    mood: 'Masterpiece',
-    poster: 'https://m.media-amazon.com/images/M/MV5BN2JkMDc5MGQtZjg3YS00NmFiLWIyZmQtZTJmNTM5MjVmYTQ4XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
-    secondaryPoster: 'https://image.tmdb.org/t/p/w780/ptpr0kGAckfQkJeJIt8st5dglvd.jpg',
+    mood: 'Hollywood Masterpiece',
+    poster: 'https://images.weserv.nl/?url=https://m.media-amazon.com/images/M/MV5BN2JkMDc5MGQtZjg3YS00NmFiLWIyZmQtZTJmNTM5MjVmYTQ4XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
+    secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BN2JkMDc5MGQtZjg3YS00NmFiLWIyZmQtZTJmNTM5MjVmYTQ4XkEyXkFqcGc@._V1_SX300.jpg',
     tagline: 'The story of the man who changed the world forever.',
-    plot: 'The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb during the Manhattan Project.',
-    liveViewers: 3100
+    plot: 'The story of J. Robert Oppenheimer and his role in the development of the atomic bomb during World War II.',
+    liveViewers: 3890
   },
   {
-    imdbID: 'tt23289160',
-    name: 'Godzilla Minus One',
-    year: '2023',
-    rating: '7.8',
-    votes: '145,000+',
+    imdbID: 'tt28532454',
+    name: 'Stree 2',
+    year: '2024',
+    rating: '7.7',
+    votes: '45,000+',
     rated: 'PG-13',
-    runtime: '2h 5m',
-    rankBadge: 'Oscar Winner - Best Visual Effects',
-    director: 'Takashi Yamazaki',
-    cast: 'Ryunosuke Kamiki, Minami Hamabe, Yuki Yamada',
-    genres: ['Action', 'Drama', 'Sci-Fi'],
-    mood: 'Japanese Cinema',
-    poster: 'https://m.media-amazon.com/images/M/MV5BMjc5MjllMGUtMDIwMS00ZDVkLWEzODQtM2NlMTMwMTZhNThmXkEyXkFqcGc@._V1_SX300.jpg',
-    secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BMjc5MjllMGUtMDIwMS00ZDVkLWEzODQtM2NlMTMwMTZhNThmXkEyXkFqcGc@._V1_SX300.jpg',
-    tagline: 'Post-war Japan. Zero to minus one.',
-    plot: 'Post-war Japan is at its lowest point when a new crisis arises in the form of a giant monster, baptized in the horrific power of the atomic bomb.',
-    liveViewers: 2980
-  },
-  {
-    imdbID: 'tt8178634',
-    name: 'RRR',
-    year: '2022',
-    rating: '7.8',
-    votes: '180,000+',
-    rated: 'PG-13',
-    runtime: '3h 7m',
-    rankBadge: 'Academy Award Winner & Global Sensation',
-    director: 'S.S. Rajamouli',
-    cast: 'N.T. Rama Rao Jr., Ram Charan, Alia Bhatt, Ajay Devgn',
-    genres: ['Action', 'Drama', 'History'],
+    runtime: '2h 27m',
+    rankBadge: '#1 Indian Horror Comedy Blockbuster',
+    director: 'Amar Kaushik',
+    cast: 'Shraddha Kapoor, Rajkummar Rao, Pankaj Tripathi',
+    genres: ['Comedy', 'Horror', 'Mystery'],
     mood: 'Indian Cinema',
-    poster: 'https://m.media-amazon.com/images/M/MV5BNWMwODYyMjQtMTczMi00NTQ1LWFkYjItMGJhMWRkY2E3NDAyXkEyXkFqcGc@._V1_SX300.jpg',
-    secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BNWMwODYyMjQtMTczMi00NTQ1LWFkYjItMGJhMWRkY2E3NDAyXkEyXkFqcGc@._V1_SX300.jpg',
-    tagline: 'Rise, Roar, Revolt.',
-    plot: 'A fearless warrior on a perilous mission comes face to face with a steely cop serving the British force in 1920s pre-independent India.',
-    liveViewers: 3650
+    poster: 'https://images.weserv.nl/?url=https://m.media-amazon.com/images/M/MV5BMTA1NmUxYzItZmVmNy00YmQxLTk4Y2UtZjVkMWUwMWQ5N2IxXkEyXkFqcGc@._V1_SX300.jpg',
+    secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BMTA1NmUxYzItZmVmNy00YmQxLTk4Y2UtZjVkMWUwMWQ5N2IxXkEyXkFqcGc@._V1_SX300.jpg',
+    tagline: 'Chanderi faces a frightening new terror.',
+    plot: 'The town of Chanderi is haunted by a headless entity known as Sarkata, requiring the gang to unite to save the town.',
+    liveViewers: 4250
   },
   {
-    imdbID: 'tt6751668',
-    name: 'Parasite',
-    year: '2019',
+    imdbID: 'tt27911000',
+    name: 'Maharaja',
+    year: '2024',
     rating: '8.5',
-    votes: '950,000+',
+    votes: '85,000+',
+    rated: 'PG-13',
+    runtime: '2h 20m',
+    rankBadge: '2024 Top Rated Indian Thriller',
+    director: 'Nithilan Swaminathan',
+    cast: 'Vijay Sethupathi, Anurag Kashyap, Mamta Mohandas',
+    genres: ['Action', 'Crime', 'Drama'],
+    mood: 'Indian Cinema',
+    poster: 'https://images.weserv.nl/?url=https://m.media-amazon.com/images/M/MV5BOTFlMTIxOGItZTk0Zi00MTk2LWJiM2UtMzlhZWYzNjQ4N2Y3XkEyXkFqcGc@._V1_SX300.jpg',
+    secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BOTFlMTIxOGItZTk0Zi00MTk2LWJiM2UtMzlhZWYzNjQ4N2Y3XkEyXkFqcGc@._V1_SX300.jpg',
+    tagline: 'An unforgiving quest for justice.',
+    plot: 'A quiet barber seeks vengeance after home invaders assault his household and steal a cherished family item.',
+    liveViewers: 3950
+  },
+  {
+    imdbID: 'tt12610390',
+    name: 'Gladiator II',
+    year: '2024',
+    rating: '8.2',
+    votes: '140,000+',
     rated: 'R',
-    runtime: '2h 12m',
-    rankBadge: '4 Academy Awards & Palme d\'Or Winner',
-    director: 'Bong Joon Ho',
-    cast: 'Song Kang-ho, Lee Sun-kyun, Cho Yeo-jeong',
-    genres: ['Drama', 'Thriller', 'Comedy'],
-    mood: 'Korean Cinema',
-    poster: 'https://m.media-amazon.com/images/M/MV5BYjk1Y2U4MjQtY2ZiNS00OWQyLWI3MmYtZWUwNmRjYWRiNWNhXkEyXkFqcGc@._V1_SX300.jpg',
-    secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BYjk1Y2U4MjQtY2ZiNS00OWQyLWI3MmYtZWUwNmRjYWRiNWNhXkEyXkFqcGc@._V1_SX300.jpg',
-    tagline: 'Act like you own the place.',
-    plot: 'Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park family and the destitute Kim clan.',
-    liveViewers: 2890
+    runtime: '2h 28m',
+    rankBadge: '2024 Hollywood Epic',
+    director: 'Ridley Scott',
+    cast: 'Paul Mescal, Pedro Pascal, Denzel Washington',
+    genres: ['Action', 'Adventure', 'Drama'],
+    mood: 'Hollywood Cinema',
+    poster: 'https://images.weserv.nl/?url=https://m.media-amazon.com/images/M/MV5BN2JkMDc5MGQtZjg3YS00NmFiLWIyZmQtZTJmNTM5MjVmYTQ4XkEyXkFqcGc@._V1_SX300.jpg',
+    secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BN2JkMDc5MGQtZjg3YS00NmFiLWIyZmQtZTJmNTM5MjVmYTQ4XkEyXkFqcGc@._V1_SX300.jpg',
+    tagline: 'What we do in life echoes in eternity.',
+    plot: 'Years after witnessing the death of Maximus, Lucius enters the Colosseum to fight for the restoration of Rome\'s glory.',
+    liveViewers: 3680
+  },
+  {
+    imdbID: 'tt23849204',
+    name: '12th Fail',
+    year: '2023',
+    rating: '8.9',
+    votes: '120,000+',
+    rated: 'PG-13',
+    runtime: '2h 27m',
+    rankBadge: 'IMDb Top Rated Indian Drama',
+    director: 'Vidhu Vinod Chopra',
+    cast: 'Vikrant Massey, Medha Shankr, Anant V Joshi',
+    genres: ['Biography', 'Drama'],
+    mood: 'Indian Cinema',
+    poster: 'https://images.weserv.nl/?url=https://m.media-amazon.com/images/M/MV5BNTE3OTIxZDYtNjA0NC00N2YxLTg1NGQtOTYxNmZkMDkwOWNjXkEyXkFqcGc@._V1_SX300.jpg',
+    secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BNTE3OTIxZDYtNjA0NC00N2YxLTg1NGQtOTYxNmZkMDkwOWNjXkEyXkFqcGc@._V1_SX300.jpg',
+    tagline: 'Restart. Defy the odds.',
+    plot: 'Based on the true story of Manoj Kumar Sharma who overcomes extreme poverty to become an IPS officer.',
+    liveViewers: 4100
   },
   {
     imdbID: 'tt6263850',
     name: 'Deadpool & Wolverine',
     year: '2024',
-    rating: '7.6',
-    votes: '565,000+',
+    rating: '7.8',
+    votes: '590,000+',
     rated: 'R',
     runtime: '2h 8m',
-    rankBadge: '#1 in Global Action Comedy',
+    rankBadge: '2024 Marvel Blockbuster',
     director: 'Shawn Levy',
     cast: 'Ryan Reynolds, Hugh Jackman, Emma Corrin',
     genres: ['Action', 'Comedy', 'Sci-Fi'],
-    mood: 'Action',
-    poster: 'https://m.media-amazon.com/images/M/MV5BZTk5ODY0MmQtMzA3Ni00NGY1LThiYzItZThiNjFiNDM4MTM3XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
-    secondaryPoster: 'https://image.tmdb.org/t/p/w780/5jHqH1h7pB2Y9LgJ1fWjF2qH2qX.jpg',
-    tagline: 'Come together to save the Marvel multiverse.',
-    plot: 'Deadpool is offered a place in the Marvel Cinematic Universe by the TVA, but instead recruits an all-new variant of Wolverine to save his dying timeline.',
-    liveViewers: 2840
+    mood: 'Hollywood Cinema',
+    poster: 'https://images.weserv.nl/?url=https://m.media-amazon.com/images/M/MV5BZTk5ODY0MmQtMzA3Ni00NGY1LThiYzItZThiNjFiNDM4MTM3XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg',
+    secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BZTk5ODY0MmQtMzA3Ni00NGY1LThiYzItZThiNjFiNDM4MTM3XkEyXkFqcGc@._V1_SX300.jpg',
+    tagline: 'Come together to save the multiverse.',
+    plot: 'Wolverine is recovering from his injuries when he crosses paths with Deadpool to defeat a common enemy.',
+    liveViewers: 3410
   },
   {
     imdbID: 'tt26458038',
@@ -143,35 +162,54 @@ export const SPOTLIGHT_MOVIES_DATA = [
     votes: '35,000+',
     rated: 'PG-13',
     runtime: '2h 15m',
-    rankBadge: '#1 All-Time Malayalam Blockbuster',
+    rankBadge: '#1 Indian Survival Thriller',
     director: 'Chidambaram',
     cast: 'Soubin Shahir, Sreenath Bhasi, Balu Varghese',
     genres: ['Adventure', 'Drama', 'Thriller'],
-    mood: 'Malayalam Cinema',
-    poster: 'https://m.media-amazon.com/images/M/MV5BMDVkOGEzZDgtYWU4Yi00MDA3LWE4YmQtYjQxNDgwNDYxNGU4XkEyXkFqcGc@._V1_SX300.jpg',
+    mood: 'Indian Cinema',
+    poster: 'https://images.weserv.nl/?url=https://m.media-amazon.com/images/M/MV5BMDVkOGEzZDgtYWU4Yi00MDA3LWE4YmQtYjQxNDgwNDYxNGU4XkEyXkFqcGc@._V1_SX300.jpg',
     secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BMDVkOGEzZDgtYWU4Yi00MDA3LWE4YmQtYjQxNDgwNDYxNGU4XkEyXkFqcGc@._V1_SX300.jpg',
     tagline: 'True friendship defies the darkest depths.',
-    plot: 'A group of friends from Cochin embark on a trip to Kodaikanal, where one of them gets trapped inside the notorious Guna Caves.',
+    plot: 'A group of friends embark on a trip where one of them gets trapped inside Guna Caves, sparking a perilous rescue mission.',
     liveViewers: 3210
   },
   {
-    imdbID: 'tt16428256',
-    name: 'Suzume',
+    imdbID: 'tt9362722',
+    name: 'Spider-Man: Across the Spider-Verse',
     year: '2023',
-    rating: '7.6',
-    votes: '65,000+',
+    rating: '8.6',
+    votes: '360,000+',
     rated: 'PG',
-    runtime: '2h 2m',
-    rankBadge: 'Global Anime Sensation',
-    director: 'Makoto Shinkai',
-    cast: 'Nanoka Hara, Hokuto Matsumura, Eri Fukatsu',
-    genres: ['Animation', 'Adventure', 'Fantasy'],
-    mood: 'Anime',
-    poster: 'https://m.media-amazon.com/images/M/MV5BODhkNDhmNzktODFmMC00NDZiLWEzN2UtY2YwYzgzYTVlMWZmXkEyXkFqcGc@._V1_SX300.jpg',
-    secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BODhkNDhmNzktODFmMC00NDZiLWEzN2UtY2YwYzgzYTVlMWZmXkEyXkFqcGc@._V1_SX300.jpg',
-    tagline: 'On the other side of the door was time in its entirety.',
-    plot: 'A modern action-adventure story where a 17-year-old girl named Suzume helps a mysterious young man close doors from the outer side that are releasing disasters all over Japan.',
-    liveViewers: 2740
+    runtime: '2h 20m',
+    rankBadge: 'Hollywood Animated Masterpiece',
+    director: 'Joaquim Dos Santos, Kemp Powers',
+    cast: 'Shameik Moore, Hailee Steinfeld, Oscar Isaac',
+    genres: ['Animation', 'Action', 'Adventure'],
+    mood: 'Hollywood Cinema',
+    poster: 'https://images.weserv.nl/?url=https://m.media-amazon.com/images/M/MV5BNThiZjA3MjItZGY5Ni00ZmJhLWEwN2EtOTBlYTA4Y2E0M2ZmXkEyXkFqcGc@._V1_SX300.jpg',
+    secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BNThiZjA3MjItZGY5Ni00ZmJhLWEwN2EtOTBlYTA4Y2E0M2ZmXkEyXkFqcGc@._V1_SX300.jpg',
+    tagline: 'With great power comes great responsibility.',
+    plot: 'Miles Morales catapults across the Multiverse, where he encounters a team of Spider-People charged with protecting its existence.',
+    liveViewers: 3150
+  },
+  {
+    imdbID: 'tt23289160',
+    name: 'Godzilla Minus One',
+    year: '2023',
+    rating: '7.9',
+    votes: '160,000+',
+    rated: 'PG-13',
+    runtime: '2h 5m',
+    rankBadge: 'Oscar Winner - Best Visual Effects',
+    director: 'Takashi Yamazaki',
+    cast: 'Ryunosuke Kamiki, Minami Hamabe, Yuki Yamada',
+    genres: ['Action', 'Drama', 'Sci-Fi'],
+    mood: 'Global Cinema',
+    poster: 'https://images.weserv.nl/?url=https://m.media-amazon.com/images/M/MV5BMjc5MjllMGUtMDIwMS00ZDVkLWEzODQtM2NlMTMwMTZhNThmXkEyXkFqcGc@._V1_SX300.jpg',
+    secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BMjc5MjllMGUtMDIwMS00ZDVkLWEzODQtM2NlMTMwMTZhNThmXkEyXkFqcGc@._V1_SX300.jpg',
+    tagline: 'Post-war Japan. Zero to minus one.',
+    plot: 'Post-war Japan faces a horrific new crisis in the form of a giant atomic-powered monster.',
+    liveViewers: 3050
   },
   {
     imdbID: 'tt15354916',
@@ -181,58 +219,20 @@ export const SPOTLIGHT_MOVIES_DATA = [
     votes: '95,000+',
     rated: 'PG-13',
     runtime: '2h 49m',
-    rankBadge: 'Global Bollywood Box-Office Record',
+    rankBadge: 'Global Indian Action Record',
     director: 'Atlee',
     cast: 'Shah Rukh Khan, Nayanthara, Vijay Sethupathi',
     genres: ['Action', 'Thriller', 'Drama'],
-    mood: 'Bollywood',
-    poster: 'https://m.media-amazon.com/images/M/MV5BMGExNGI1NDktOWI2Mi00NDM3LWIxMmQtNTQxYTgzMzI0MTA1XkEyXkFqcGc@._V1_SX300.jpg',
+    mood: 'Indian Cinema',
+    poster: 'https://images.weserv.nl/?url=https://m.media-amazon.com/images/M/MV5BMGExNGI1NDktOWI2Mi00NDM3LWIxMmQtNTQxYTgzMzI0MTA1XkEyXkFqcGc@._V1_SX300.jpg',
     secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BMGExNGI1NDktOWI2Mi00NDM3LWIxMmQtNTQxYTgzMzI0MTA1XkEyXkFqcGc@._V1_SX300.jpg',
     tagline: 'Ready or not, here he comes.',
-    plot: 'A high-octane action thriller that outlines the emotional journey of a man who is set to rectify the wrongs in society.',
+    plot: 'A high-octane action thriller outlining a man set to rectify the wrongs in society.',
     liveViewers: 3380
-  },
-  {
-    imdbID: 'tt17009710',
-    name: 'Anatomy of a Fall',
-    year: '2023',
-    rating: '7.6',
-    votes: '150,000+',
-    rated: 'R',
-    runtime: '2h 31m',
-    rankBadge: 'Palme d\'Or & Oscar Winner',
-    director: 'Justine Triet',
-    cast: 'Sandra Hüller, Swann Arlaud, Milo Machado-Graner',
-    genres: ['Crime', 'Drama', 'Mystery'],
-    mood: 'European Cinema',
-    poster: 'https://m.media-amazon.com/images/M/MV5BYTk3MjFkZmQtMThiYi00N2JhLTk2YzItZTE5ZGUxZTIyZDVkXkEyXkFqcGc@._V1_QL75_UY562_CR2,0,380,562_.jpg',
-    secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BYTk3MjFkZmQtMThiYi00N2JhLTk2YzItZTE5ZGUxZTIyZDVkXkEyXkFqcGc@._V1_QL75_UY562_CR2,0,380,562_.jpg',
-    tagline: 'Did he fall or was he pushed?',
-    plot: 'A woman is suspected of her husband\'s murder, and their blind son faces a moral dilemma as the sole witness in this gripping French courtroom drama.',
-    liveViewers: 2120
-  },
-  {
-    imdbID: 'tt2788316',
-    name: 'Shōgun',
-    year: '2024',
-    rating: '8.6',
-    votes: '190,000+',
-    rated: 'TV-MA',
-    runtime: '10 Episodes',
-    rankBadge: '18 Emmy Record Winner',
-    director: 'Rachel Kondo & Justin Marks',
-    cast: 'Hiroyuki Sanada, Cosmo Jarvis, Anna Sawai',
-    genres: ['Adventure', 'Drama', 'History'],
-    mood: 'Series',
-    poster: 'https://m.media-amazon.com/images/M/MV5BZmJkMDRjYzEtMWI3Ny00OWE3LWJlNTItMGQ1MTQzMzc3NDY5XkEyXkFqcGc@._V1_SX300.jpg',
-    secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BZmJkMDRjYzEtMWI3Ny00OWE3LWJlNTItMGQ1MTQzMzc3NDY5XkEyXkFqcGc@._V1_SX300.jpg',
-    tagline: 'The battle for the Shogunate begins.',
-    plot: 'When a mysterious European ship is found marooned in feudal Japan, Lord Yoshii Toranaga discovers secrets that tip the scales of power.',
-    liveViewers: 2850
   }
 ];
 
-const ROTATION_INTERVAL = 6000; // 6 seconds per live spotlight slide
+const ROTATION_INTERVAL = 6000;
 
 const HeroSection = ({
   onSelectMovie,
@@ -242,39 +242,58 @@ const HeroSection = ({
 }) => {
   const [spotlightIndex, setSpotlightIndex] = useState(0);
   const [timerKey, setTimerKey] = useState(0);
-  const [failedImages, setFailedImages] = useState(new Set());
+  const [imageFallbacks, setImageFallbacks] = useState({});
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const dragStartX = useRef(0);
   const isPointerDown = useRef(false);
 
-  const handleImageError = (id) => {
-    if (!id) return;
-    setFailedImages((prev) => {
-      if (prev.has(id)) return prev;
-      const next = new Set(prev);
-      next.add(id);
-      return next;
-    });
+  const totalSpotlights = SPOTLIGHT_MOVIES_DATA.length;
+  const currentSpotlight = SPOTLIGHT_MOVIES_DATA[spotlightIndex % totalSpotlights];
+
+  const getPosterUrl = (movie) => {
+    if (!movie) return '';
+    return imageFallbacks[movie.imdbID] || movie.poster;
   };
 
-  // Only show spotlight movies with verified working posters
-  const validSpotlights = useMemo(() => {
-    return SPOTLIGHT_MOVIES_DATA.filter(
-      (m) => m.poster && !failedImages.has(m.imdbID)
-    );
-  }, [failedImages]);
+  const handleImageError = (id) => {
+    if (!id) return;
+    const movie = SPOTLIGHT_MOVIES_DATA.find((m) => m.imdbID === id);
+    if (!movie) return;
 
-  const totalSpotlights = validSpotlights.length || 1;
-  const currentSpotlight = validSpotlights[spotlightIndex % totalSpotlights] || validSpotlights[0] || SPOTLIGHT_MOVIES_DATA[0];
+    // Step 1: Try proxy url if poster isn't proxied yet
+    if (!imageFallbacks[id] && movie.poster && !movie.poster.includes('images.weserv.nl')) {
+      const proxied = `https://images.weserv.nl/?url=${encodeURIComponent(movie.poster)}`;
+      setImageFallbacks((prev) => ({
+        ...prev,
+        [id]: proxied
+      }));
+      return;
+    }
 
-  // Tri-Deck Flanking Indexes for 3D Orbit
-  const prevSpotlightIndex = (spotlightIndex - 1 + totalSpotlights) % totalSpotlights;
-  const nextSpotlightIndex = (spotlightIndex + 1) % totalSpotlights;
-  const prevSpotlight = validSpotlights[prevSpotlightIndex];
-  const nextSpotlight = validSpotlights[nextSpotlightIndex];
+    // Step 2: Try secondary poster URL if available & different
+    if (!imageFallbacks[id] && movie.secondaryPoster && movie.secondaryPoster !== movie.poster) {
+      const proxiedSec = movie.secondaryPoster.includes('images.weserv.nl')
+        ? movie.secondaryPoster
+        : `https://images.weserv.nl/?url=${encodeURIComponent(movie.secondaryPoster)}`;
+      setImageFallbacks((prev) => ({
+        ...prev,
+        [id]: proxiedSec
+      }));
+      return;
+    }
 
-  // Drag Handlers
+    // Step 3: Final fallback to styled dark SVG placeholder
+    if (imageFallbacks[id] && imageFallbacks[id].startsWith('data:image/svg+xml')) return;
+
+    const movieTitle = movie ? movie.name : 'Cinema';
+    const svgFallback = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="500" height="750" viewBox="0 0 500 750"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%230f172a"/><stop offset="100%" stop-color="%231e293b"/></linearGradient></defs><rect width="100%" height="100%" fill="url(%23g)"/><text x="50%" y="45%" fill="%23e2e8f0" font-family="sans-serif" font-size="28" font-weight="bold" text-anchor="middle">${encodeURIComponent(movieTitle)}</text><text x="50%" y="55%" fill="%23f59e0b" font-family="sans-serif" font-size="20" text-anchor="middle">★ Spotlight Cinema</text></svg>`;
+    setImageFallbacks((prev) => ({
+      ...prev,
+      [id]: svgFallback
+    }));
+  };
+
   const handleStartDrag = (clientX) => {
     isPointerDown.current = true;
     dragStartX.current = clientX;
@@ -293,14 +312,12 @@ const HeroSection = ({
     isPointerDown.current = false;
     setIsDragging(false);
 
-    const threshold = 40;
+    const threshold = 35;
     if (dragOffset < -threshold) {
-      // Swiped Left -> Next
       playSound('whoosh');
       setSpotlightIndex((prev) => (prev + 1) % totalSpotlights);
       setTimerKey((k) => k + 1);
     } else if (dragOffset > threshold) {
-      // Swiped Right -> Previous
       playSound('whoosh');
       setSpotlightIndex((prev) => (prev - 1 + totalSpotlights) % totalSpotlights);
       setTimerKey((k) => k + 1);
@@ -308,7 +325,6 @@ const HeroSection = ({
     setDragOffset(0);
   };
 
-  // 6-Second Live Auto-Rotation Timer
   useEffect(() => {
     const rotationTimer = setInterval(() => {
       setSpotlightIndex((prev) => (prev + 1) % totalSpotlights);
@@ -338,16 +354,16 @@ const HeroSection = ({
 
   return (
     <section className="flagship-cinema-stage">
-      {/* Multi-layer Persistent Poster Hero Background */}
+      {/* Multi-layer Backdrop Layer */}
       <div className="stage-backdrops-container" aria-hidden="true">
-        {validSpotlights.map((movie, idx) => {
+        {SPOTLIGHT_MOVIES_DATA.map((movie, idx) => {
           const isCurrent = idx === (spotlightIndex % totalSpotlights);
           return (
             <div
               key={`bg-${movie.imdbID}`}
               className={`stage-panoramic-backdrop-layer ${isCurrent ? 'active' : ''}`}
               style={{
-                backgroundImage: `url(${movie.poster})`
+                backgroundImage: `url(${getPosterUrl(movie)})`
               }}
             />
           );
@@ -358,61 +374,88 @@ const HeroSection = ({
       <div className="stage-scrim-radial" aria-hidden="true" />
       <div className="stage-scrim-left" aria-hidden="true" />
       <div className="stage-scrim-bottom" aria-hidden="true" />
+      <div className="stage-scrim-top" aria-hidden="true" />
 
       {/* Main Inner Stage Wrapper */}
       <div className="stage-inner-wrapper">
         {/* ==========================================
-            LEFT: CINEMA COCKPIT CONSOLE (Clean, Minimalist)
+            LEFT: CINEMA COCKPIT CONSOLE (Clean & Minimalist)
             ========================================== */}
         <div
           className="cinema-cockpit-console"
           key={`cockpit-${currentSpotlight.imdbID}`}
-          onClick={handleOpenMovie}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') handleOpenMovie();
-          }}
-          title={`Explore ${currentSpotlight.name}`}
         >
           {/* Cinematic Title */}
-          <h2 className="cockpit-title">
-            {currentSpotlight.name}{' '}
-            <span className="cockpit-year-tag">({currentSpotlight.year})</span>
-          </h2>
+          <div className="cockpit-title-block">
+            <h2
+              className="cockpit-title"
+              onClick={handleOpenMovie}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') handleOpenMovie();
+              }}
+              title={`Explore ${currentSpotlight.name}`}
+            >
+              {currentSpotlight.name}{' '}
+              <span className="cockpit-year-tag">({currentSpotlight.year})</span>
+            </h2>
+          </div>
 
           {/* Tagline */}
-          <p className="cockpit-tagline">"{currentSpotlight.tagline}"</p>
+          {currentSpotlight.tagline && (
+            <p className="cockpit-tagline">"{currentSpotlight.tagline}"</p>
+          )}
 
-          {/* Technical Specs Badges */}
+          {/* Netflix Signature Specs Row (Match %, IMDb, Rating, Quality) */}
           <div className="cockpit-spec-row">
+            <span className="spec-badge-match">98% Match</span>
             <span className="spec-badge-gold">★ {currentSpotlight.rating} IMDb</span>
-            <span className="spec-votes-count">({currentSpotlight.votes})</span>
+            {currentSpotlight.votes && (
+              <span className="spec-votes-count">({currentSpotlight.votes})</span>
+            )}
             <span className="spec-badge-neon">{currentSpotlight.runtime}</span>
             <span className="spec-badge-age">{currentSpotlight.rated}</span>
-            <span className="spec-badge-neon">DOLBY VISION</span>
+            <span className="spec-badge-tech">4K Ultra HD</span>
+            <span className="spec-badge-tech">Dolby Atmos</span>
           </div>
 
-          {/* Director & Leading Cast */}
-          <div className="cockpit-credits-row">
-            <span className="credits-director">
-              Directed by <strong>{currentSpotlight.director}</strong>
-            </span>
-            <span className="credits-cast">
-              Starring <strong>{currentSpotlight.cast}</strong>
-            </span>
-          </div>
+          {/* Plot Overview */}
+          {currentSpotlight.plot && (
+            <p className="cockpit-plot-synopsis">{currentSpotlight.plot}</p>
+          )}
 
-          {/* Genre Capsule Pills */}
-          <div className="cockpit-genre-chips">
-            {currentSpotlight.genres.map((g) => (
-              <span key={g} className="cockpit-genre-pill">
-                {g}
-              </span>
-            ))}
-          </div>
+          {/* Director & Cast Row */}
+          {(currentSpotlight.director || currentSpotlight.cast) && (
+            <div className="cockpit-credits-row">
+              {currentSpotlight.director && (
+                <span className="credits-director">
+                  <strong>Director:</strong> {currentSpotlight.director}
+                </span>
+              )}
+              {currentSpotlight.director && currentSpotlight.cast && (
+                <span className="credits-divider">•</span>
+              )}
+              {currentSpotlight.cast && (
+                <span className="credits-cast">
+                  <strong>Starring:</strong> {currentSpotlight.cast}
+                </span>
+              )}
+            </div>
+          )}
 
-          {/* Primary Action Button Cluster */}
+          {/* Genre Pills */}
+          {currentSpotlight.genres && currentSpotlight.genres.length > 0 && (
+            <div className="cockpit-genre-chips">
+              {currentSpotlight.genres.map((g) => (
+                <span key={g} className="cockpit-genre-pill">
+                  {g}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Primary Action Button Cluster (Netflix/Hotstar Inspired) */}
           <div className="cockpit-cta-group">
             <button
               type="button"
@@ -421,50 +464,44 @@ const HeroSection = ({
                 e.stopPropagation();
                 handleOpenMovie();
               }}
-              title="Explore full movie details, cast & reviews"
+              title="Explore full movie details"
             >
-              <span>Explore Cinema Details</span>
+              <span className="cta-play-icon">▶</span>
+              <span>Explore Details</span>
               <span className="cta-arrow-glow">→</span>
             </button>
 
             {onWatchTrailer && (
               <button
                 type="button"
-                className="cockpit-watchlist-btn"
+                className="cockpit-watchlist-btn cta-trailer-btn"
                 onClick={(e) => {
                   e.stopPropagation();
                   onWatchTrailer(currentSpotlight);
                 }}
-                title={
-                  currentSpotlight.mood === 'Series' || currentSpotlight.mood === 'Anime'
-                    ? 'View official backdrop & media'
-                    : 'Watch official HD trailer'
-                }
+                title="Watch official trailer"
               >
-                <span>
-                  {currentSpotlight.mood === 'Series' || currentSpotlight.mood === 'Anime'
-                    ? '🖼 View Backdrop'
-                    : '▶ Watch Trailer'}
-                </span>
+                <span>🎬 Watch Trailer</span>
               </button>
             )}
 
             <button
               type="button"
               className={`cockpit-watchlist-btn ${isWatchlisted(currentSpotlight) ? 'active' : ''}`}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 playSound('click');
                 if (onToggleWatchlist) onToggleWatchlist(currentSpotlight);
               }}
-              title={isWatchlisted(currentSpotlight) ? 'Remove from Watchlist' : 'Add to Watchlist'}
+              title={isWatchlisted(currentSpotlight) ? 'Remove from My List' : 'Add to My List'}
             >
-              <span>{isWatchlisted(currentSpotlight) ? '★ In Watchlist' : '+ Add to Watchlist'}</span>
+              <span>{isWatchlisted(currentSpotlight) ? '✓ In My List' : '+ My List'}</span>
             </button>
           </div>
         </div>
 
         {/* ==========================================
-            RIGHT: 3D DEPTH POSTER DECK & INTERACTIVE ORBIT (With Drag / Swipe)
+            RIGHT: 3D DEPTH POSTER DECK, DRAGGABLE ORBIT & DOT NAVIGATION
             ========================================== */}
         <div className="cinema-3d-deck-stage">
           <div
@@ -484,7 +521,7 @@ const HeroSection = ({
                 : undefined
             }
           >
-            {validSpotlights.map((movie, idx) => {
+            {SPOTLIGHT_MOVIES_DATA.map((movie, idx) => {
               const activeIdx = spotlightIndex % totalSpotlights;
               let diff = idx - activeIdx;
               if (diff > totalSpotlights / 2) diff -= totalSpotlights;
@@ -523,7 +560,7 @@ const HeroSection = ({
                 >
                   <div className={`center-poster-frame ${isCenter ? 'is-active-frame' : ''}`}>
                     <img
-                      src={movie.poster}
+                      src={getPosterUrl(movie)}
                       alt={movie.name}
                       className="deck-poster-img center-img"
                       referrerPolicy="no-referrer"
@@ -542,24 +579,39 @@ const HeroSection = ({
             })}
           </div>
 
-          {/* Interactive Poster Gallery with Integrated Timer Progress Line */}
-          <div className="hero-poster-gallery" role="tablist" aria-label="Spotlight movie thumbnails">
-            {validSpotlights.map((movie, idx) => {
+          {/* Interactive Poster Gallery Menu (Seamless Draggable Strip) */}
+          <div
+            className={`hero-poster-gallery ${isDragging ? 'is-dragging' : ''}`}
+            role="tablist"
+            aria-label="Spotlight movie thumbnails"
+            onMouseDown={(e) => handleStartDrag(e.clientX)}
+            onMouseMove={(e) => handleMoveDrag(e.clientX)}
+            onMouseUp={handleEndDrag}
+            onMouseLeave={handleEndDrag}
+            onTouchStart={(e) => handleStartDrag(e.touches[0].clientX)}
+            onTouchMove={(e) => handleMoveDrag(e.touches[0].clientX)}
+            onTouchEnd={handleEndDrag}
+          >
+            {SPOTLIGHT_MOVIES_DATA.map((movie, idx) => {
               const isActive = idx === (spotlightIndex % totalSpotlights);
               return (
                 <button
                   type="button"
                   key={`gallery-item-${movie.imdbID}`}
                   className={`gallery-thumb-card ${isActive ? 'active' : ''}`}
-                  onClick={() => handleDeckSelect(idx)}
+                  onClick={() => {
+                    if (Math.abs(dragOffset) > 10) return;
+                    handleDeckSelect(idx);
+                  }}
                   title={`${movie.name} (${movie.year}) - Click to spotlight`}
                   role="tab"
                   aria-selected={isActive}
                 >
                   <img
-                    src={movie.poster}
+                    src={getPosterUrl(movie)}
                     alt={movie.name}
                     className="gallery-thumb-img"
+                    referrerPolicy="no-referrer"
                     loading="lazy"
                     draggable={false}
                     onError={() => handleImageError(movie.imdbID)}
@@ -576,6 +628,24 @@ const HeroSection = ({
               );
             })}
           </div>
+
+          {/* Modern Dot Navigation System */}
+          <div className="hero-dots-navigation" role="tablist" aria-label="Spotlight navigation dots">
+            {SPOTLIGHT_MOVIES_DATA.map((movie, idx) => {
+              const isActive = idx === (spotlightIndex % totalSpotlights);
+              return (
+                <button
+                  type="button"
+                  key={`dot-nav-${movie.imdbID}`}
+                  className={`hero-nav-dot ${isActive ? 'active' : ''}`}
+                  onClick={() => handleDeckSelect(idx)}
+                  title={`Switch to ${movie.name}`}
+                  role="tab"
+                  aria-selected={isActive}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
@@ -583,3 +653,5 @@ const HeroSection = ({
 };
 
 export default HeroSection;
+
+

@@ -94,6 +94,7 @@ const Body = ({
           searchTerm={searchTerm}
           errorMessage={errorMessage}
           onQuickSearch={onQuickSearch}
+          onBackToHome={onBackToResults}
         />
       )}
 
@@ -122,10 +123,29 @@ const Body = ({
         <div className="animate-fade-in">
           {/* Header Bar */}
           <div className="section-header-bar">
-            <h2 className="section-title">
-              <span>Results for</span>
-              <span className="query-highlight">"{searchTerm}"</span>
-            </h2>
+            <div className="section-header-left">
+              <button
+                type="button"
+                className="page-back-action-btn results-back-btn"
+                onClick={onBackToResults}
+                title="Go back to Home"
+              >
+                <span className="btn-arrow">←</span>
+                <span>Back to Home</span>
+              </button>
+
+              <div className="header-title-group">
+                <div className="page-breadcrumbs mini-crumbs">
+                  <span className="crumb-item" onClick={onBackToResults} style={{ cursor: 'pointer' }}>Home</span>
+                  <span className="crumb-separator">›</span>
+                  <span className="crumb-active">{activeGenre ? `Category: ${activeGenre}` : `Search: ${searchTerm}`}</span>
+                </div>
+                <h2 className="section-title">
+                  <span>Results for</span>
+                  <span className="query-highlight">"{searchTerm || activeGenre}"</span>
+                </h2>
+              </div>
+            </div>
             <span className="results-count-badge">
               {processedResults.length} {processedResults.length === 1 ? 'Title' : 'Titles'} Shown
             </span>

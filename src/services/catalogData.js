@@ -4,6 +4,41 @@ export const SPOTLIGHT_MOVIES = SPOTLIGHT_MOVIES_DATA;
 
 export const GENRE_LIST = [
   {
+    name: 'Watch Free Movies',
+    query: 'Watch Free Movies',
+    bg: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80'
+  },
+  {
+    name: 'Bollywood Cinema',
+    query: 'Bollywood',
+    bg: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=600&q=80'
+  },
+  {
+    name: 'South Indian Cinema',
+    query: 'Tollywood',
+    bg: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80'
+  },
+  {
+    name: 'Indian Web Series',
+    query: 'Indian Series',
+    bg: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?auto=format&fit=crop&w=600&q=80'
+  },
+  {
+    name: 'Malayalam Cinema',
+    query: 'Malayalam',
+    bg: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=600&q=80'
+  },
+  {
+    name: 'Bengali Cinema',
+    query: 'Bengali',
+    bg: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=600&q=80'
+  },
+  {
+    name: 'Punjabi Cinema',
+    query: 'Punjabi',
+    bg: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80'
+  },
+  {
     name: 'Action',
     query: 'Action',
     bg: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80'
@@ -77,41 +112,6 @@ export const GENRE_LIST = [
     name: 'Romance',
     query: 'Romance',
     bg: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80'
-  },
-  {
-    name: 'Bollywood Cinema',
-    query: 'Bollywood',
-    bg: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=600&q=80'
-  },
-  {
-    name: 'South Indian Cinema',
-    query: 'Tollywood',
-    bg: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80'
-  },
-  {
-    name: 'Malayalam Cinema',
-    query: 'Malayalam',
-    bg: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=600&q=80'
-  },
-  {
-    name: 'Bengali Cinema',
-    query: 'Bengali',
-    bg: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=600&q=80'
-  },
-  {
-    name: 'Nollywood Cinema',
-    query: 'Nollywood',
-    bg: 'https://images.unsplash.com/photo-1514306191717-452ec28c7814?auto=format&fit=crop&w=600&q=80'
-  },
-  {
-    name: 'Indian Web Series',
-    query: 'Indian Series',
-    bg: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?auto=format&fit=crop&w=600&q=80'
-  },
-  {
-    name: 'Punjabi Cinema',
-    query: 'Punjabi',
-    bg: 'https://images.unsplash.com/photo-1514306191717-452ec28c7814?auto=format&fit=crop&w=600&q=80'
   },
   {
     name: 'Kannada Cinema',
@@ -358,4 +358,16 @@ export const INDIAN_CLASSICS_ALL = [
   { id: 'tt0077451', imdbID: 'tt0077451', name: 'Don', year: '1978', type: 'movie', imdbRating: '7.7', genre: ['Action', 'Crime'], poster: 'https://image.tmdb.org/t/p/w500/dn2PqV1u14cW6PqV1u14.jpg' },
   { id: 'tt0050868', imdbID: 'tt0050868', name: 'Pyaasa', year: '1957', type: 'movie', imdbRating: '8.3', genre: ['Drama', 'Music'], poster: 'https://image.tmdb.org/t/p/w500/py1PqV1u14cW6PqV1u14.jpg' },
   { id: 'tt0053000', imdbID: 'tt0053000', name: 'Kaagaz Ke Phool', year: '1959', type: 'movie', imdbRating: '7.8', genre: ['Drama', 'Romance'], poster: 'https://image.tmdb.org/t/p/w500/kf2PqV1u14cW6PqV1u14.jpg' }
+];
+
+export const OPEN_SOURCE_MOVIES_ALL = [
+  { id: 'open_tos', imdbID: 'tt2285752', name: 'Tears of Steel', year: '2012', type: 'movie', imdbRating: '7.0', genre: ['Sci-Fi', 'Action', 'Open Source'], poster: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80', backdrop: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=1600&q=80', trailerId: 'vH3s9c2n8pI', plot: 'In a dystopian future Amsterdam, a group of scientists and soldiers attempt to save the world from robotic destruction in this open-source VFX epic.' },
+  { id: 'open_sintel', imdbID: 'tt1727587', name: 'Sintel', year: '2010', type: 'movie', imdbRating: '7.4', genre: ['Animation', 'Fantasy', 'Open Source'], poster: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=600&q=80', backdrop: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=1600&q=80', trailerId: 'eRsGyueVLvQ', plot: 'A lonely young woman named Sintel searches for a baby dragon she nursed to health, facing dragons, thieves, and ancient forces in an open-source fantasy world.' },
+  { id: 'open_bbb', imdbID: 'tt1254929', name: 'Big Buck Bunny', year: '2008', type: 'movie', imdbRating: '7.2', genre: ['Animation', 'Comedy', 'Open Source'], poster: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80', backdrop: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=1600&q=80', trailerId: 'YE7VzlLtp-4', plot: 'A giant, gentle rabbit seeks hilarious vengeance against three mischievous forest bullies who ruin his peaceful day.' },
+  { id: 'open_ed', imdbID: 'tt0885278', name: "Elephants Dream", year: '2006', type: 'movie', imdbRating: '6.4', genre: ['Animation', 'Sci-Fi', 'Open Source'], poster: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80', backdrop: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1600&q=80', trailerId: 'TLkA0RELKeM', plot: 'Two men explore a giant, surreal machine world where reality and imagination blend in the worlds first open-source 3D film.' },
+  { id: 'open_cosmos', imdbID: 'tt4897040', name: 'Cosmos Laundromat', year: '2015', type: 'movie', imdbRating: '7.1', genre: ['Animation', 'Fantasy', 'Open Source'], poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80', backdrop: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1600&q=80', trailerId: 'Y-rmzh0PI3c', plot: 'On a desolate island, a suicidal sheep named Franck meets a salesman who offers him the adventure of a lifetime across parallel universes.' },
+  { id: 'open_spring', imdbID: 'tt9709664', name: 'Spring', year: '2019', type: 'movie', imdbRating: '7.6', genre: ['Animation', 'Fantasy', 'Open Source'], poster: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=600&q=80', backdrop: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1600&q=80', trailerId: 'WhWc3b3KhnY', plot: 'A shepherd girl and her dog face ancient spirits to bring about the end of winter in a visually breathtaking open animated fantasy.' },
+  { id: 'open_notld', imdbID: 'tt0063350', name: 'Night of the Living Dead', year: '1968', type: 'movie', imdbRating: '7.8', genre: ['Horror', 'Public Domain'], poster: 'https://m.media-amazon.com/images/M/MV5BMTYyOTAxMTk0MV5BMl5BanBnXkFtZTcwNTg3MTc3OA@@._V1_SX700_.jpg', backdrop: 'https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&w=1600&q=80', trailerId: '0TAGtIQdnLw', plot: 'A ragtag group of survivors barricade themselves in a farmhouse to withstand an army of flesh-eating ghouls in George Romeros public domain horror classic.' },
+  { id: 'open_charade', imdbID: 'tt0056923', name: 'Charade', year: '1963', type: 'movie', imdbRating: '7.9', genre: ['Mystery', 'Romance', 'Public Domain'], poster: 'https://m.media-amazon.com/images/M/MV5BMjA1Nzg0MTMyNV5BMl5BanBnXkFtZTcwMjM4MTc3OA@@._V1_SX700_.jpg', backdrop: 'https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1600&q=80', trailerId: 'uJ4eJbX499w', plot: 'Audrey Hepburn and Cary Grant star in a romantic suspense masterpiece about a grieving widow pursued by dangerous men for her late husbands hidden fortune.' },
+  { id: 'open_general', imdbID: 'tt0017925', name: 'The General', year: '1926', type: 'movie', imdbRating: '8.1', genre: ['Action', 'Comedy', 'Public Domain'], poster: 'https://m.media-amazon.com/images/M/MV5BYmE1OTVjMmUtMDVlOS00MDU5LWEzODQtNmRjYjBhMTkyMGJkXkEyXkFqcGc@._V1_SX700_.jpg', backdrop: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1600&q=80', trailerId: 'iHlBMk56P6U', plot: 'Buster Keatons legendary Civil War locomotive masterpiece, universally acclaimed as one of the greatest silent action comedies ever made.' }
 ];

@@ -12,19 +12,22 @@ const Nav = ({
   onToggleTheme,
   selectedMovie,
   onBack,
+  canGoBack,
   hasSearchResults
 }) => {
   const quickDiscoveries = [
+    { label: 'Kalki 2898 AD', query: 'Kalki 2898 AD' },
+    { label: 'Stree 2', query: 'Stree 2' },
+    { label: 'Jawan', query: 'Jawan' },
+    { label: 'RRR', query: 'RRR' },
+    { label: 'Panchayat', query: 'Panchayat' },
+    { label: 'Sacred Games', query: 'Sacred Games' },
+    { label: 'Kantara', query: 'Kantara' },
+    { label: 'Mirzapur', query: 'Mirzapur' },
+    { label: 'Manjummel Boys', query: 'Manjummel Boys' },
     { label: 'Dune', query: 'Dune' },
     { label: 'Interstellar', query: 'Interstellar' },
-    { label: 'The Batman', query: 'The Batman' },
-    { label: 'Breaking Bad', query: 'Breaking Bad' },
-    { label: 'Stranger Things', query: 'Stranger Things' },
-    { label: 'Attack on Titan', query: 'Attack on Titan' },
-    { label: 'The Matrix', query: 'The Matrix' },
-    { label: 'Spirited Away', query: 'Spirited Away' },
-    { label: 'Oppenheimer', query: 'Oppenheimer' },
-    { label: 'Game of Thrones', query: 'Game of Thrones' }
+    { label: 'Stranger Things', query: 'Stranger Things' }
   ];
 
   const handleSubmit = (e) => {
@@ -41,15 +44,29 @@ const Nav = ({
   return (
     <header className="navbar-wrapper">
       <div className="navbar">
-        {/* Brand */}
-        <div className="brand" onClick={onResetToHome} title="Go to CineScope Home">
-          <div className="brand-icon">
-            <span>🎬</span>
+        {/* Brand & Back Button */}
+        <div className="navbar-brand-group">
+          <div className="brand" onClick={onResetToHome} title="Go to CineScope Home">
+            <div className="brand-icon">
+              <span>🎬</span>
+            </div>
+            <div className="brand-info">
+              <span className="brand-title">CineScope</span>
+              <span className="brand-tagline">Cinema & TV Explorer</span>
+            </div>
           </div>
-          <div className="brand-info">
-            <span className="brand-title">CineScope</span>
-            <span className="brand-tagline">Cinema & TV Explorer</span>
-          </div>
+
+          {canGoBack && onBack && (
+            <button
+              type="button"
+              className="nav-header-back-btn animate-fade-in"
+              onClick={onBack}
+              title="Go back to previous screen"
+            >
+              <span className="back-arrow">←</span>
+              <span className="back-text">{selectedMovie ? (hasSearchResults ? 'Results' : 'Home') : 'Home'}</span>
+            </button>
+          )}
         </div>
 
         {/* Clean, Standard Search Bar */}

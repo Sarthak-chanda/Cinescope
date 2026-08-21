@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Notfound = ({ searchTerm, errorMessage, onQuickSearch }) => {
+const Notfound = ({ searchTerm, errorMessage, onQuickSearch, onBackToHome }) => {
   const suggestions = [
     'Inception',
     'Interstellar',
@@ -27,6 +27,19 @@ const Notfound = ({ searchTerm, errorMessage, onQuickSearch }) => {
           </>
         )}
       </p>
+
+      {onBackToHome && (
+        <div style={{ marginBottom: '1.5rem' }}>
+          <button
+            type="button"
+            className="page-back-action-btn notfound-home-btn"
+            onClick={onBackToHome}
+          >
+            <span className="btn-arrow">←</span>
+            <span>Return to Home Page</span>
+          </button>
+        </div>
+      )}
 
       <div>
         <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.75rem', fontWeight: '600', textTransform: 'uppercase' }}>

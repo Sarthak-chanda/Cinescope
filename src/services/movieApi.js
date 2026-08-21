@@ -13,7 +13,8 @@ import {
   INDIAN_SERIES_ALL,
   PUNJABI_HITS_ALL,
   KANNADA_HITS_ALL,
-  INDIAN_CLASSICS_ALL
+  INDIAN_CLASSICS_ALL,
+  OPEN_SOURCE_MOVIES_ALL
 } from './catalogData';
 import { fetchBollywoodSubcategory } from './bollywoodApi';
 import { fetchBengaliSubcategory } from './bengaliApi';
@@ -29,10 +30,13 @@ const rotateOmdbKey = () => {
   currentKeyIndex = (currentKeyIndex + 1) % OMDB_KEYS.length;
 };
 
+const TMDB_API_KEYS = ['4f89241199a531b29dbd244a307b2251', '15d2fd48f88cd047e350a84db92b352b', '8424a613a20721c83fa88085d564177d'];
+let tmdbKeyIdx = 0;
+const getTmdbKey = () => TMDB_API_KEYS[tmdbKeyIdx++ % TMDB_API_KEYS.length];
+
 const OMDB_BASE_URL = 'https://www.omdbapi.com/';
-const TVMAZE_BASE_URL = 'https://api.tvmaze.com/';
-const JIKAN_BASE_URL = 'https://api.jikan.moe/v4/';
-const WIKIPEDIA_BASE_URL = 'https://en.wikipedia.org/api/rest_v1/page/summary/';
+const TMDB_BASE_URL = 'https://api.themoviedb.org/3/';
+const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/';
 
 const CACHE_STORAGE_KEY = 'cinescope_hybrid_cache_v5';
 const PRELOADED_CONTENT_KEY = 'cinescope_preloaded_content_v1';
@@ -146,6 +150,27 @@ export const setPreloadedContentToLocalMemory = (key, data) => {
   } catch {
     // Fail-safe
   }
+};
+
+/**
+ * Poster Quality Enhancer
+ * Upgrades Amazon/OMDB thumbnail images to high-definition 700px width posters
+ */
+export const normalizePosterUrl = (url) => {
+  if (!url || url === 'N/A' || typeof url !== 'string' || url.includes('placeholder')) return null;
+  let cleanUrl = url.trim();
+  if (cleanUrl.includes('image.tmdb.org')) {
+    return cleanUrl;
+  }
+  if (cleanUrl.includes('media-amazon.com') || cleanUrl.includes('ia.media-imdb.com')) {
+    // Standardize Amazon CDN URLs to clean _V1_.jpg or SX300 to prevent 403 hotlink blocks
+    cleanUrl = cleanUrl
+      .replace(/_SX\d+_/g, '_SX300_')
+      .replace(/_UX\d+_/g, '_UX300_')
+      .replace(/_SY\d+_/g, '_SY450_')
+      .replace(/_UY\d+_/g, '_UY450_');
+  }
+  return cleanUrl;
 };
 
 /**
@@ -912,6 +937,7 @@ const ALL_CURATED_LIST = [
   ...PUNJABI_HITS_ALL,
   ...KANNADA_HITS_ALL,
   ...INDIAN_CLASSICS_ALL,
+  ...OPEN_SOURCE_MOVIES_ALL,
   ...SCIFI_EXPANDED_ALL,
   ...CRITIC_RECOMMENDED_ALL,
   ...TOP_SERIES_ALL,
@@ -928,24 +954,27 @@ ALL_CURATED_LIST.forEach((item) => {
 });
 
 /**
- * Wikipedia API: Enrich summary and backdrop banner
+ * TMDB Overview & Backdrop Provider (Replaces Wikipedia summary)
  */
 export const fetchWikipediaSummary = async (title) => {
   if (!title) return null;
-  const cacheKey = `wiki:${title.toLowerCase()}`;
+  const cacheKey = `tmdb_summary:${title.toLowerCase()}`;
   const cached = getCachedData(cacheKey);
   if (cached) return cached;
 
   try {
-    const url = `${WIKIPEDIA_BASE_URL}${encodeURIComponent(title.trim())}`;
+    const apiKey = getTmdbKey();
+    const url = `${TMDB_BASE_URL}search/multi?api_key=${apiKey}&query=${encodeURIComponent(title.trim())}&page=1`;
     const res = await fetch(url, { signal: AbortSignal.timeout(3500) });
     if (!res.ok) return null;
     const data = await res.json();
+    const match = data?.results?.[0];
+    if (!match) return null;
     const result = {
-      description: data.description,
-      extract: data.extract,
-      thumbnail: data.thumbnail?.source || null,
-      originalImage: data.originalimage?.source || null
+      description: match.overview || null,
+      extract: match.overview || null,
+      thumbnail: match.poster_path ? `${TMDB_IMAGE_BASE}w500${match.poster_path}` : null,
+      originalImage: match.backdrop_path ? `${TMDB_IMAGE_BASE}w1280${match.backdrop_path}` : null
     };
     setCachedData(cacheKey, result);
     return result;
@@ -955,46 +984,41 @@ export const fetchWikipediaSummary = async (title) => {
 };
 
 /**
- * TVmaze API: Search TV Shows with Cast & Episodes
+ * TMDB API: Search TV Shows with Cast & Details (Replaces TVmaze)
  */
 export const searchTVmaze = async (query) => {
   const trimmed = query.trim();
   if (!trimmed || trimmed.length < 2) return [];
 
-  const cacheKey = `tvmaze_search:${trimmed}`;
+  const cacheKey = `tmdb_tv_search:${trimmed}`;
   const cached = getCachedData(cacheKey);
   if (cached) return cached;
 
   try {
-    const url = `${TVMAZE_BASE_URL}search/shows?q=${encodeURIComponent(trimmed)}`;
+    const apiKey = getTmdbKey();
+    const url = `${TMDB_BASE_URL}search/tv?api_key=${apiKey}&query=${encodeURIComponent(trimmed)}&page=1`;
     const response = await fetch(url, { signal: AbortSignal.timeout(4000) });
     if (!response.ok) return [];
 
     const data = await response.json();
-    const results = (data || []).map((entry) => {
-      const show = entry.show;
-      const year = show.premiered ? show.premiered.slice(0, 4) : '';
-      const endYear = show.ended ? show.ended.slice(0, 4) : (show.status === 'Running' ? 'Present' : '');
-      const yearDisplay = year ? (endYear ? `${year}–${endYear}` : year) : '';
-
+    const results = (data.results || []).map((show) => {
+      const year = show.first_air_date ? show.first_air_date.slice(0, 4) : 'TV Series';
       return {
-        id: `tv_${show.id}`,
+        id: `tmdb_tv_${show.id}`,
+        tmdbId: show.id,
         tvmazeId: show.id,
-        imdbID: show.externals?.imdb || null,
-        name: show.name,
-        year: yearDisplay || 'TV Series',
+        imdbID: null,
+        name: show.name || show.original_name,
+        year: year,
         type: 'series',
-        genres: show.genres || ['TV Series'],
-        imdbRating: show.rating?.average ? String(show.rating.average) : null,
-        poster: show.image?.medium || show.image?.original || null,
-        backdrop: show.image?.original || null,
-        plot: stripHtml(show.summary) || 'No synopsis available.',
-        network: show.network?.name || show.webChannel?.name || 'Network',
-        status: show.status,
-        officialSite: show.officialSite,
-        source: 'tvmaze'
+        genres: ['TV Series'],
+        imdbRating: show.vote_average ? show.vote_average.toFixed(1) : null,
+        poster: show.poster_path ? `${TMDB_IMAGE_BASE}w500${show.poster_path}` : null,
+        backdrop: show.backdrop_path ? `${TMDB_IMAGE_BASE}w1280${show.backdrop_path}` : null,
+        plot: show.overview || 'No synopsis available.',
+        source: 'tmdb'
       };
-    });
+    }).filter((s) => s.poster);
 
     setCachedData(cacheKey, results);
     return results;
@@ -1004,78 +1028,52 @@ export const searchTVmaze = async (query) => {
 };
 
 /**
- * TVmaze API: Fetch Full TV Details with Seasons, Episodes, and Cast Photos
+ * TMDB API: Fetch Full TV Details with Seasons & Cast (Replaces TVmaze)
  */
-export const fetchTVmazeDetails = async (tvmazeId) => {
-  if (!tvmazeId) return null;
-  const cacheKey = `tvmaze_detail:${tvmazeId}`;
+export const fetchTVmazeDetails = async (showId) => {
+  if (!showId) return null;
+  const cacheKey = `tmdb_tv_detail:${showId}`;
   const cached = getCachedData(cacheKey);
   if (cached) return cached;
 
   try {
-    const url = `${TVMAZE_BASE_URL}shows/${tvmazeId}?embed[]=episodes&embed[]=cast&embed[]=seasons`;
+    const apiKey = getTmdbKey();
+    const url = `${TMDB_BASE_URL}tv/${showId}?api_key=${apiKey}&append_to_response=credits,external_ids`;
     const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
     if (!response.ok) return null;
 
     const data = await response.json();
-    const episodesRaw = data._embedded?.episodes || [];
-    const castRaw = data._embedded?.cast || [];
+    const castRaw = data.credits?.cast || [];
 
-    // Group episodes by season
-    const seasonsMap = {};
-    episodesRaw.forEach((ep) => {
-      const sNum = ep.season || 1;
-      if (!seasonsMap[sNum]) {
-        seasonsMap[sNum] = [];
-      }
-      seasonsMap[sNum].push({
-        id: ep.id,
-        number: ep.number,
-        name: ep.name,
-        season: ep.season,
-        airdate: ep.airdate,
-        runtime: ep.runtime ? `${ep.runtime} min` : null,
-        rating: ep.rating?.average ? String(ep.rating.average) : null,
-        image: ep.image?.medium || ep.image?.original || null,
-        summary: stripHtml(ep.summary)
-      });
-    });
-
-    // Cast members with photo and role
     const castList = castRaw.slice(0, 16).map((c) => ({
-      name: c.person?.name || 'Unknown',
-      character: c.character?.name || 'Cast',
-      photo: c.person?.image?.medium || c.person?.image?.original || null
+      name: c.name || 'Unknown',
+      character: c.character || 'Cast',
+      photo: c.profile_path ? `${TMDB_IMAGE_BASE}w185${c.profile_path}` : null
     }));
 
-    const year = data.premiered ? data.premiered.slice(0, 4) : '';
-    const endYear = data.ended ? data.ended.slice(0, 4) : (data.status === 'Running' ? 'Present' : '');
+    const year = data.first_air_date ? data.first_air_date.slice(0, 4) : '';
+    const endYear = data.in_production ? 'Present' : (data.last_air_date ? data.last_air_date.slice(0, 4) : '');
 
     const details = {
-      id: `tv_${data.id}`,
+      id: `tmdb_tv_${data.id}`,
+      tmdbId: data.id,
       tvmazeId: data.id,
-      imdbID: data.externals?.imdb || null,
+      imdbID: data.external_ids?.imdb_id || null,
       name: data.name,
       year: year ? (endYear ? `${year}–${endYear}` : year) : '',
       type: 'series',
-      genre: data.genres || ['Drama', 'TV Series'],
-      imdbRating: data.rating?.average ? String(data.rating.average) : 'N/A',
-      poster: data.image?.original || data.image?.medium || null,
-      backdrop: data.image?.original || null,
-      plot: stripHtml(data.summary),
-      language: data.language || 'English',
+      genre: (data.genres || []).map((g) => g.name),
+      imdbRating: data.vote_average ? data.vote_average.toFixed(1) : 'N/A',
+      poster: data.poster_path ? `${TMDB_IMAGE_BASE}w500${data.poster_path}` : null,
+      backdrop: data.backdrop_path ? `${TMDB_IMAGE_BASE}w1280${data.backdrop_path}` : null,
+      plot: data.overview || 'No synopsis available.',
+      language: data.original_language || 'English',
       status: data.status,
-      network: data.network?.name || data.webChannel?.name || null,
-      officialSite: data.officialSite,
-      seasonsCount: Object.keys(seasonsMap).length,
-      seasonsMap: seasonsMap,
-      episodes: episodesRaw,
+      seasonsCount: data.number_of_seasons || 1,
       castMembers: castList,
       actors: castList.map((c) => c.name),
-      runtime: data.averageRuntime ? `${data.averageRuntime} min` : null,
-      formattedRuntime: data.averageRuntime ? `${data.averageRuntime} mins / ep` : null,
       ratings: {
-        imdb: data.rating?.average ? `${data.rating.average}/10` : null
+        imdb: data.vote_average ? `${data.vote_average.toFixed(1)}/10` : null
       }
     };
 
@@ -1087,46 +1085,42 @@ export const fetchTVmazeDetails = async (tvmazeId) => {
 };
 
 /**
- * Jikan Anime API v4: Search Anime Series & Movies
+ * TMDB API: Search Anime Series & Movies (Replaces Jikan/MAL)
  */
 export const searchJikanAnime = async (query) => {
   const trimmed = query.trim();
   if (!trimmed || trimmed.length < 2) return [];
 
-  const cacheKey = `jikan_search:${trimmed}`;
+  const cacheKey = `tmdb_anime_search:${trimmed}`;
   const cached = getCachedData(cacheKey);
   if (cached) return cached;
 
   try {
-    const url = `${JIKAN_BASE_URL}anime?q=${encodeURIComponent(trimmed)}&limit=10&sfw=true`;
+    const apiKey = getTmdbKey();
+    const url = `${TMDB_BASE_URL}search/tv?api_key=${apiKey}&query=${encodeURIComponent(trimmed)}&page=1`;
     const response = await fetch(url, { signal: AbortSignal.timeout(4000) });
     if (!response.ok) return [];
 
     const data = await response.json();
-    const results = (data.data || []).map((anime) => {
-      const year = anime.year ? String(anime.year) : (anime.aired?.from ? anime.aired.from.slice(0, 4) : 'Anime');
-      const genres = (anime.genres || []).map((g) => g.name);
-
+    const results = (data.results || []).map((anime) => {
+      const year = anime.first_air_date ? anime.first_air_date.slice(0, 4) : 'Anime';
       return {
-        id: `mal_${anime.mal_id}`,
-        malId: anime.mal_id,
+        id: `tmdb_anime_${anime.id}`,
+        malId: anime.id,
+        tmdbId: anime.id,
         imdbID: null,
-        name: anime.title_english || anime.title,
-        japaneseTitle: anime.title_japanese,
+        name: anime.name || anime.original_name,
+        japaneseTitle: anime.original_name,
         year: year,
-        type: anime.type === 'Movie' ? 'movie' : 'anime',
-        genres: genres.length > 0 ? ['Animation', ...genres] : ['Animation', 'Anime'],
-        imdbRating: anime.score ? String(anime.score) : null,
-        poster: anime.images?.jpg?.large_image_url || anime.images?.jpg?.image_url || null,
-        backdrop: anime.images?.jpg?.large_image_url || null,
-        plot: anime.synopsis || 'No synopsis available.',
-        studio: (anime.studios || []).map((s) => s.name).join(', ') || 'Studio',
-        status: anime.status,
-        episodesCount: anime.episodes,
-        trailerId: anime.trailer?.youtube_id || null,
-        source: 'jikan'
+        type: 'anime',
+        genres: ['Animation', 'Anime'],
+        imdbRating: anime.vote_average ? anime.vote_average.toFixed(1) : null,
+        poster: anime.poster_path ? `${TMDB_IMAGE_BASE}w500${anime.poster_path}` : null,
+        backdrop: anime.backdrop_path ? `${TMDB_IMAGE_BASE}w1280${anime.backdrop_path}` : null,
+        plot: anime.overview || 'No synopsis available.',
+        source: 'tmdb'
       };
-    });
+    }).filter((a) => a.poster);
 
     setCachedData(cacheKey, results);
     return results;
@@ -1136,48 +1130,38 @@ export const searchJikanAnime = async (query) => {
 };
 
 /**
- * Jikan Anime API v4: Fetch Complete Anime Details
+ * TMDB API: Fetch Complete Anime Details (Replaces Jikan/MAL)
  */
-export const fetchJikanAnimeDetails = async (malId) => {
-  if (!malId) return null;
-  const cacheKey = `jikan_detail:${malId}`;
+export const fetchJikanAnimeDetails = async (animeId) => {
+  if (!animeId) return null;
+  const cacheKey = `tmdb_anime_detail:${animeId}`;
   const cached = getCachedData(cacheKey);
   if (cached) return cached;
 
   try {
-    const url = `${JIKAN_BASE_URL}anime/${malId}/full`;
+    const apiKey = getTmdbKey();
+    const url = `${TMDB_BASE_URL}tv/${animeId}?api_key=${apiKey}&append_to_response=credits,external_ids`;
     const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
     if (!response.ok) return null;
 
-    const res = await response.json();
-    const a = res.data;
-    if (!a) return null;
-
+    const a = await response.json();
     const genres = (a.genres || []).map((g) => g.name);
-    const studios = (a.studios || []).map((s) => s.name).join(', ');
-    const producers = (a.producers || []).map((p) => p.name).join(', ');
 
     const details = {
-      id: `mal_${a.mal_id}`,
-      malId: a.mal_id,
-      imdbID: null,
-      name: a.title_english || a.title,
-      japaneseTitle: a.title_japanese,
-      year: a.year ? String(a.year) : (a.aired?.from ? a.aired.from.slice(0, 4) : 'Anime'),
-      type: a.type === 'Movie' ? 'movie' : 'anime',
+      id: `tmdb_anime_${a.id}`,
+      malId: a.id,
+      tmdbId: a.id,
+      imdbID: a.external_ids?.imdb_id || null,
+      name: a.name || a.original_name,
+      japaneseTitle: a.original_name,
+      year: a.first_air_date ? a.first_air_date.slice(0, 4) : 'Anime',
+      type: 'anime',
       genre: ['Animation', ...genres],
-      imdbRating: a.score ? String(a.score) : 'N/A',
-      imdbVotes: a.scored_by ? `${a.scored_by.toLocaleString()} MAL votes` : null,
-      poster: a.images?.jpg?.large_image_url || a.images?.jpg?.image_url || null,
-      backdrop: a.images?.jpg?.large_image_url || null,
-      plot: a.synopsis || 'No synopsis available.',
-      director: studios || 'Animation Director',
-      production: producers || studios,
-      trailerId: a.trailer?.youtube_id || null,
-      duration: a.duration,
-      status: a.status,
-      totalSeasons: a.episodes ? `${a.episodes} Episodes` : null,
-      website: a.url
+      imdbRating: a.vote_average ? a.vote_average.toFixed(1) : 'N/A',
+      poster: a.poster_path ? `${TMDB_IMAGE_BASE}w500${a.poster_path}` : null,
+      backdrop: a.backdrop_path ? `${TMDB_IMAGE_BASE}w1280${a.backdrop_path}` : null,
+      plot: a.overview || 'No synopsis available.',
+      status: a.status
     };
 
     setCachedData(cacheKey, details);
@@ -1258,17 +1242,24 @@ export const fetchMovieDetails = async ({ title = '', imdbID = '', year = '', ty
 
   // 1. First check if we have a rich curated local entry with full metadata
   const targetId = imdbID || (title ? Array.from(UNIQUE_CURATED_MAP.values()).find(m => m.name.toLowerCase() === title.toLowerCase())?.imdbID : null);
-  const curatedMatch = targetId ? UNIQUE_CURATED_MAP.get(targetId) : null;
+  const curatedMatch = (targetId ? UNIQUE_CURATED_MAP.get(targetId) : null) || (title ? Array.from(UNIQUE_CURATED_MAP.values()).find(m => m.name.toLowerCase() === title.toLowerCase()) : null);
 
-  const queryParam = imdbID ? `i=${encodeURIComponent(imdbID)}` : `t=${encodeURIComponent(title.trim())}`;
-  const yearParam = year ? `&y=${encodeURIComponent(year.trim())}` : '';
-  const typeParam = type && type !== 'all' ? `&type=${encodeURIComponent(type.trim())}` : '';
   const cacheKey = `detail:${imdbID || title.trim()}:${year}:${type}`;
 
   const cached = getCachedData(cacheKey);
   if (cached) {
     return { data: cached, fromCache: true };
   }
+
+  // If item is a local curated entry without standard tt IMDB ID, return curatedMatch directly
+  if (curatedMatch && (!imdbID || !imdbID.startsWith('tt'))) {
+    setCachedData(cacheKey, curatedMatch);
+    return { data: curatedMatch, fromCache: true };
+  }
+
+  const queryParam = imdbID ? `i=${encodeURIComponent(imdbID)}` : `t=${encodeURIComponent(title.trim())}`;
+  const yearParam = year ? `&y=${encodeURIComponent(year.trim())}` : '';
+  const typeParam = type && type !== 'all' ? `&type=${encodeURIComponent(type.trim())}` : '';
 
   // 2. Abort previous detail request
   if (currentDetailController) {
@@ -1372,7 +1363,12 @@ export const resolveCategoryMovies = async (queryStr) => {
   const q = queryStr.trim().toLowerCase();
 
   try {
-    // 0. Upcoming Movie Categories
+    // 0. Free Stream & Open Source Category
+    if (q.includes('watch free') || q.includes('free stream') || q.includes('open source')) {
+      return OPEN_SOURCE_MOVIES_ALL;
+    }
+
+    // 0b. Upcoming Movie Categories
     if (q.includes('hollywood upcoming') || q.includes('upcoming hollywood')) {
       return HOLLYWOOD_UPCOMING;
     }
@@ -1746,15 +1742,20 @@ export const searchMoviesList = async ({ query = '', page = 1, type = '', year =
           }
           const d = await res.json();
           if (d.Response === 'True' && d.Search) {
-            return d.Search.map((item) => ({
-              id: item.imdbID,
-              imdbID: item.imdbID,
-              name: item.Title,
-              year: formatTimelineYear(item.Year, item.Title),
-              type: item.Type || 'movie',
-              poster: item.Poster && item.Poster !== 'N/A' ? item.Poster : null,
-              imdbRating: null
-            }));
+            return d.Search
+              .filter((item) => {
+                const t = (item.Type || '').toLowerCase();
+                return t === 'movie' || t === 'series' || t === 'tv';
+              })
+              .map((item) => ({
+                id: item.imdbID,
+                imdbID: item.imdbID,
+                name: item.Title,
+                year: formatTimelineYear(item.Year, item.Title),
+                type: item.Type === 'series' ? 'series' : 'movie',
+                poster: normalizePosterUrl(item.Poster),
+                imdbRating: null
+              }));
           }
           return [];
         } catch (err) {
@@ -1772,7 +1773,7 @@ export const searchMoviesList = async ({ query = '', page = 1, type = '', year =
       tvResults.value.forEach((item) => {
         const key = item.imdbID || item.id;
         if (!resultsMap.has(key)) {
-          resultsMap.set(key, item);
+          resultsMap.set(key, { ...item, poster: normalizePosterUrl(item.poster) });
         }
       });
     }
@@ -1782,7 +1783,7 @@ export const searchMoviesList = async ({ query = '', page = 1, type = '', year =
       jikanResults.value.forEach((item) => {
         const key = item.id || `mal_${item.malId}`;
         if (!resultsMap.has(key)) {
-          resultsMap.set(key, item);
+          resultsMap.set(key, { ...item, poster: normalizePosterUrl(item.poster) });
         }
       });
     }
@@ -1791,22 +1792,36 @@ export const searchMoviesList = async ({ query = '', page = 1, type = '', year =
     if (omdbResults.status === 'fulfilled' && Array.isArray(omdbResults.value)) {
       omdbResults.value.forEach((item) => {
         const key = item.imdbID || item.id;
+        const normPoster = normalizePosterUrl(item.poster);
         if (resultsMap.has(key)) {
           const existing = resultsMap.get(key);
-          resultsMap.set(key, { ...existing, poster: existing.poster || item.poster });
+          resultsMap.set(key, { ...existing, poster: existing.poster || normPoster });
         } else {
-          resultsMap.set(key, item);
+          resultsMap.set(key, { ...item, poster: normPoster });
         }
       });
     }
 
     let combined = Array.from(resultsMap.values());
 
+    // Strict content filtering: ONLY allow actual Movies, TV Series, and Anime (reject games, episodes, etc.)
+    const ALLOWED_TYPES = new Set(['movie', 'series', 'tv', 'anime']);
+    combined = combined.filter((m) => {
+      if (!m || !m.name) return false;
+      const rawType = (m.type || m.Type || 'movie').toLowerCase();
+      if (rawType === 'game' || rawType === 'episode' || rawType === 'video' || rawType === 'music') return false;
+      if (!ALLOWED_TYPES.has(rawType)) return false;
+      return true;
+    }).map((m) => ({
+      ...m,
+      poster: normalizePosterUrl(m.poster)
+    }));
+
     // Filter by type if explicitly requested
     if (type && type !== 'all') {
       combined = combined.filter((m) => {
-        if (type === 'movie') return m.type === 'movie';
-        if (type === 'series') return m.type === 'series';
+        if (type === 'movie') return m.type === 'movie' || !m.type;
+        if (type === 'series') return m.type === 'series' || m.type === 'tv';
         if (type === 'anime') return m.type === 'anime' || (m.genre && m.genre.includes('Animation'));
         return true;
       });
@@ -1877,45 +1892,48 @@ export const getGenreMovies = (genreName, sortBy = 'rating') => {
  * Retrieves live spotlight cinema data with guaranteed 16:9 widescreen backdrops
  */
 export const fetchHeroSpotlightMovies = async () => {
-  const cacheKey = 'hero_spotlight_movies_v2';
+  const cacheKey = 'hero_spotlight_movies_tmdb_v3';
   const cached = getCachedData(cacheKey);
   if (cached && cached.length > 0) return cached;
 
   try {
-    // Dynamic query to TVmaze top rated shows + TMDB CDN verified hits
-    const response = await fetch('https://api.tvmaze.com/shows?page=1', {
+    const apiKey = getTmdbKey();
+    const response = await fetch(`${TMDB_BASE_URL}trending/all/day?api_key=${apiKey}`, {
       signal: AbortSignal.timeout(4000)
     });
     if (!response.ok) return null;
 
     const data = await response.json();
-    const topRated = (data || [])
-      .filter((s) => s.rating?.average && s.rating.average >= 8.5 && s.image?.original)
-      .slice(0, 5)
+    const topRated = (data.results || [])
+      .filter((s) => s.vote_average && s.vote_average >= 7.2 && (s.poster_path || s.backdrop_path))
+      .slice(0, 8)
       .map((s) => {
-        const year = formatTimelineYear(s.premiered ? s.premiered.slice(0, 4) : '2024', s.name, s.status, s.ended);
+        const title = s.title || s.name || s.original_title || s.original_name;
+        const release = s.release_date || s.first_air_date || '2024';
+        const year = release.slice(0, 4);
         return {
-          imdbID: s.externals?.imdb ? s.externals.imdb : `tv_${s.id}`,
-          name: s.name,
+          imdbID: `tmdb_${s.id}`,
+          tmdbId: s.id,
+          name: title,
           year: year,
-          rating: String(s.rating.average),
-          votes: '250,000+',
-          rated: 'TV-MA',
-          runtime: s.averageRuntime ? `${s.averageRuntime} min / ep` : 'Series',
-          rankBadge: 'Global Top Stream',
-          director: s.network?.name || 'Top Studio Production',
-          cast: (s.genres || []).join(', ') || 'Drama, Adventure',
-          genres: s.genres || ['Drama', 'Thriller'],
-          mood: 'Series',
+          rating: s.vote_average ? s.vote_average.toFixed(1) : '8.5',
+          votes: s.vote_count ? `${s.vote_count.toLocaleString()}+` : '100,000+',
+          rated: s.adult ? 'R' : 'PG-13',
+          runtime: s.media_type === 'tv' ? 'TV Series' : '2h 15m',
+          rankBadge: '#1 Global Spotlight',
+          director: 'Official Production',
+          cast: 'Popular Cast',
+          genres: ['Action', 'Drama', 'Adventure'],
+          mood: s.media_type === 'tv' ? 'Series' : 'Hollywood',
           vibeScore: { intrigue: '97%', spectacle: '95%', drama: '98%' },
-          backdrop: s.image?.original || s.image?.medium,
-          backdropFallback: s.image?.medium || s.image?.original,
-          tagline: stripHtml(s.summary).slice(0, 80) + '...',
-          plot: stripHtml(s.summary),
-          poster: s.image?.original || s.image?.medium,
+          backdrop: s.backdrop_path ? `${TMDB_IMAGE_BASE}w1280${s.backdrop_path}` : `${TMDB_IMAGE_BASE}w500${s.poster_path}`,
+          backdropFallback: s.poster_path ? `${TMDB_IMAGE_BASE}w500${s.poster_path}` : null,
+          tagline: (s.overview || '').slice(0, 80) + '...',
+          plot: s.overview || 'No synopsis available.',
+          poster: s.poster_path ? `${TMDB_IMAGE_BASE}w500${s.poster_path}` : null,
           liveViewers: Math.floor(Math.random() * 1500) + 2000
         };
-      });
+      }).filter((m) => m.poster);
 
     if (topRated.length > 0) {
       setCachedData(cacheKey, topRated);
@@ -1929,31 +1947,33 @@ export const fetchHeroSpotlightMovies = async () => {
 
 /**
  * Specific Live Category API Fetcher
- * Queries specialized APIs (TVmaze for TV shows, Jikan v4 for Anime, OMDb for Blockbusters & Sci-Fi)
+ * Queries TMDB & OMDb (IMDb) exclusively
  */
 export const fetchDynamicCategoryTitles = async (categoryKey) => {
-  const cacheKey = `category_dynamic_${categoryKey}_v2`;
+  const cacheKey = `category_dynamic_${categoryKey}_tmdb_v3`;
   const cached = getCachedData(cacheKey);
   if (cached && cached.length > 0) return cached;
 
   try {
+    const apiKey = getTmdbKey();
     if (categoryKey === 'series') {
-      const res = await fetch('https://api.tvmaze.com/shows?page=0', {
+      const res = await fetch(`${TMDB_BASE_URL}tv/popular?api_key=${apiKey}&page=1`, {
         signal: AbortSignal.timeout(3500)
       });
       if (res.ok) {
         const data = await res.json();
-        const shows = (data || [])
-          .filter((s) => s.rating?.average && s.rating.average >= 7.8 && s.image?.medium)
+        const shows = (data.results || [])
+          .filter((s) => s.poster_path)
           .slice(0, 30)
           .map((s) => ({
-            id: s.externals?.imdb || `tvm_${s.id}`,
-            imdbID: s.externals?.imdb || `tvm_${s.id}`,
-            name: s.name,
-            year: formatTimelineYear(s.premiered ? s.premiered.slice(0, 4) : '2024', s.name, s.status, s.ended),
+            id: `tmdb_tv_${s.id}`,
+            imdbID: `tmdb_tv_${s.id}`,
+            tmdbId: s.id,
+            name: s.name || s.original_name,
+            year: s.first_air_date ? s.first_air_date.slice(0, 4) : 'TV Series',
             type: 'series',
-            imdbRating: String(s.rating.average),
-            poster: s.image?.original || s.image?.medium
+            imdbRating: s.vote_average ? s.vote_average.toFixed(1) : '8.0',
+            poster: `${TMDB_IMAGE_BASE}w500${s.poster_path}`
           }));
         if (shows.length > 0) {
           setCachedData(cacheKey, shows);
@@ -1961,91 +1981,28 @@ export const fetchDynamicCategoryTitles = async (categoryKey) => {
         }
       }
     } else if (categoryKey === 'anime') {
-      try {
-        const query = `
-          query {
-            Page(page: 1, perPage: 40) {
-              media(type: ANIME, sort: [TRENDING_DESC, POPULARITY_DESC]) {
-                id
-                idMal
-                title {
-                  english
-                  romaji
-                  native
-                }
-                coverImage {
-                  extraLarge
-                  large
-                }
-                bannerImage
-                averageScore
-                seasonYear
-                startDate {
-                  year
-                }
-                genres
-              }
-            }
-          }
-        `;
-        const res = await fetch('https://graphql.anilist.co', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({ query }),
-          signal: AbortSignal.timeout(4000)
-        });
-        if (res.ok) {
-          const json = await res.json();
-          const list = json?.data?.Page?.media || [];
-          const animes = list
-            .filter((a) => (a.coverImage?.extraLarge || a.coverImage?.large) && (a.title?.english || a.title?.romaji))
-            .map((a) => {
-              const yr = a.seasonYear || a.startDate?.year || 'Anime';
-              const rating = a.averageScore ? (a.averageScore / 10).toFixed(1) : '8.5';
-              return {
-                id: a.idMal ? `mal_${a.idMal}` : `anilist_${a.id}`,
-                imdbID: a.idMal ? `mal_${a.idMal}` : `anilist_${a.id}`,
-                name: a.title.english || a.title.romaji,
-                year: String(yr),
-                type: 'anime',
-                imdbRating: rating,
-                poster: a.coverImage.extraLarge || a.coverImage.large
-              };
-            });
-          if (animes.length > 0) {
-            setCachedData(cacheKey, animes);
-            return animes;
-          }
-        }
-      } catch {
-        // Fallback to Jikan v4
-        try {
-          const jikanRes = await fetch('https://api.jikan.moe/v4/top/anime?filter=bypopularity&limit=30', {
-            signal: AbortSignal.timeout(3000)
-          });
-          if (jikanRes.ok) {
-            const data = await jikanRes.json();
-            const animes = (data?.data || [])
-              .filter((a) => a.images?.jpg?.image_url && (a.title_english || a.title))
-              .map((a) => ({
-                id: `mal_${a.mal_id}`,
-                imdbID: `mal_${a.mal_id}`,
-                name: a.title_english || a.title,
-                year: a.year ? String(a.year) : 'Anime',
-                type: 'anime',
-                imdbRating: a.score ? String(a.score) : '8.5',
-                poster: a.images?.jpg?.large_image_url || a.images?.jpg?.image_url
-              }));
-            if (animes.length > 0) {
-              setCachedData(cacheKey, animes);
-              return animes;
-            }
-          }
-        } catch {
-          // Graceful fallback to static set
+      const res = await fetch(
+        `${TMDB_BASE_URL}discover/tv?api_key=${apiKey}&with_genres=16&with_original_language=ja&sort_by=popularity.desc&page=1`,
+        { signal: AbortSignal.timeout(3500) }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        const animes = (data.results || [])
+          .filter((a) => a.poster_path)
+          .slice(0, 30)
+          .map((a) => ({
+            id: `tmdb_anime_${a.id}`,
+            imdbID: `tmdb_anime_${a.id}`,
+            tmdbId: a.id,
+            name: a.name || a.original_name,
+            year: a.first_air_date ? a.first_air_date.slice(0, 4) : 'Anime',
+            type: 'anime',
+            imdbRating: a.vote_average ? a.vote_average.toFixed(1) : '8.5',
+            poster: `${TMDB_IMAGE_BASE}w500${a.poster_path}`
+          }));
+        if (animes.length > 0) {
+          setCachedData(cacheKey, animes);
+          return animes;
         }
       }
     } else if (categoryKey === 'latest') {
@@ -2177,96 +2134,48 @@ export const fetchDynamicCategoryTitles = async (categoryKey) => {
   }
 };
 
-// Dynamic 2nd Poster / Alternate Artwork Provider API
+// Dynamic 2nd Poster / Alternate Artwork Provider API (TMDB)
 export const fetchSecondaryPoster = async (title, imdbID, type) => {
   if (!title && !imdbID) return null;
   const cleanTitle = (title || '').replace(/\([^)]*\)/g, '').trim();
-  const cacheKey = `sec_poster_${(imdbID || cleanTitle).toLowerCase()}`;
+  const cacheKey = `sec_poster_tmdb_${(imdbID || cleanTitle).toLowerCase()}`;
 
   const cached = getCachedData(cacheKey);
   if (cached) return cached;
 
   try {
-    // 1. Try TVmaze images endpoint (provides multiple original poster variations)
-    const tvmazeRes = await fetch(
-      `${TVMAZE_BASE_URL}singlesearch/shows?q=${encodeURIComponent(cleanTitle)}&embed=images`,
-      { signal: AbortSignal.timeout(3000) }
-    );
-    if (tvmazeRes.ok) {
-      const tvData = await tvmazeRes.json();
-      const images = tvData?._embedded?.images || [];
-      const posters = images.filter((img) => img.type === 'poster');
-      if (posters.length > 1 && posters[1]?.resolutions?.original?.url) {
-        const secUrl = posters[1].resolutions.original.url;
-        setCachedData(cacheKey, secUrl);
-        return secUrl;
-      }
-      if (images.length > 1 && images[1]?.resolutions?.original?.url) {
-        const secUrl = images[1].resolutions.original.url;
-        setCachedData(cacheKey, secUrl);
-        return secUrl;
-      }
-    }
-  } catch {
-    // Fallthrough to next provider
-  }
-
-  try {
-    // 2. Try Jikan anime pictures endpoint if anime or series
-    const jikanRes = await fetch(
-      `${JIKAN_BASE_URL}anime?q=${encodeURIComponent(cleanTitle)}&limit=1`,
-      { signal: AbortSignal.timeout(3000) }
-    );
-    if (jikanRes.ok) {
-      const jData = await jikanRes.json();
-      const malId = jData?.data?.[0]?.mal_id;
-      if (malId) {
-        const picRes = await fetch(`${JIKAN_BASE_URL}anime/${malId}/pictures`, {
-          signal: AbortSignal.timeout(2500)
-        });
-        if (picRes.ok) {
-          const picData = await picRes.json();
-          const pictures = picData?.data || [];
-          if (pictures.length > 1 && pictures[1]?.jpg?.large_image_url) {
-            const secUrl = pictures[1].jpg.large_image_url;
-            setCachedData(cacheKey, secUrl);
-            return secUrl;
-          }
+    const apiKey = getTmdbKey();
+    if (imdbID && imdbID.startsWith('tt')) {
+      const findRes = await fetch(
+        `${TMDB_BASE_URL}find/${imdbID}?api_key=${apiKey}&external_source=imdb_id`,
+        { signal: AbortSignal.timeout(3000) }
+      );
+      if (findRes.ok) {
+        const findData = await findRes.json();
+        const match = findData?.movie_results?.[0] || findData?.tv_results?.[0];
+        if (match?.backdrop_path) {
+          const secUrl = `${TMDB_IMAGE_BASE}w780${match.backdrop_path}`;
+          setCachedData(cacheKey, secUrl);
+          return secUrl;
         }
       }
     }
-  } catch {
-    // Fallthrough
-  }
 
-  try {
-    // 3. Try Wikipedia media list for alternative promotional posters
-    const wikiRes = await fetch(
-      `https://en.wikipedia.org/api/rest_v1/page/media-list/${encodeURIComponent(cleanTitle)}`,
+    const searchRes = await fetch(
+      `${TMDB_BASE_URL}search/multi?api_key=${apiKey}&query=${encodeURIComponent(cleanTitle)}`,
       { signal: AbortSignal.timeout(3000) }
     );
-    if (wikiRes.ok) {
-      const wikiData = await wikiRes.json();
-      const items = wikiData?.items || [];
-      const imageItems = items.filter((item) => item.type === 'image' && !item.title.toLowerCase().includes('.svg'));
-      if (imageItems.length > 1) {
-        const fileName = imageItems[1].title;
-        const fileRes = await fetch(
-          `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(fileName)}`,
-          { signal: AbortSignal.timeout(2000) }
-        );
-        if (fileRes.ok) {
-          const fileData = await fileRes.json();
-          if (fileData?.originalimage?.source) {
-            const secUrl = fileData.originalimage.source;
-            setCachedData(cacheKey, secUrl);
-            return secUrl;
-          }
-        }
+    if (searchRes.ok) {
+      const searchData = await searchRes.json();
+      const match = searchData?.results?.[0];
+      if (match?.backdrop_path) {
+        const secUrl = `${TMDB_IMAGE_BASE}w780${match.backdrop_path}`;
+        setCachedData(cacheKey, secUrl);
+        return secUrl;
       }
     }
   } catch {
-    // No secondary poster found
+    // Fail-safe
   }
 
   return null;
