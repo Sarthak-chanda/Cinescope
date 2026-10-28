@@ -1,9 +1,8 @@
-# Agent Guidelines
+# Agent Guidelines (Cinescope)
 
-- **Token & Credit Efficiency**: The user has low AI credits and daily quota limits.
-  - Keep all responses concise, sharp, and focused directly on the solution.
-  - Avoid redundant explanations, repetitive code dumps, or unnecessary steps.
-  - Batch edits cleanly and minimize token usage during tools and file inspections.
+> Inherits workspace standards from root `AGENTS.md`.
 
-- **Git Push Policy**: Do NOT automatically commit or push code changes to GitHub. Only run `git commit` or `git push` when the user explicitly asks to push.
-
+- **Token & Credit Efficiency**: Strict daily quota limits. Keep responses concise, surgical, and free of fluff. No full-file rewrites.
+- **Git Push Policy**: Do NOT automatically commit or push to GitHub. Only run git commands upon explicit request.
+- **UI/UX & Responsiveness**: Pixel-perfect layout, 4px/8px spacing, mobile responsiveness (zero overflow, touch targets >= 44px), smooth micro-interactions.
+- **Clean Architecture**: Modular components (< 200 lines), custom hooks for logic, clean state colocation.

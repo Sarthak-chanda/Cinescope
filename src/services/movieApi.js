@@ -2181,3 +2181,119 @@ export const fetchSecondaryPoster = async (title, imdbID, type) => {
   return null;
 };
 
+/**
+ * Fast search suggestions with local instant match + multi-source fallback
+ */
+export const fetchSearchSuggestions = async (query, signal) => {
+  const trimmed = query ? query.trim() : '';
+  if (!trimmed || trimmed.length < 1) return [];
+
+  const lower = trimmed.toLowerCase();
+  const cacheKey = `search_suggestions:${lower}`;
+  const cached = getCachedData(cacheKey);
+  if (cached) return cached;
+
+  const resultsMap = new Map();
+
+  // 1. Instant local match from curated database (0ms latency)
+  if (Array.isArray(ALL_CURATED_LIST)) {
+    for (const item of ALL_CURATED_LIST) {
+      if (!item || !item.name) continue;
+      const itemNameLower = item.name.toLowerCase();
+      if (itemNameLower.includes(lower)) {
+        const idKey = item.imdbID || item.id || item.name;
+        const isPrefix = itemNameLower.startsWith(lower);
+        resultsMap.set(idKey, {
+          id: item.imdbID || item.id,
+          imdbID: item.imdbID || (String(item.id).startsWith('tt') ? item.id : null),
+          tvmazeId: item.tvmazeId || (String(item.id).startsWith('tv_') ? parseInt(item.id.replace('tv_', ''), 10) : null),
+          name: item.name,
+          year: item.year || '',
+          type: item.type || 'movie',
+          poster: normalizePosterUrl(item.poster),
+          imdbRating: item.imdbRating || null,
+          genre: Array.isArray(item.genre) ? item.genre.slice(0, 2).join(', ') : (item.genre || ''),
+          priority: isPrefix ? 2 : 1
+        });
+        if (resultsMap.size >= 8) break;
+      }
+    }
+  }
+
+  // If query is only 1 char, return instant local results without waiting for network
+  if (trimmed.length < 2) {
+    const list = Array.from(resultsMap.values()).slice(0, 6);
+    return list;
+  }
+
+  // 2. Parallel network search across OMDB & TVmaze
+  try {
+    const omdbKey = getOmdbKey();
+    const omdbUrl = `${OMDB_BASE_URL}?s=${encodeURIComponent(trimmed)}&page=1&apikey=${omdbKey}`;
+    const tvmazeUrl = `https://api.tvmaze.com/search/shows?q=${encodeURIComponent(trimmed)}`;
+
+    const fetchOptions = signal ? { signal } : { signal: AbortSignal.timeout(2200) };
+
+    const [omdbRes, tvmazeRes] = await Promise.allSettled([
+      fetch(omdbUrl, fetchOptions).then((r) => (r.ok ? r.json() : null)),
+      fetch(tvmazeUrl, fetchOptions).then((r) => (r.ok ? r.json() : null))
+    ]);
+
+    if (omdbRes.status === 'fulfilled' && omdbRes.value?.Response === 'True' && Array.isArray(omdbRes.value.Search)) {
+      omdbRes.value.Search.forEach((m) => {
+        if (!m || !m.Title) return;
+        const idKey = m.imdbID || m.Title;
+        if (!resultsMap.has(idKey)) {
+          const isPrefix = m.Title.toLowerCase().startsWith(lower);
+          resultsMap.set(idKey, {
+            id: m.imdbID,
+            imdbID: m.imdbID,
+            name: m.Title,
+            year: formatTimelineYear(m.Year, m.Title),
+            type: m.Type === 'series' ? 'series' : 'movie',
+            poster: normalizePosterUrl(m.Poster),
+            imdbRating: null,
+            genre: null,
+            priority: isPrefix ? 2 : 1
+          });
+        }
+      });
+    }
+
+    if (tvmazeRes.status === 'fulfilled' && Array.isArray(tvmazeRes.value)) {
+      tvmazeRes.value.forEach((item) => {
+        const show = item?.show;
+        if (!show || !show.name) return;
+        const idKey = show.externals?.imdb || `tv_${show.id}`;
+        if (!resultsMap.has(idKey)) {
+          const isPrefix = show.name.toLowerCase().startsWith(lower);
+          resultsMap.set(idKey, {
+            id: show.externals?.imdb || `tv_${show.id}`,
+            imdbID: show.externals?.imdb || null,
+            tvmazeId: show.id,
+            name: show.name,
+            year: show.premiered ? show.premiered.slice(0, 4) : 'TV',
+            type: 'series',
+            poster: show.image?.medium || show.image?.original || null,
+            imdbRating: show.rating?.average ? String(show.rating.average) : null,
+            genre: Array.isArray(show.genres) ? show.genres.slice(0, 2).join(', ') : null,
+            priority: isPrefix ? 2 : 1
+          });
+        }
+      });
+    }
+  } catch {
+    // Graceful fallback to existing local matches
+  }
+
+  const finalResults = Array.from(resultsMap.values())
+    .sort((a, b) => (b.priority || 0) - (a.priority || 0))
+    .slice(0, 7);
+
+  if (finalResults.length > 0) {
+    setCachedData(cacheKey, finalResults);
+  }
+
+  return finalResults;
+};
+

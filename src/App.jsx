@@ -170,6 +170,19 @@ const App = () => {
     });
   };
 
+  const handleClearRecentSearches = () => {
+    setRecentSearches([]);
+    try {
+      localStorage.removeItem(RECENT_KEY);
+    } catch {
+      // Storage fail-safe
+    }
+  };
+
+  const handleRemoveRecentSearch = (termToRemove) => {
+    setRecentSearches((prev) => prev.filter((item) => item.toLowerCase() !== termToRemove.toLowerCase()));
+  };
+
   const selectedMovieRef = useRef(selectedMovie);
   selectedMovieRef.current = selectedMovie;
   const searchResultsRef = useRef(searchResults);
@@ -601,6 +614,9 @@ const App = () => {
         watchlistCount={watchlist.length}
         onOpenWatchlist={() => setIsWatchlistOpen(true)}
         recentSearches={recentSearches}
+        onClearRecentSearches={handleClearRecentSearches}
+        onRemoveRecentSearch={handleRemoveRecentSearch}
+        onSelectMovie={handleSelectMovie}
         onQuickSearch={handleQuickSearch}
         onResetToHome={handleResetToHome}
         theme={theme}

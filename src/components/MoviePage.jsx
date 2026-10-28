@@ -5,46 +5,107 @@ import { formatTimelineYear } from '../services/movieApi';
 
 // Curated trailer video IDs for popular titles (with universal search fallback)
 const KNOWN_TRAILERS = {
+  // Batman & DC Universe
+  tt2975590: '0WWzgGyAH6Y',  // Batman v Superman: Dawn of Justice
+  tt0372784: 'neY2xVmOfUM',  // Batman Begins
+  tt0468569: 'EXeTwQWrcwY',  // The Dark Knight
+  tt1345836: 'g8evyE9TuYg',  // The Dark Knight Rises
+  tt1877830: 'mqqft2x_Aa4',  // The Batman
+  tt0096895: 'dgC9Q0uhX70',  // Batman (1989)
+  tt12361974: 'vM-Bja2Gy04', // Zack Snyder's Justice League
+  tt0974015: '3cxixDgHUYw',  // Justice League
+  tt0770828: 'T6DJcgm3wNY',  // Man of Steel
+  tt7286456: 'zAGVQLHvwOY',  // Joker
+  tt11315808: '_OKAwz2MsJs', // Joker: Folie à Deux
+
+  // Marvel Universe
   tt6263850: '73_1biulkYk',  // Deadpool & Wolverine
+  tt0371746: '8ugaeA-nMTc',  // Iron Man
+  tt0848228: 'eOrNdBpGMv8',  // The Avengers
+  tt4154756: '6ZfuNTqbHE8',  // Avengers: Infinity War
+  tt4154796: 'TcMBFSGVi1c',  // Avengers: Endgame
+  tt10872600: 'JfVOs4VSpmA', // Spider-Man: No Way Home
+  tt9362722: 'cqGjhVJWtEg',  // Spider-Man: Across the Spider-Verse
+  tt0145487: 't06RUxP0s9c',  // Spider-Man (2002)
+  tt3498820: 'dKrVegVI0Us',  // Captain America: Civil War
+  tt1843866: '7SlILk2WMTI',  // Captain America: The Winter Soldier
+  tt3501632: 'ue80QwXMRHg',  // Thor: Ragnarok
+  tt1825683: 'xjDjIWPwcPU',  // Black Panther
+
+  // Sci-Fi, Hollywood & Global Cinema Hits
   tt15239678: 'Way9Dexny3w', // Dune: Part Two
+  tt1160419: '8g18jFHCLXk',  // Dune (2021)
   tt22022452: 'LEjhY15eCx0', // Inside Out 2
   tt9218128: '4rgYUipGJNo',  // Gladiator II
+  tt0172495: 'owK1qxDselE',  // Gladiator
   tt18411490: 'x0XDEhP4MQs', // Alien: Romulus
   tt11358390: 'Kdr5oedn7q8', // Kingdom of the Planet of the Apes
-  tt2788316: 'yAN5uspAo8U',  // Shōgun
-  tt12637874: 'V-mugKDQDlg', // Fallout
-  tt11198330: 'DotnJ7tTA34', // House of the Dragon
-  tt14452776: 'y-c1a7E8K4M', // The Bear
-  tt21209876: 'p0q8D9dJcEM', // Solo Leveling
-  tt9335498: 'VQGCKyvzIM4',  // Demon Slayer
-  tt29584620: 'x_7Ww_b2t64', // Queen of Tears
-  tt10970552: 'oqxAJKy0ii4', // Squid Game
-  tt10850932: 'GVQGWgeVc4k', // Crash Landing on You
-  tt21344706: 'tqFFztsbc9o', // The Glory
   tt1375666: 'YoHD9XEInc0',  // Inception
-  tt0468569: 'EXeTwQWrcwY',  // The Dark Knight
   tt0816692: 'zSWdZVtXT7E',  // Interstellar
-  tt4154796: 'TcMBFSGVi1c',  // Avengers: Endgame
   tt15398776: 'uYPbbksJxIg', // Oppenheimer
   tt0110912: 'tDAT98e0wK4',  // Pulp Fiction
   tt0068646: 'sY1S34973zA',  // The Godfather
-  tt0245429: 'ByXuk9QqQkk',  // Spirited Away
+  tt0120338: '2e-eXJ6HgkQ',  // Titanic
+  tt0499549: '5PSNL1qE6VY',  // Avatar
+  tt1630029: 'd9MyW72ELq0',  // Avatar: The Way of Water
+  tt0111161: 'PLl99DlL6b4',  // The Shawshank Redemption
+  tt0107290: 'QWBKEmWWL38',  // Jurassic Park
+  tt0137523: 'O1nDozs-L7w',  // Fight Club
+  tt0133093: 'vKQi3bBA1y8',  // The Matrix
   tt6751668: '5xH0hhJ98Bx',  // Parasite
-  tt9362722: 'cqGjhVJWtEg',  // Spider-Man: Across the Spider-Verse
-  tt1877830: 'mqqft2x_Aa4',  // The Batman
   tt1745960: 'giXco2JaZ_4',  // Top Gun: Maverick
   tt1517268: 'pBk4NYhWNMM',  // Barbie
+  tt0245429: 'ByXuk9QqQkk',  // Spirited Away
+  tt5311514: 'xU47nhruN-Q',  // Your Name
+
+  // Indian Cinema Hits
+  tt28424180: 'kQDd1AhGIHk', // Kalki 2898 AD
+  tt7392708: 'KVn7Z7_g8L4',  // Stree 2
+  tt15791034: 'COv52Qyctws', // Jawan
+  tt11152516: 'Dydmpfo68DA', // Animal
+  tt12844910: 'vqu4zbiqqGs', // Pathaan
+  tt8178634: 'NgBoAM7KA-M',  // RRR
+  tt20839958: '6oKFao0aIGE', // Kantara
+  tt31035980: 'id848WKm1Y8', // Manjummel Boys
+  tt1187043: 'xvszmUWKII8',  // 3 Idiots
+  tt2631186: '2-B2W37f2O4',  // Baahubali: The Beginning
+  tt4849494: 'G62HrubdD6o',  // Baahubali 2: The Conclusion
+  tt7838252: 'qXgF-iJ_ezE',  // K.G.F: Chapter 1
+  tt10698680: 'JKa05nyUmuQ', // K.G.F: Chapter 2
+  tt16366836: 'bUR_FKt7Iso', // Salaar
+  tt15445094: 'Po3jVh2pmxE', // Leo
+  tt9389998: 'puz8k_4m9-M',  // Pushpa: The Rise
+  tt21867144: 'r-G4w2p3R8g', // Pushpa 2: The Rule
+  tt15444740: 'xenOE1Tma0A', // Jailer
+  tt28114975: '7M7y2sQ8G2Y', // Premalu
+  tt14824792: 'vV_P5-PkW5w', // Bramayugam
+
+  // TV Series & Anime
+  tt2788316: 'yAN5uspAo8U',  // Shōgun
+  tt12637874: 'V-mugKDQDlg', // Fallout
+  tt11198330: 'DotnJ7tTA34', // House of the Dragon
+  tt0944947: 'KPLWWIOCOOQ',  // Game of Thrones
+  tt14452776: 'y-c1a7E8K4M', // The Bear
   tt0903747: 'HhesaQXLuRY',  // Breaking Bad
   tt4574334: 'b9EkMc79ZSU',  // Stranger Things
   tt8701918: 's9APLXM9Ei8',  // Chernobyl
   tt3581920: 'uLtkt8BonwM',  // The Last of Us
   tt1190634: '06rueu_fh30',  // The Boys
+  tt12004706: 'mojZJ7ui64g', // Panchayat
+  tt6473300: 'ZNeGF-PvVHY',  // Mirzapur
+  tt6077448: '28j8h0RRnq4',  // Sacred Games
+  tt10344078: 'y4sLgT1c5v4', // The Family Man
+  tt21209876: 'p0q8D9dJcEM', // Solo Leveling
+  tt9335498: 'VQGCKyvzIM4',  // Demon Slayer
   tt2560140: 'MGRm4IzK1SQ',  // Attack on Titan
   tt12343534: 'pkZXflMmU1Y', // Jujutsu Kaisen
   tt11126994: 'fXmAurh012s', // Arcane
-  tt5311514: 'xU47nhruN-Q',  // Your Name
-  tt0137523: 'O1nDozs-L7w',  // Fight Club
-  tt0133093: 'vKQi3bBA1y8'   // The Matrix
+  tt0388629: '1-S-_pTzGj8',  // One Piece
+  tt4052886: '1G3wX_x2i3Q',  // Death Note
+  tt29584620: 'x_7Ww_b2t64', // Queen of Tears
+  tt10970552: 'oqxAJKy0ii4', // Squid Game
+  tt10850932: 'GVQGWgeVc4k', // Crash Landing on You
+  tt21344706: 'tqFFztsbc9o'  // The Glory
 };
 
 const RATING_REACTIONS = {
@@ -104,11 +165,96 @@ const calculateMovieVibes = (movie) => {
   };
 };
 
+const KNOWN_TITLE_TRAILERS = {
+  'batman v superman': '0WWzgGyAH6Y',
+  'batman begins': 'neY2xVmOfUM',
+  'the dark knight': 'EXeTwQWrcwY',
+  'the dark knight rises': 'g8evyE9TuYg',
+  'the batman': 'mqqft2x_Aa4',
+  'zack snyder': 'vM-Bja2Gy04',
+  'justice league': '3cxixDgHUYw',
+  'man of steel': 'T6DJcgm3wNY',
+  'deadpool': '73_1biulkYk',
+  'dune part two': 'Way9Dexny3w',
+  'dune part 2': 'Way9Dexny3w',
+  'dune 2': 'Way9Dexny3w',
+  'dune': 'Way9Dexny3w',
+  'inside out 2': 'LEjhY15eCx0',
+  'gladiator': '4rgYUipGJNo',
+  'alien romulus': 'x0XDEhP4MQs',
+  'kingdom of the planet of the apes': 'Kdr5oedn7q8',
+  'shogun': 'yAN5uspAo8U',
+  'fallout': 'V-mugKDQDlg',
+  'house of the dragon': 'DotnJ7tTA34',
+  'the bear': 'y-c1a7E8K4M',
+  'solo leveling': 'p0q8D9dJcEM',
+  'demon slayer': 'VQGCKyvzIM4',
+  'queen of tears': 'x_7Ww_b2t64',
+  'squid game': 'oqxAJKy0ii4',
+  'crash landing on you': 'GVQGWgeVc4k',
+  'the glory': 'tqFFztsbc9o',
+  'inception': 'YoHD9XEInc0',
+  'interstellar': 'zSWdZVtXT7E',
+  'avengers endgame': 'TcMBFSGVi1c',
+  'avengers infinity war': '6ZfuNTqbHE8',
+  'avengers': 'eOrNdBpGMv8',
+  'spider man': 'cqGjhVJWtEg',
+  'oppenheimer': 'uYPbbksJxIg',
+  'pulp fiction': 'tDAT98e0wK4',
+  'the godfather': 'UaVTIH8mujA',
+  'spirited away': 'ByXuk9QqQkk',
+  'parasite': '5xH0hhJ98Bx',
+  'top gun maverick': 'giXco2JaZ_4',
+  'barbie': 'pBk4NYhWNMM',
+  'breaking bad': 'HhesaQXLuRY',
+  'stranger things': 'b9EkMc79ZSU',
+  'chernobyl': 's9APLXM9Ei8',
+  'the last of us': 'uLtkt8BonwM',
+  'the boys': '06rueu_fh30',
+  'attack on titan': 'MGRm4IzK1SQ',
+  'jujutsu kaisen': 'pkZXflMmU1Y',
+  'arcane': 'fXmAurh012s',
+  'your name': 'xU47nhruN-Q',
+  'fight club': 'O1nDozs-L7w',
+  'the matrix': 'vKQi3bBA1y8',
+  'kalki': 'kQDd1AhGIHk',
+  'stree 2': 'KVn7Z7_g8L4',
+  'jawan': 'COv52Qyctws',
+  'animal': 'Dydmpfo68DA',
+  'pathaan': 'vqu4zbiqqGs',
+  'rrr': 'NgBoAM7KA-M',
+  'kantara': '6oKFao0aIGE',
+  'manjummel boys': 'id848WKm1Y8',
+  '3 idiots': 'xvszmUWKII8',
+  'baahubali': '2-B2W37f2O4',
+  'baahubali 2': 'G62HrubdD6o',
+  'kgf': 'qXgF-iJ_ezE',
+  'salaar': 'bUR_FKt7Iso',
+  'leo': 'Po3jVh2pmxE',
+  'pushpa': 'puz8k_4m9-M',
+  'jailer': 'xenOE1Tma0A',
+  'premalu': '7M7y2sQ8G2Y',
+  'bramayugam': 'vV_P5-PkW5w',
+  'panchayat': 'mojZJ7ui64g',
+  'mirzapur': 'ZNeGF-PvVHY',
+  'sacred games': '28j8h0RRnq4',
+  'the family man': 'y4sLgT1c5v4',
+  'game of thrones': 'KPLWWIOCOOQ',
+  'one piece': '1-S-_pTzGj8',
+  'death note': '1G3wX_x2i3Q',
+  'titanic': '2e-eXJ6HgkQ',
+  'avatar': '5PSNL1qE6VY',
+  'shawshank': 'PLl99DlL6b4',
+  'joker': 'zAGVQLHvwOY',
+  'jurassic park': 'QWBKEmWWL38',
+  'iron man': '8ugaeA-nMTc'
+};
+
 // Trailer Availability Checker for Movie, Anime, or TV Series
 const resolveTrailerVideoId = (item) => {
   if (!item) return null;
-  if (item.imdbID && KNOWN_TRAILERS[item.imdbID]) return KNOWN_TRAILERS[item.imdbID];
-  if (item.id && KNOWN_TRAILERS[item.id]) return KNOWN_TRAILERS[item.id];
+  const directId = item.imdbID || item.id;
+  if (directId && KNOWN_TRAILERS[directId]) return KNOWN_TRAILERS[directId];
   if (item.trailerId && typeof item.trailerId === 'string' && !['0TAGtIQdnLw', 'r6Hg33MYzyA'].includes(item.trailerId)) {
     return item.trailerId;
   }
@@ -117,7 +263,65 @@ const resolveTrailerVideoId = (item) => {
     const match = String(item.trailerUrl).match(/(?:embed\/|v=|\/vi\/|youtu\.be\/|\/v\/)([^#&?]*)/);
     if (match && match[1]) return match[1];
   }
+
+  // Match by clean movie/show title
+  const rawTitle = (item.Title || item.name || item.title || '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+  if (rawTitle) {
+    for (const [key, vid] of Object.entries(KNOWN_TITLE_TRAILERS)) {
+      if (rawTitle === key || rawTitle.includes(key) || key.includes(rawTitle)) {
+        return vid;
+      }
+    }
+  }
+
   return null;
+};
+
+// Runtime cache for verified YouTube video availability to guarantee 0ms lookups
+const ytValidationCache = new Map();
+
+/**
+ * Checks YouTube video availability to avoid embedding broken / "Video unavailable" players.
+ * Probes YouTube's thumbnail: unavailable/deleted videos return a 120x90 placeholder image,
+ * whereas valid videos return width >= 320.
+ */
+const verifyYouTubeVideoAvailability = (vid) => {
+  if (!vid) return Promise.resolve(false);
+  if (ytValidationCache.has(vid)) {
+    return Promise.resolve(ytValidationCache.get(vid));
+  }
+
+  return new Promise((resolve) => {
+    const probeImg = new Image();
+    let isSettled = false;
+
+    const timer = setTimeout(() => {
+      if (!isSettled) {
+        isSettled = true;
+        // On probe timeout, default to allowing embed and let YouTube postMessage listener guard it
+        resolve(true);
+      }
+    }, 1800);
+
+    probeImg.onload = () => {
+      if (isSettled) return;
+      isSettled = true;
+      clearTimeout(timer);
+      const isPlayable = probeImg.naturalWidth > 120;
+      ytValidationCache.set(vid, isPlayable);
+      resolve(isPlayable);
+    };
+
+    probeImg.onerror = () => {
+      if (isSettled) return;
+      isSettled = true;
+      clearTimeout(timer);
+      ytValidationCache.set(vid, false);
+      resolve(false);
+    };
+
+    probeImg.src = `https://img.youtube.com/vi/${vid}/mqdefault.jpg`;
+  });
 };
 
 const MoviePage = ({
@@ -144,13 +348,40 @@ const MoviePage = ({
   const [activeTab, setActiveTab] = useState('overview');
   const [copiedLink, setCopiedLink] = useState(false);
 
-  // Trailer Availability Checker State: Show HD Backdrop Hero by default; play video on user click
-  const initialTrailerId = resolveTrailerVideoId(movie);
-  const [isPlayingTrailer, setIsPlayingTrailer] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [trailerError, setTrailerError] = useState(false);
+  // Resolved trailer ID from direct props, clean title match, or known dictionary
+  const resolvedVideoId = resolveTrailerVideoId(movie);
 
-  // Watch status: 'want', 'watching', 'completed', 'favorite'
+  // Stage view mode state: 'trailer' | 'poster' | 'banner'
+  const [stageMode, setStageMode] = useState(() => (resolvedVideoId ? 'trailer' : 'poster'));
+  const [trailerError, setTrailerError] = useState(() => !resolvedVideoId);
+  const [isMuted, setIsMuted] = useState(true);
+  const isPlayingTrailer = stageMode === 'trailer';
+  const setIsPlayingTrailer = (val) => setStageMode(val ? 'trailer' : 'poster');
+
+  // Verify YouTube trailer thumbnail response on mount
+  useEffect(() => {
+    if (!resolvedVideoId) {
+      setTrailerError(true);
+      setStageMode('poster');
+      return;
+    }
+
+    let isSubscribed = true;
+    setTrailerError(false);
+    setStageMode('trailer');
+
+    verifyYouTubeVideoAvailability(resolvedVideoId).then((isAvailable) => {
+      if (!isSubscribed) return;
+      if (!isAvailable) {
+        setTrailerError(true);
+        setStageMode('poster'); // DIRECTLY SHOW POSTER IN PLACE OF TRAILER SPACE!
+      }
+    });
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, [resolvedVideoId, movie?.imdbID, movie?.id]);
   const [watchStatus, setWatchStatus] = useState(() => {
     try {
       const stored = localStorage.getItem('cinescope_watch_statuses');
@@ -183,6 +414,7 @@ const MoviePage = ({
 
   const iframeRef = useRef(null);
   const detailsSectionRef = useRef(null);
+  const hasStartedPlaybackRef = useRef(false);
   const movieId = movie?.imdbID || movie?.id;
 
   const movieGenreList = Array.isArray(movie?.genre)
@@ -382,10 +614,6 @@ const MoviePage = ({
     const fallback = generatePaletteFallback(movie.name);
     setExtractedColors(fallback);
 
-    // For TV Series and Anime: ALWAYS default to clean poster view (no auto-playing trailer video)
-    setIsPlayingTrailer(!isTvOrAnime);
-    setTrailerError(false);
-
     // Default to 'episodes' tab for TV & Anime
     if (isTvOrAnime) {
       setActiveTab('episodes');
@@ -532,15 +760,27 @@ const MoviePage = ({
     'https://images.weserv.nl/?url=https://m.media-amazon.com/images/M/MV5BMGExNGI1NDktOWI2Mi00NDM3LWIxMmQtNTQxYTgzMzI0MTA1XkEyXkFqcGc@._V1_SX700.jpg';
 
   // Determine trailer video ID via availability checker from API values
-  const videoId = resolveTrailerVideoId(movie);
+  const videoId = resolvedVideoId;
   const hasTrailer = Boolean(videoId) && !trailerError;
 
-  // Build trailer embed URL when video ID is available
-  const heroEmbedUrl = videoId
-    ? `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=0&enablejsapi=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1&showinfo=0&playsinline=1`
+  // Build trailer embed URL with autoplay=1&mute=1 so Chrome autoplay policy never blocks it
+  const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
+  const heroEmbedUrl = hasTrailer && videoId
+    ? `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=1&enablejsapi=1&origin=${currentOrigin}&controls=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`
     : null;
 
   const externalTrailerUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(`${name} ${year} official trailer`)}`;
+
+  const handleIframeLoad = () => {
+    if (!iframeRef.current) return;
+    try {
+      iframeRef.current.contentWindow.postMessage(JSON.stringify({ event: 'listening' }), '*');
+      iframeRef.current.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo', args: '' }), '*');
+      iframeRef.current.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: '' }), '*');
+    } catch {
+      // Fail-safe
+    }
+  };
 
   // Auto-unmute postMessage effect on mount
   useEffect(() => {
@@ -548,25 +788,44 @@ const MoviePage = ({
       const timer = setTimeout(() => {
         try {
           iframeRef.current.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: '' }), '*');
-          iframeRef.current.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo', args: '' }), '*');
         } catch {
           // Fail-safe
         }
-      }, 450);
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [hasTrailer, isPlayingTrailer]);
 
-  // Window listener for YouTube embed error codes (e.g. video unavailable / blocked embed)
+  // Window listener for YouTube embed error codes (e.g. video unavailable / blocked embed codes 100, 101, 150)
   useEffect(() => {
-    if (!isPlayingTrailer) return;
+    if (stageMode !== 'trailer' || !videoId || !hasTrailer) return;
 
     const handleWindowMessage = (event) => {
       try {
-        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
-        if (data && (data.event === 'onError' || (data.info && typeof data.info === 'number' && [2, 5, 100, 101, 150].includes(data.info)))) {
+        if (event.origin && !event.origin.includes('youtube')) return;
+
+        let data = event.data;
+        if (typeof data === 'string') {
+          try {
+            data = JSON.parse(data);
+          } catch {
+            return;
+          }
+        }
+        if (!data) return;
+
+        // Check for any YouTube player error indicators
+        const isErrorEvent = data.event === 'onError' || data.error;
+        const errVal = data.info ?? data.data;
+        const isDirectErrorCode = typeof errVal === 'number' && [2, 5, 100, 101, 150].includes(errVal);
+        const isInfoObjectError =
+          data.info &&
+          typeof data.info === 'object' &&
+          (typeof data.info.errorCode === 'number' || typeof data.info.error === 'number');
+
+        if (isErrorEvent || isDirectErrorCode || isInfoObjectError) {
           setTrailerError(true);
-          setIsPlayingTrailer(false);
+          setStageMode('poster'); // Immediately switch to poster
         }
       } catch {
         // Non-JSON message ignore
@@ -575,7 +834,7 @@ const MoviePage = ({
 
     window.addEventListener('message', handleWindowMessage);
     return () => window.removeEventListener('message', handleWindowMessage);
-  }, [isPlayingTrailer]);
+  }, [stageMode, videoId, hasTrailer]);
 
   // Essential Isolated Controls for Trailer
   const toggleMute = () => {
@@ -696,12 +955,12 @@ const MoviePage = ({
       <div className="moving-gradient-overlay" aria-hidden="true" />
 
       {/* =========================================================================
-          1. 16:9 VIDEO TRAILER PLAYER STAGE (If Trailer Available)
-             OR 16:9 POSTER & BACKDROP STAGE IN EXACT PLACE OF TRAILER (If Unavailable)
+          1. UNIFIED CINEMA MEDIA STAGE (TRAILER, POSTER IN TRAILER SPACE, OR BANNER)
           ========================================================================= */}
-      {hasTrailer && isPlayingTrailer && heroEmbedUrl ? (
-        <section className="cinema-hero-stage animate-scale-up">
-          <div className="cinema-video-container">
+      <section className="cinema-hero-stage animate-scale-up">
+        <div className="cinema-video-container">
+          {/* 1. TRAILER VIEW */}
+          {stageMode === 'trailer' && hasTrailer && heroEmbedUrl ? (
             <iframe
               ref={iframeRef}
               src={heroEmbedUrl}
@@ -709,113 +968,162 @@ const MoviePage = ({
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
               loading="eager"
+              onLoad={handleIframeLoad}
               onError={() => {
+                ytValidationCache.set(videoId, false);
                 setTrailerError(true);
-                setIsPlayingTrailer(false);
+                setTrailerStatus('unavailable');
+                setStageMode('poster');
               }}
             />
+          ) : null}
 
-            {/* Controls in Top Right Corner */}
-            <div className="trailer-top-corner-controls">
+          {/* 2. POSTER VIEW (DIRECTLY IN PLACE OF TRAILER SPACE) */}
+          {(stageMode === 'poster' || (!hasTrailer && stageMode === 'trailer') || trailerError) && stageMode !== 'banner' ? (
+            <div className="stage-poster-view animate-fade-in">
+              <div
+                className="stage-ambient-bg"
+                style={{ backgroundImage: `url(${poster || displayBackdrop})` }}
+                aria-hidden="true"
+              />
+              <div className="stage-ambient-vignette" aria-hidden="true" />
+
+              <div className="stage-poster-center-frame">
+                {poster ? (
+                  <img
+                    src={poster}
+                    alt={titleDisplay}
+                    className="stage-poster-img"
+                    loading="eager"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                ) : (
+                  <div className="stage-poster-fallback">
+                    <span>🎬</span>
+                  </div>
+                )}
+                <div className="stage-poster-glow" />
+              </div>
+
+              <div className="stage-poster-meta-bar">
+                <div className="stage-meta-info">
+                  <span className="stage-meta-title">{titleDisplay}</span>
+                  {year && <span className="stage-meta-sub">{year}</span>}
+                  {imdbRating && imdbRating !== 'N/A' && (
+                    <span className="stage-meta-rating">★ {imdbRating}</span>
+                  )}
+                  <span className="stage-meta-badge">
+                    {isTvOrAnime ? (movie?.type === 'anime' ? 'Anime' : 'TV Series') : (type || 'Movie')}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ) : null}
+
+          {/* 3. BANNER VIEW (DIRECTLY IN PLACE OF TRAILER SPACE) */}
+          {stageMode === 'banner' ? (
+            <div className="stage-banner-view animate-fade-in">
+              <div
+                className="stage-banner-image"
+                style={{ backgroundImage: `url(${displayBackdrop})` }}
+                aria-hidden="true"
+              />
+              <div className="stage-banner-overlay" aria-hidden="true" />
+
+              <div className="stage-poster-meta-bar">
+                <div className="stage-meta-info">
+                  <span className="stage-meta-title">{titleDisplay}</span>
+                  {year && <span className="stage-meta-sub">{year}</span>}
+                  {imdbRating && imdbRating !== 'N/A' && (
+                    <span className="stage-meta-rating">★ {imdbRating}</span>
+                  )}
+                  <span className="stage-meta-badge">
+                    {isTvOrAnime ? (movie?.type === 'anime' ? 'Anime' : 'TV Series') : (type || 'Movie')}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ) : null}
+
+          {/* Stage Controls Overlay: Segmented Mode Toggler (Trailer | Poster | Banner) + Audio Controls */}
+          <div className="cinema-stage-controls-overlay">
+            <div className="cinema-mode-segmented-toggler" role="tablist" aria-label="Media stage view modes">
               <button
                 type="button"
-                className="corner-ctrl-pill"
+                className={`mode-segment-btn ${stageMode === 'trailer' && hasTrailer ? 'active' : ''}`}
                 onClick={() => {
                   playSound('click');
-                  setIsPlayingTrailer(false);
+                  if (hasTrailer) {
+                    setStageMode('trailer');
+                  }
                 }}
-                title="View Movie Poster Banner"
+                disabled={!hasTrailer}
+                title={!hasTrailer ? 'Official YouTube trailer not available for this title' : 'Play YouTube Trailer'}
+                role="tab"
+                aria-selected={stageMode === 'trailer'}
               >
-                <span>🖼 Poster View</span>
+                <span className="btn-icon">▶</span>
+                <span className="btn-label">Trailer</span>
+                {!hasTrailer && <span className="unavail-tag">N/A</span>}
               </button>
+
               <button
                 type="button"
-                className={`corner-ctrl-pill ${isMuted ? 'muted' : 'unmuted'}`}
-                onClick={toggleMute}
-                title={isMuted ? 'Unmute Audio' : 'Mute Audio'}
+                className={`mode-segment-btn ${stageMode === 'poster' ? 'active' : ''}`}
+                onClick={() => {
+                  playSound('click');
+                  setStageMode('poster');
+                }}
+                title="View Movie Poster"
+                role="tab"
+                aria-selected={stageMode === 'poster'}
               >
-                <span>{isMuted ? '🔇 Unmute' : '🔊 Mute'}</span>
+                <span className="btn-icon">🖼</span>
+                <span className="btn-label">Poster</span>
               </button>
+
               <button
                 type="button"
-                className="corner-ctrl-pill"
-                onClick={restartTrailer}
-                title="Replay from beginning"
+                className={`mode-segment-btn ${stageMode === 'banner' ? 'active' : ''}`}
+                onClick={() => {
+                  playSound('click');
+                  setStageMode('banner');
+                }}
+                title="View Cinematic Banner"
+                role="tab"
+                aria-selected={stageMode === 'banner'}
               >
-                <span>↺ Replay</span>
+                <span className="btn-icon">🌄</span>
+                <span className="btn-label">Banner</span>
               </button>
             </div>
-          </div>
-        </section>
-      ) : (
-        /* Full-Screen Visible Backdrop Stage with Glassmorphism Tag & Headline + Big Movie Poster */
-        <section className="full-screen-backdrop-hero animate-fade-in">
-          {/* Crisp, Fully Visible Panoramic Backdrop */}
-          <div
-            className="crisp-backdrop-image"
-            style={{ backgroundImage: `url(${displayBackdrop})` }}
-            aria-hidden="true"
-          />
-          <div className="crisp-backdrop-overlay" aria-hidden="true" />
 
-          <div className="hero-backdrop-container">
-            {/* Big Movie Poster Frame */}
-            {poster && (
-              <div className="big-hero-poster-frame">
-                <img
-                  src={poster}
-                  alt={titleDisplay}
-                  className="big-hero-poster-img"
-                  loading="eager"
-                  onError={(e) => {
-                    e.target.parentElement.style.display = 'none';
-                  }}
-                />
-                <div className="poster-shine-glow" />
-              </div>
-            )}
-
-            {/* Glassmorphism Title, Tag & Headline Box */}
-            <div className="glassmorphism-hero-card">
-              <div className="glass-tags-row">
-                <span className="glass-type-tag">
-                  {isTvOrAnime ? (movie?.type === 'anime' ? 'Anime Series' : 'TV Series') : (type || 'Movie')}
-                </span>
-                {imdbRating && imdbRating !== 'N/A' && (
-                  <span className="glass-rating-tag">★ {imdbRating} IMDB</span>
-                )}
-                {year && <span className="glass-year-tag">{year}</span>}
-              </div>
-
-              <h1 className="glass-headline-title">{titleDisplay}</h1>
-
-              {tagline ? <p className="glass-tagline-text">"{tagline}"</p> : null}
-
-              {genresList && genresList.length > 0 && (
-                <div className="glass-genres-row">
-                  {genresList.slice(0, 4).map((g, i) => (
-                    <span key={i} className="glass-genre-chip">{g}</span>
-                  ))}
-                </div>
-              )}
-
-              <div className="glass-action-row">
+            {/* Audio & Replay actions when in trailer mode */}
+            {stageMode === 'trailer' && hasTrailer && !trailerError && (
+              <div className="cinema-trailer-actions">
                 <button
                   type="button"
-                  className="glass-play-action-btn"
-                  onClick={() => {
-                    playSound('click');
-                    setTrailerError(false);
-                    setIsPlayingTrailer(true);
-                  }}
+                  className={`trailer-action-pill ${isMuted ? 'muted' : 'unmuted'}`}
+                  onClick={toggleMute}
+                  title={isMuted ? 'Unmute Audio' : 'Mute Audio'}
                 >
-                  <span>▶ Watch Official Trailer / Video</span>
+                  <span>{isMuted ? '🔇 Unmute' : '🔊 Mute'}</span>
+                </button>
+                <button
+                  type="button"
+                  className="trailer-action-pill"
+                  onClick={restartTrailer}
+                  title="Replay from beginning"
+                >
+                  <span>↺ Replay</span>
                 </button>
               </div>
-            </div>
+            )}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* =========================================================================
           2. UNIFIED CINEMATIC MOVIE DETAILS & SIDEBAR SHOWCASE
