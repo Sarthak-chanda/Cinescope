@@ -2297,3 +2297,73 @@ export const fetchSearchSuggestions = async (query, signal) => {
   return finalResults;
 };
 
+/**
+ * Fetch Real Watch Providers (JustWatch data via TMDB API)
+ * Returns actual regional streaming availability (flatrate, free, ads, rent, buy, and JustWatch links).
+ */
+export const fetchWatchProviders = async ({ imdbID = '', title = '', tmdbId = null, type = 'movie', signal = null }) => {
+  const cacheKey = `watch_providers:${imdbID || title}`;
+  const cached = getCachedData(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
+  const TMDB_KEY = '3fd2be6f0c70a2a598f084ddfb75487c';
+  const BASE = 'https://api.tmdb.org/3';
+
+  try {
+    let resolvedTmdbId = tmdbId;
+    let resolvedType = type === 'series' || type === 'tv' || type === 'anime' ? 'tv' : 'movie';
+
+    // 1. Resolve TMDB ID via IMDb ID
+    if (!resolvedTmdbId && imdbID && String(imdbID).startsWith('tt')) {
+      const findUrl = `${BASE}/find/${encodeURIComponent(imdbID)}?api_key=${TMDB_KEY}&external_source=imdb_id`;
+      const findRes = await fetch(findUrl, { signal: signal || AbortSignal.timeout(3500) });
+      if (findRes.ok) {
+        const findData = await findRes.json();
+        if (findData.movie_results && findData.movie_results.length > 0) {
+          resolvedTmdbId = findData.movie_results[0].id;
+          resolvedType = 'movie';
+        } else if (findData.tv_results && findData.tv_results.length > 0) {
+          resolvedTmdbId = findData.tv_results[0].id;
+          resolvedType = 'tv';
+        }
+      }
+    }
+
+    // 2. Fallback: Search by clean title
+    if (!resolvedTmdbId && title) {
+      const cleanTitle = title.trim();
+      const searchUrl = `${BASE}/search/multi?api_key=${TMDB_KEY}&query=${encodeURIComponent(cleanTitle)}`;
+      const searchRes = await fetch(searchUrl, { signal: signal || AbortSignal.timeout(3500) });
+      if (searchRes.ok) {
+        const searchData = await searchRes.json();
+        const match = searchData.results?.find(r => r.media_type === 'movie' || r.media_type === 'tv');
+        if (match) {
+          resolvedTmdbId = match.id;
+          resolvedType = match.media_type;
+        }
+      }
+    }
+
+    if (!resolvedTmdbId) {
+      return null;
+    }
+
+    // 3. Fetch real watch providers
+    const provUrl = `${BASE}/${resolvedType}/${resolvedTmdbId}/watch/providers?api_key=${TMDB_KEY}`;
+    const provRes = await fetch(provUrl, { signal: signal || AbortSignal.timeout(4000) });
+    if (!provRes.ok) return null;
+
+    const provData = await provRes.json();
+    const results = provData?.results || null;
+
+    if (results && Object.keys(results).length > 0) {
+      setCachedData(cacheKey, results);
+    }
+    return results;
+  } catch {
+    return null;
+  }
+};
+

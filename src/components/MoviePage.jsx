@@ -734,6 +734,43 @@ const MoviePage = ({
   const currentSeasonEpisodes = effectiveSeasonsMap[selectedSeason] || (availableSeasons.length > 0 ? effectiveSeasonsMap[availableSeasons[0]] : []);
   const movieVibes = calculateMovieVibes(movie);
 
+  const scrollToSection = (sectionId) => {
+    playSound('click');
+    setActiveTab(sectionId);
+    const target = document.getElementById(`section-${sectionId}`);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  // Scroll-spy to dynamically highlight the visible section in the navigation bar
+  useEffect(() => {
+    const sectionIds = [
+      'overview',
+      'stream',
+      'cast',
+      ...(isSeries && availableSeasons.length > 0 ? ['episodes'] : []),
+      'specs'
+    ];
+
+    const handleScroll = () => {
+      const offsetThreshold = 180;
+      for (let i = sectionIds.length - 1; i >= 0; i--) {
+        const el = document.getElementById(`section-${sectionIds[i]}`);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= offsetThreshold) {
+            setActiveTab(sectionIds[i]);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isSeries, availableSeasons.length]);
+
   const genresList = Array.isArray(genre)
     ? genre
     : (typeof genre === 'string'
@@ -1558,20 +1595,21 @@ const MoviePage = ({
               <button
                 type="button"
                 className={`nav-tab-pill ${activeTab === 'overview' ? 'active' : ''}`}
-                onClick={() => {
-                  playSound('click');
-                  setActiveTab('overview');
-                }}
+                onClick={() => scrollToSection('overview')}
               >
                 Overview
               </button>
               <button
                 type="button"
+                className={`nav-tab-pill ${activeTab === 'stream' ? 'active' : ''}`}
+                onClick={() => scrollToSection('stream')}
+              >
+                Where to Watch
+              </button>
+              <button
+                type="button"
                 className={`nav-tab-pill ${activeTab === 'cast' ? 'active' : ''}`}
-                onClick={() => {
-                  playSound('click');
-                  setActiveTab('cast');
-                }}
+                onClick={() => scrollToSection('cast')}
               >
                 Cast & Crew ({castMembers?.length || actors?.length || 0})
               </button>
@@ -1579,31 +1617,15 @@ const MoviePage = ({
                 <button
                   type="button"
                   className={`nav-tab-pill ${activeTab === 'episodes' ? 'active' : ''}`}
-                  onClick={() => {
-                    playSound('click');
-                    setActiveTab('episodes');
-                  }}
+                  onClick={() => scrollToSection('episodes')}
                 >
                   Episodes ({availableSeasons.length} Seasons)
                 </button>
               )}
               <button
                 type="button"
-                className={`nav-tab-pill ${activeTab === 'stream' ? 'active' : ''}`}
-                onClick={() => {
-                  playSound('click');
-                  setActiveTab('stream');
-                }}
-              >
-                Where to Watch
-              </button>
-              <button
-                type="button"
                 className={`nav-tab-pill ${activeTab === 'specs' ? 'active' : ''}`}
-                onClick={() => {
-                  playSound('click');
-                  setActiveTab('specs');
-                }}
+                onClick={() => scrollToSection('specs')}
               >
                 Production & Specs
               </button>
@@ -1639,42 +1661,56 @@ const MoviePage = ({
               </div>
             </div>
 
-            {/* Tab 1: Overview & Storyline */}
-            {(activeTab === 'overview' || activeTab === 'all') && (
-              <>
-                {/* Storyline Synopsis Block */}
-                <div className="details-block synopsis-glass-block">
-                  <h3 className="block-title">
-                    Storyline & Synopsis
-                  </h3>
-                  <p className="details-plot-body">{plot}</p>
-                </div>
+            {/* Section 1: Overview & Storyline */}
+            <div id="section-overview" className="details-section-wrapper">
+              {/* Storyline Synopsis Block */}
+              <div className="details-block synopsis-glass-block">
+                <h3 className="block-title">
+                  Storyline & Synopsis
+                </h3>
+                <p className="details-plot-body">{plot}</p>
+              </div>
 
-                {/* Memorable Tagline */}
-                {movie.tagline && (
-                  <div className="details-block quote-highlight-block">
-                    <div className="quote-header">
-                      <span className="quote-label">Memorable Tagline</span>
-                    </div>
-                    <blockquote className="movie-quote-text">
-                      "{movie.tagline}"
-                    </blockquote>
-                    <div className="quote-action-row">
-                      <button
-                        type="button"
-                        className="copy-quote-btn"
-                        onClick={() => handleCopyQuote(movie.tagline)}
-                      >
-                        <span>{copiedQuote ? 'Quote Copied ✓' : 'Copy Quote'}</span>
-                      </button>
-                    </div>
+              {/* Memorable Tagline */}
+              {movie.tagline && (
+                <div className="details-block quote-highlight-block">
+                  <div className="quote-header">
+                    <span className="quote-label">Memorable Tagline</span>
                   </div>
-                )}
-              </>
-            )}
+                  <blockquote className="movie-quote-text">
+                    "{movie.tagline}"
+                  </blockquote>
+                  <div className="quote-action-row">
+                    <button
+                      type="button"
+                      className="copy-quote-btn"
+                      onClick={() => handleCopyQuote(movie.tagline)}
+                    >
+                      <span>{copiedQuote ? 'Quote Copied ✓' : 'Copy Quote'}</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
 
-            {/* Tab 2: Cast & Crew */}
-            {(activeTab === 'cast' || activeTab === 'all') && (
+            {/* Section 2: Where to Stream & Watch */}
+            <div id="section-stream" className="details-section-wrapper">
+              <div className="details-block streaming-lounge-block">
+                <WatchProviders
+                  movieTitle={name}
+                  movie={movie}
+                  onWatchTrailer={() => {
+                    playSound('whoosh');
+                    setIsPlayingTrailer(true);
+                    setIsPaused(false);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Section 3: Cast & Crew */}
+            <div id="section-cast" className="details-section-wrapper">
               <div className="details-block">
                 <h3 className="block-title">
                   Top Cast & Stars
@@ -1722,225 +1758,210 @@ const MoviePage = ({
                   ))}
                 </div>
               </div>
-            )}
+            </div>
 
-            {/* Tab 3: Episodes & Seasons */}
-            {isSeries && availableSeasons.length > 0 && (activeTab === 'episodes' || activeTab === 'all') && (
-              <div className="details-block tv-episodes-block">
-                <div className="episodes-header-row">
-                  <h3 className="block-title">
-                    Season & Episode Guide
-                  </h3>
-                  <span className="episodes-count-badge">
-                    {availableSeasons.length} {availableSeasons.length === 1 ? 'Season' : 'Seasons'}
-                  </span>
-                </div>
+            {/* Section 4: Episodes & Seasons */}
+            {isSeries && availableSeasons.length > 0 && (
+              <div id="section-episodes" className="details-section-wrapper">
+                <div className="details-block tv-episodes-block">
+                  <div className="episodes-header-row">
+                    <h3 className="block-title">
+                      Season & Episode Guide
+                    </h3>
+                    <span className="episodes-count-badge">
+                      {availableSeasons.length} {availableSeasons.length === 1 ? 'Season' : 'Seasons'}
+                    </span>
+                  </div>
 
-                {/* Season Tabs */}
-                <div
-                  className={`season-tabs-row ${isDraggingSeasons ? 'is-dragging' : ''}`}
-                  ref={seasonTabsRef}
-                  onMouseDown={handleSeasonsMouseDown}
-                  onMouseMove={handleSeasonsMouseMove}
-                  onMouseUp={handleSeasonsMouseUpOrLeave}
-                  onMouseLeave={handleSeasonsMouseUpOrLeave}
-                >
-                  {availableSeasons.map((sNum) => (
-                    <button
-                      key={sNum}
-                      className={`season-tab-btn ${selectedSeason === sNum ? 'active' : ''}`}
-                      onClick={() => {
-                        playSound('click');
-                        setSelectedSeason(sNum);
-                      }}
-                      type="button"
-                    >
-                      Season {sNum}
-                    </button>
-                  ))}
-                </div>
+                  {/* Season Tabs */}
+                  <div
+                    className={`season-tabs-row ${isDraggingSeasons ? 'is-dragging' : ''}`}
+                    ref={seasonTabsRef}
+                    onMouseDown={handleSeasonsMouseDown}
+                    onMouseMove={handleSeasonsMouseMove}
+                    onMouseUp={handleSeasonsMouseUpOrLeave}
+                    onMouseLeave={handleSeasonsMouseUpOrLeave}
+                  >
+                    {availableSeasons.map((sNum) => (
+                      <button
+                        key={sNum}
+                        className={`season-tab-btn ${selectedSeason === sNum ? 'active' : ''}`}
+                        onClick={() => {
+                          playSound('click');
+                          setSelectedSeason(sNum);
+                        }}
+                        type="button"
+                      >
+                        Season {sNum}
+                      </button>
+                    ))}
+                  </div>
 
-                {/* Episode Cards Grid */}
-                <div className="episodes-cards-grid">
-                  {currentSeasonEpisodes.map((ep) => {
-                    const epKey = `ep_${selectedSeason}_${ep.number || ep.id}`;
-                    const isWatched = watchedEpisodes.has(epKey);
-                    return (
-                      <div key={ep.id} className={`episode-card ${isWatched ? 'watched' : ''}`}>
-                        <div className="episode-thumb-container">
-                          {ep.image ? (
-                            <img
-                              src={ep.image}
-                              alt={ep.name}
-                              className="episode-thumb"
-                              loading="lazy"
-                              referrerPolicy="no-referrer"
-                            />
-                          ) : (
-                            <div className="episode-thumb-placeholder">
-                              <span>Episode {ep.number || ''}</span>
+                  {/* Episode Cards Grid */}
+                  <div className="episodes-cards-grid">
+                    {currentSeasonEpisodes.map((ep) => {
+                      const epKey = `ep_${selectedSeason}_${ep.number || ep.id}`;
+                      const isWatched = watchedEpisodes.has(epKey);
+                      return (
+                        <div key={ep.id} className={`episode-card ${isWatched ? 'watched' : ''}`}>
+                          <div className="episode-thumb-container">
+                            {ep.image ? (
+                              <img
+                                src={ep.image}
+                                alt={ep.name}
+                                className="episode-thumb"
+                                loading="lazy"
+                                referrerPolicy="no-referrer"
+                              />
+                            ) : (
+                              <div className="episode-thumb-placeholder">
+                                <span>Episode {ep.number || ''}</span>
+                              </div>
+                            )}
+                            <button
+                              type="button"
+                              className={`episode-watch-btn ${isWatched ? 'active' : ''}`}
+                              onClick={() => toggleWatchedEpisode(epKey)}
+                              title={isWatched ? 'Mark as unwatched' : 'Mark as watched'}
+                            >
+                              {isWatched ? '✓ Watched' : '+ Watch'}
+                            </button>
+                          </div>
+                          <div className="episode-content">
+                            <div className="episode-top-row">
+                              <span className="episode-number">S{String(selectedSeason).padStart(2, '0')}E{String(ep.number || 1).padStart(2, '0')}</span>
+                              <span className="episode-title" title={ep.name}>{ep.name}</span>
+                              {ep.rating && <span className="episode-rating">★ {ep.rating}</span>}
                             </div>
-                          )}
-                          <button
-                            type="button"
-                            className={`episode-watch-btn ${isWatched ? 'active' : ''}`}
-                            onClick={() => toggleWatchedEpisode(epKey)}
-                            title={isWatched ? 'Mark as unwatched' : 'Mark as watched'}
-                          >
-                            {isWatched ? '✓ Watched' : '+ Watch'}
-                          </button>
-                        </div>
-                        <div className="episode-content">
-                          <div className="episode-top-row">
-                            <span className="episode-number">S{String(selectedSeason).padStart(2, '0')}E{String(ep.number || 1).padStart(2, '0')}</span>
-                            <span className="episode-title" title={ep.name}>{ep.name}</span>
-                            {ep.rating && <span className="episode-rating">★ {ep.rating}</span>}
+                            <div className="episode-meta-subrow">
+                              {ep.airdate && <span className="episode-airdate">Aired: {ep.airdate}</span>}
+                              {ep.runtime && <span className="episode-runtime">• {ep.runtime}</span>}
+                            </div>
+                            <p className="episode-summary">{ep.summary || 'Episode details available on broadcast.'}</p>
                           </div>
-                          <div className="episode-meta-subrow">
-                            {ep.airdate && <span className="episode-airdate">Aired: {ep.airdate}</span>}
-                            {ep.runtime && <span className="episode-runtime">• {ep.runtime}</span>}
-                          </div>
-                          <p className="episode-summary">{ep.summary || 'Episode details available on broadcast.'}</p>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             )}
 
-            {/* Tab 4: Where to Stream */}
-            {(activeTab === 'stream' || activeTab === 'all') && (
-              <div className="details-block streaming-lounge-block">
-                <WatchProviders
-                  movieTitle={name}
-                  onWatchTrailer={() => {
-                    playSound('whoosh');
-                    setIsPlayingTrailer(true);
-                    setIsPaused(false);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                />
+            {/* Section 5: Technical Specs, Box Office & Trivia */}
+            <div id="section-specs" className="details-section-wrapper">
+              <div className="details-block">
+                <h3 className="block-title">
+                  Production & Release Data
+                </h3>
+                <div className="spec-info-grid">
+                  {(director || directorsList.length > 0) && (
+                    <div className="spec-card">
+                      <span className="spec-label">Director</span>
+                      <button
+                        className="spec-value-link"
+                        onClick={() => {
+                          playSound('click');
+                          if (onDirectorClick) onDirectorClick(director || directorsList[0]);
+                        }}
+                        type="button"
+                      >
+                        {director || directorsList.join(', ')}
+                      </button>
+                    </div>
+                  )}
+
+                  {(writer || writersList.length > 0) && (
+                    <div className="spec-card">
+                      <span className="spec-label">Screenplay / Writer</span>
+                      <span className="spec-value">{writer || writersList.join(', ')}</span>
+                    </div>
+                  )}
+
+                  {production && (
+                    <div className="spec-card">
+                      <span className="spec-label">Studio / Producer</span>
+                      <span className="spec-value">{production}</span>
+                    </div>
+                  )}
+
+                  {boxOffice && (
+                    <div className="spec-card">
+                      <span className="spec-label">Box Office Gross</span>
+                      <span className="spec-value" style={{ color: '#10b981', fontWeight: '700' }}>
+                        {boxOffice}
+                      </span>
+                    </div>
+                  )}
+
+                  {network && (
+                    <div className="spec-card">
+                      <span className="spec-label">Network / Platform</span>
+                      <span className="spec-value" style={{ color: '#38bdf8' }}>{network}</span>
+                    </div>
+                  )}
+
+                  {languagesList.length > 0 && (
+                    <div className="spec-card">
+                      <span className="spec-label">Audio Languages</span>
+                      <span className="spec-value">{languagesList.join(', ')}</span>
+                    </div>
+                  )}
+
+                  {countriesList.length > 0 && (
+                    <div className="spec-card">
+                      <span className="spec-label">Country</span>
+                      <span className="spec-value">{countriesList.join(', ')}</span>
+                    </div>
+                  )}
+
+                  {website && website !== 'N/A' && (
+                    <div className="spec-card">
+                      <span className="spec-label">Official Site</span>
+                      <a
+                        href={website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="spec-value-link"
+                        style={{ color: '#6366f1' }}
+                      >
+                        Visit Website ↗
+                      </a>
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
 
-            {/* Tab 5: Technical Specs, Box Office & Trivia */}
-            {(activeTab === 'specs' || activeTab === 'all') && (
-              <>
-                <div className="details-block">
-                  <h3 className="block-title">
-                    Production & Release Data
-                  </h3>
-                  <div className="spec-info-grid">
-                    {(director || directorsList.length > 0) && (
-                      <div className="spec-card">
-                        <span className="spec-label">Director</span>
-                        <button
-                          className="spec-value-link"
-                          onClick={() => {
-                            playSound('click');
-                            if (onDirectorClick) onDirectorClick(director || directorsList[0]);
-                          }}
-                          type="button"
-                        >
-                          {director || directorsList.join(', ')}
-                        </button>
-                      </div>
-                    )}
-
-                    {(writer || writersList.length > 0) && (
-                      <div className="spec-card">
-                        <span className="spec-label">Screenplay / Writer</span>
-                        <span className="spec-value">{writer || writersList.join(', ')}</span>
-                      </div>
-                    )}
-
-                    {production && (
-                      <div className="spec-card">
-                        <span className="spec-label">Studio / Producer</span>
-                        <span className="spec-value">{production}</span>
-                      </div>
-                    )}
-
-                    {boxOffice && (
-                      <div className="spec-card">
-                        <span className="spec-label">Box Office Gross</span>
-                        <span className="spec-value" style={{ color: '#10b981', fontWeight: '700' }}>
-                          {boxOffice}
-                        </span>
-                      </div>
-                    )}
-
-                    {network && (
-                      <div className="spec-card">
-                        <span className="spec-label">Network / Platform</span>
-                        <span className="spec-value" style={{ color: '#38bdf8' }}>{network}</span>
-                      </div>
-                    )}
-
-                    {languagesList.length > 0 && (
-                      <div className="spec-card">
-                        <span className="spec-label">Audio Languages</span>
-                        <span className="spec-value">{languagesList.join(', ')}</span>
-                      </div>
-                    )}
-
-                    {countriesList.length > 0 && (
-                      <div className="spec-card">
-                        <span className="spec-label">Country</span>
-                        <span className="spec-value">{countriesList.join(', ')}</span>
-                      </div>
-                    )}
-
-                    {website && website !== 'N/A' && (
-                      <div className="spec-card">
-                        <span className="spec-label">Official Site</span>
-                        <a
-                          href={website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="spec-value-link"
-                          style={{ color: '#6366f1' }}
-                        >
-                          Visit Website ↗
-                        </a>
-                      </div>
-                    )}
+              {/* Cinema Trivia & Facts Card */}
+              <div className="details-block trivia-block">
+                <h3 className="block-title">
+                  Cinema Highlights & Mastering
+                </h3>
+                <div className="trivia-cards-grid">
+                  <div className="trivia-card">
+                    <div className="trivia-content">
+                      <strong>Audio & Video Mastering</strong>
+                      <p>Mastered in native 4K Ultra HD resolution with high dynamic range color grading and spatial Dolby Atmos audio track.</p>
+                    </div>
                   </div>
-                </div>
 
-                {/* Cinema Trivia & Facts Card */}
-                <div className="details-block trivia-block">
-                  <h3 className="block-title">
-                    Cinema Highlights & Mastering
-                  </h3>
-                  <div className="trivia-cards-grid">
+                  <div className="trivia-card">
+                    <div className="trivia-content">
+                      <strong>Critical Reception</strong>
+                      <p>{parseFloat(imdbRating) >= 8.0 ? 'Ranked among top audience-rated titles on global cinema leaderboards with extraordinary repeat viewership.' : 'Widely discussed contemporary release across streaming platforms and film enthusiast communities.'}</p>
+                    </div>
+                  </div>
+
+                  {boxOffice && (
                     <div className="trivia-card">
                       <div className="trivia-content">
-                        <strong>Audio & Video Mastering</strong>
-                        <p>Mastered in native 4K Ultra HD resolution with high dynamic range color grading and spatial Dolby Atmos audio track.</p>
+                        <strong>Theatrical Milestone</strong>
+                        <p>Recorded over {boxOffice} across domestic and international theatrical distribution circuits.</p>
                       </div>
                     </div>
-
-                    <div className="trivia-card">
-                      <div className="trivia-content">
-                        <strong>Critical Reception</strong>
-                        <p>{parseFloat(imdbRating) >= 8.0 ? 'Ranked among top audience-rated titles on global cinema leaderboards with extraordinary repeat viewership.' : 'Widely discussed contemporary release across streaming platforms and film enthusiast communities.'}</p>
-                      </div>
-                    </div>
-
-                    {boxOffice && (
-                      <div className="trivia-card">
-                        <div className="trivia-content">
-                          <strong>Theatrical Milestone</strong>
-                          <p>Recorded over {boxOffice} across domestic and international theatrical distribution circuits.</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </div>
-              </>
-            )}
+              </div>
+            </div>
 
             {/* Honors & Awards Trophy Banner */}
             {awards && awards !== 'N/A' && (
