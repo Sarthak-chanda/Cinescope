@@ -12066,10 +12066,10 @@
   [data-theme="light"] .stage-scrim-bottom {
     background: linear-gradient(
       180deg,
-      rgba(9, 13, 22, 0) 0%,
-      rgba(9, 13, 22, 0.35) 30%,
-      rgba(9, 13, 22, 0.75) 65%,
-      rgba(9, 13, 22, 0.95) 85%,
+      rgba(248, 250, 252, 0) 0%,
+      rgba(248, 250, 252, 0.35) 30%,
+      rgba(248, 250, 252, 0.75) 65%,
+      rgba(248, 250, 252, 0.95) 85%,
       var(--bg-primary) 100%
     ) !important;
   }
@@ -12078,11 +12078,22 @@
   [data-theme="light"] .reimagined-cinema-theater-stage::after {
     background: linear-gradient(
       180deg,
-      rgba(9, 13, 22, 0) 0%,
-      rgba(9, 13, 22, 0.45) 40%,
-      rgba(9, 13, 22, 0.85) 75%,
+      rgba(248, 250, 252, 0) 0%,
+      rgba(248, 250, 252, 0.45) 40%,
+      rgba(248, 250, 252, 0.85) 75%,
       var(--bg-primary) 100%
     ) !important;
+  }
+
+  [data-theme="light"] .cockpit-title {
+    color: #0f172a !important;
+  }
+
+  [data-theme="light"] .cockpit-watchlist-btn:not(.cta-trailer-btn) {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid rgba(15, 23, 42, 0.15) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
   }
 
   .stage-inner-wrapper {
@@ -13869,30 +13880,41 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
 }
 
-/* 2. Removal of Light/White Top Band Sections Across Web App */
-.navbar-wrapper,
-.nav-substrip,
-.movie-page-top-bar,
-.app-container {
-  background: #080c14 !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
-}
-
-[data-theme="light"] .navbar-wrapper,
-[data-theme="light"] .nav-substrip,
-[data-theme="light"] .movie-page-top-bar,
-[data-theme="light"] .app-container {
+/* 2. Top Navigation & App Container Theme Consistency */
+[data-theme="dark"] .navbar-wrapper,
+[data-theme="dark"] .nav-substrip,
+[data-theme="dark"] .movie-page-top-bar,
+[data-theme="dark"] .app-container {
   background: #080c14 !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
   color: #f8fafc !important;
 }
 
-/* 3. Dark Backdrop Hero Stage & Movie Page Container */
+[data-theme="light"] .navbar-wrapper,
+[data-theme="light"] .nav-substrip,
+[data-theme="light"] .movie-page-top-bar {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .app-container {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* 3. Hero Stage & Movie Page Container */
 .full-screen-backdrop-hero,
-.cinema-hero-stage,
-.movie-fullscreen-wrapper,
-[data-theme="light"] .movie-fullscreen-wrapper {
+.cinema-hero-stage {
   background: #080c14 !important;
+}
+
+[data-theme="dark"] .movie-fullscreen-wrapper {
+  background: #080c14 !important;
+}
+
+[data-theme="light"] .movie-fullscreen-wrapper {
+  background: #f8fafc !important;
 }
 
 .crisp-backdrop-overlay,

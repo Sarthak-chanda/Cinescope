@@ -20,12 +20,12 @@ const App = () => {
   const [initialLoading, setInitialLoading] = useState(false);
   const handleLoaderComplete = useCallback(() => setInitialLoading(false), []);
 
-  // Theme State (Dark Theme Default)
+  // Theme State (Persisted in localStorage, Dark Theme Default)
   const [theme, setTheme] = useState(() => {
     try {
       const saved = localStorage.getItem(THEME_KEY);
-      if (saved === 'light') {
-        localStorage.setItem(THEME_KEY, 'dark');
+      if (saved === 'light' || saved === 'dark') {
+        return saved;
       }
       return 'dark';
     } catch {
@@ -57,6 +57,7 @@ const App = () => {
   // Sync theme with HTML document attribute
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
+    document.body.setAttribute('data-theme', theme);
     try {
       localStorage.setItem(THEME_KEY, theme);
     } catch {

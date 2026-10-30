@@ -67,27 +67,27 @@
 
 /* Light Theme (Unified Dark Metallic Scrim with Contrast) */
 [data-theme="light"] {
-  --bg-primary: #090d16;
-  --bg-secondary: #0e1424;
-  --bg-surface: rgba(15, 23, 42, 0.92);
-  --bg-surface-hover: rgba(30, 41, 59, 0.95);
-  --bg-surface-elevated: rgba(15, 23, 42, 0.95);
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-surface: rgba(255, 255, 255, 0.92);
+  --bg-surface-hover: rgba(241, 245, 249, 0.95);
+  --bg-surface-elevated: #ffffff;
 
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
 
-  --glass-border: rgba(255, 255, 255, 0.14);
-  --glass-border-hover: rgba(99, 102, 241, 0.6);
+  --glass-border: rgba(15, 23, 42, 0.1);
+  --glass-border-hover: rgba(99, 102, 241, 0.5);
 
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.35);
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.25);
 
-  --hero-glow-1: rgba(99, 102, 241, 0.3);
-  --hero-glow-2: rgba(245, 158, 11, 0.25);
-  --navbar-bg: rgba(8, 12, 20, 0.96);
+  --hero-glow-1: rgba(99, 102, 241, 0.15);
+  --hero-glow-2: rgba(245, 158, 11, 0.12);
+  --navbar-bg: rgba(255, 255, 255, 0.94);
 }
 
 /* Base Document Reset */
