@@ -354,7 +354,7 @@ const MoviePage = ({
   // Stage view mode state: 'trailer' | 'poster' | 'banner'
   const [stageMode, setStageMode] = useState(() => (resolvedVideoId ? 'trailer' : 'poster'));
   const [trailerError, setTrailerError] = useState(() => !resolvedVideoId);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
   const isPlayingTrailer = stageMode === 'trailer';
   const setIsPlayingTrailer = (val) => setStageMode(val ? 'trailer' : 'poster');
 
@@ -530,12 +530,12 @@ const MoviePage = ({
     const loadEpisodes = async () => {
       try {
         const queryName = (movie.name || movie.title || '').replace(/\(.*\)/, '').trim();
-        const tmdbRes = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=4f89241199a531b29dbd244a307b2251&query=${encodeURIComponent(queryName)}`, { signal: AbortSignal.timeout(3500) });
+        const tmdbRes = await fetch(`https://api.tmdb.org/3/search/tv?api_key=3fd2be6f0c70a2a598f084ddfb75487c&query=${encodeURIComponent(queryName)}`, { signal: AbortSignal.timeout(3500) });
         if (tmdbRes.ok) {
           const tmdbData = await tmdbRes.json();
           const tvMatch = tmdbData?.results?.[0];
           if (tvMatch?.id) {
-            const detailRes = await fetch(`https://api.themoviedb.org/3/tv/${tvMatch.id}?api_key=4f89241199a531b29dbd244a307b2251`, { signal: AbortSignal.timeout(3500) });
+            const detailRes = await fetch(`https://api.tmdb.org/3/tv/${tvMatch.id}?api_key=3fd2be6f0c70a2a598f084ddfb75487c`, { signal: AbortSignal.timeout(3500) });
             if (detailRes.ok) {
               const detailData = await detailRes.json();
               const numSeasons = detailData?.number_of_seasons || 1;
@@ -800,10 +800,10 @@ const MoviePage = ({
   const videoId = resolvedVideoId;
   const hasTrailer = Boolean(videoId) && !trailerError;
 
-  // Build trailer embed URL with autoplay=1&mute=1 so Chrome autoplay policy never blocks it
+  // Build trailer embed URL with autoplay=1&mute=0 for active unmuted sound
   const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
   const heroEmbedUrl = hasTrailer && videoId
-    ? `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=1&enablejsapi=1&origin=${currentOrigin}&controls=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`
+    ? `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=0&enablejsapi=1&origin=${encodeURIComponent(currentOrigin)}&controls=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`
     : null;
 
   const externalTrailerUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(`${name} ${year} official trailer`)}`;
@@ -814,6 +814,7 @@ const MoviePage = ({
       iframeRef.current.contentWindow.postMessage(JSON.stringify({ event: 'listening' }), '*');
       iframeRef.current.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo', args: '' }), '*');
       iframeRef.current.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: '' }), '*');
+      setIsMuted(false);
     } catch {
       // Fail-safe
     }
@@ -825,6 +826,7 @@ const MoviePage = ({
       const timer = setTimeout(() => {
         try {
           iframeRef.current.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: '' }), '*');
+          setIsMuted(false);
         } catch {
           // Fail-safe
         }
@@ -990,6 +992,34 @@ const MoviePage = ({
 
       {/* Deep Gradient Scrim Overlay */}
       <div className="moving-gradient-overlay" aria-hidden="true" />
+
+      {/* Top Standardized Subpage Navigation Bar */}
+      <div className="subpage-top-nav-bar movie-page-top-nav">
+        <div className="subpage-nav-container">
+          <button
+            type="button"
+            className="subpage-back-btn"
+            onClick={onBack}
+            title={hasSearchResults ? 'Back to Search Results' : 'Back to Home'}
+            aria-label={hasSearchResults ? 'Back to Search Results' : 'Back to Home'}
+          >
+            <span className="back-arrow">←</span>
+            <span>{hasSearchResults ? 'Back to Results' : 'Back to Home'}</span>
+          </button>
+
+          <div className="subpage-breadcrumbs">
+            <span className="crumb-link" onClick={onBack} title="Back to Home">Home</span>
+            <span className="crumb-sep">›</span>
+            {hasSearchResults && (
+              <>
+                <span className="crumb-link" onClick={onBack} title="Back to Search Results">Results</span>
+                <span className="crumb-sep">›</span>
+              </>
+            )}
+            <span className="crumb-current">{titleDisplay}</span>
+          </div>
+        </div>
+      </div>
 
       {/* =========================================================================
           1. UNIFIED CINEMA MEDIA STAGE (TRAILER, POSTER IN TRAILER SPACE, OR BANNER)
@@ -1604,7 +1634,7 @@ const MoviePage = ({
                 className={`nav-tab-pill ${activeTab === 'stream' ? 'active' : ''}`}
                 onClick={() => scrollToSection('stream')}
               >
-                Where to Watch
+                Watch Now
               </button>
               <button
                 type="button"
@@ -1630,6 +1660,15 @@ const MoviePage = ({
                 Production & Specs
               </button>
             </div>
+
+            {/* Multi-API Cross-Validation Badge */}
+            {movie.validationSources && movie.validationSources.length > 0 && (
+              <div className="multi-api-validation-bar" title="Metadata cross-verified across independent cinema registries">
+                <span className="validation-badge-icon">✓</span>
+                <span className="validation-badge-title">Multi-Registry Verified:</span>
+                <span className="validation-badge-sources">{movie.validationSources.join(' • ')}</span>
+              </div>
+            )}
 
             {/* Decorated Critic Scoreboard */}
             <div className="details-ratings-grid">
@@ -1659,6 +1698,17 @@ const MoviePage = ({
                   <span className="critic-label">Metacritic</span>
                 </div>
               </div>
+
+              {/* TMDb Verified Score */}
+              {(movie.tmdbRating || ratings?.tmdb) && (
+                <div className="critic-rating-card tmdb-glow">
+                  <div className="critic-badge-icon tmdb" style={{ background: '#01b4e4', color: '#fff', fontWeight: 800 }}>TMDb</div>
+                  <div className="critic-meta">
+                    <span className="critic-score">{movie.tmdbRating || ratings.tmdb}/10</span>
+                    <span className="critic-label">{movie.tmdbVotes ? `${Number(movie.tmdbVotes).toLocaleString()} votes` : 'TMDb Registry'}</span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Section 1: Overview & Storyline */}
@@ -2008,11 +2058,13 @@ const MoviePage = ({
         <div className="movie-page-bottom-nav">
           <button
             type="button"
-            className="page-back-action-btn"
+            className="subpage-back-btn"
             onClick={onBack}
+            title={hasSearchResults ? 'Back to Search Results' : 'Back to Home'}
+            aria-label={hasSearchResults ? 'Back to Search Results' : 'Back to Home'}
           >
-            <span className="btn-arrow">←</span>
-            <span>{hasSearchResults ? 'Back to Search Results' : 'Back to Main Catalog'}</span>
+            <span className="back-arrow">←</span>
+            <span>{hasSearchResults ? 'Back to Results' : 'Back to Home'}</span>
           </button>
           <button
             type="button"

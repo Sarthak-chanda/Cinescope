@@ -9,11 +9,21 @@ const MovieCard = ({
   onToggleWatchlist,
   onImageError
 }) => {
+  const [currentPoster, setCurrentPoster] = useState(movie?.poster || '');
   const [imageFailed, setImageFailed] = useState(false);
+  const [triedFallback, setTriedFallback] = useState(false);
 
-  if (!movie || !movie.poster || imageFailed) return null;
+  React.useEffect(() => {
+    if (movie?.poster) {
+      setCurrentPoster(movie.poster);
+      setImageFailed(false);
+      setTriedFallback(false);
+    }
+  }, [movie?.poster]);
 
-  const { id, imdbID, name, year, type, poster, imdbRating, genres, genre, status } = movie;
+  if (!movie || !currentPoster || imageFailed) return null;
+
+  const { id, imdbID, name, year, type, imdbRating, genres, genre, status } = movie;
   const displayYear = formatTimelineYear(year, name, status);
   const genreDisplay = Array.isArray(genre) && genre.length > 0
     ? genre[0]
@@ -38,7 +48,45 @@ const MovieCard = ({
     }
   };
 
-  const handleImageError = () => {
+  const handleImageError = async () => {
+    if (!triedFallback) {
+      setTriedFallback(true);
+      // Try secondary poster if present and different
+      if (movie.secondaryPoster && movie.secondaryPoster !== currentPoster) {
+        setCurrentPoster(movie.secondaryPoster);
+        return;
+      }
+      // If weserv proxy was used, try direct url without weserv
+      if (currentPoster.includes('images.weserv.nl/?url=')) {
+        const directUrl = decodeURIComponent(currentPoster.split('url=')[1] || '');
+        if (directUrl && directUrl !== currentPoster) {
+          setCurrentPoster(directUrl);
+          return;
+        }
+      }
+      // Try dynamic TMDb fetch for exact title match
+      if (name) {
+        try {
+          const isTv = type === 'series' || type === 'tv' || type === 'anime';
+          const ep = isTv ? 'search/tv' : 'search/movie';
+          const res = await fetch(`https://api.tmdb.org/3/${ep}?api_key=3fd2be6f0c70a2a598f084ddfb75487c&query=${encodeURIComponent(name.replace(/\s*\([^\)]*\)/g, '').trim())}`);
+          if (res.ok) {
+            const data = await res.json();
+            const hit = data.results?.[0];
+            if (hit?.poster_path) {
+              const tmdbPoster = `https://image.tmdb.org/t/p/w500${hit.poster_path}`;
+              if (tmdbPoster !== currentPoster) {
+                setCurrentPoster(tmdbPoster);
+                return;
+              }
+            }
+          }
+        } catch {
+          // ignore
+        }
+      }
+    }
+
     setImageFailed(true);
     if (onImageError) {
       onImageError(id || imdbID);
@@ -59,7 +107,7 @@ const MovieCard = ({
     >
       <div className="movie-card-poster-wrapper">
         <img
-          src={poster}
+          src={currentPoster}
           alt={name || 'Poster'}
           className="movie-card-poster"
           loading="lazy"

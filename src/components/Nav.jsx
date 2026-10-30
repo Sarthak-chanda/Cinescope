@@ -41,21 +41,6 @@ const Nav = ({
   canGoBack,
   hasSearchResults
 }) => {
-  const quickDiscoveries = [
-    { label: 'Kalki 2898 AD', query: 'Kalki 2898 AD' },
-    { label: 'Stree 2', query: 'Stree 2' },
-    { label: 'Jawan', query: 'Jawan' },
-    { label: 'RRR', query: 'RRR' },
-    { label: 'Panchayat', query: 'Panchayat' },
-    { label: 'Sacred Games', query: 'Sacred Games' },
-    { label: 'Kantara', query: 'Kantara' },
-    { label: 'Mirzapur', query: 'Mirzapur' },
-    { label: 'Manjummel Boys', query: 'Manjummel Boys' },
-    { label: 'Dune', query: 'Dune' },
-    { label: 'Interstellar', query: 'Interstellar' },
-    { label: 'Stranger Things', query: 'Stranger Things' }
-  ];
-
   const [isOpen, setIsOpen] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -165,18 +150,11 @@ const Nav = ({
     onQuickSearch(term);
   };
 
-  const handleSelectTrending = (query) => {
-    setIsOpen(false);
-    setActiveIndex(-1);
-    setSearchTerm(query);
-    onQuickSearch(query);
-  };
-
   // Keyboard navigation calculation
   const isQueryMode = Boolean(searchTerm && searchTerm.trim().length > 0);
   const totalNavigableItems = isQueryMode
     ? suggestions.length + (suggestions.length > 0 ? 1 : 0)
-    : recentSearches.length + quickDiscoveries.length;
+    : (recentSearches?.length || 0);
 
   const handleKeyDown = (e) => {
     if (!isOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
@@ -207,13 +185,8 @@ const Nav = ({
             handleSubmit();
           }
         } else {
-          if (activeIndex < recentSearches.length) {
+          if (activeIndex < (recentSearches?.length || 0)) {
             handleSelectRecent(recentSearches[activeIndex]);
-          } else {
-            const trendIdx = activeIndex - recentSearches.length;
-            if (quickDiscoveries[trendIdx]) {
-              handleSelectTrending(quickDiscoveries[trendIdx].query);
-            }
           }
         }
       } else {
@@ -225,8 +198,8 @@ const Nav = ({
   return (
     <header className="navbar-wrapper">
       <div className="navbar">
-        {/* Brand & Back Button */}
-        <div className="navbar-brand-group">
+        {/* Left: Fixed Brand & Primary Navigation */}
+        <div className="navbar-left">
           <div className="brand" onClick={onResetToHome} title="Go to CineScope Home">
             <div className="brand-icon">
               <span>🎬</span>
@@ -237,17 +210,16 @@ const Nav = ({
             </div>
           </div>
 
-          {canGoBack && onBack && (
+          <nav className="nav-primary-links" aria-label="Main navigation">
             <button
               type="button"
-              className="nav-header-back-btn animate-fade-in"
-              onClick={onBack}
-              title="Go back to previous screen"
+              className={`nav-link-btn ${!canGoBack ? 'active' : ''}`}
+              onClick={onResetToHome}
+              title="Go to Home"
             >
-              <span className="back-arrow">←</span>
-              <span className="back-text">{selectedMovie ? (hasSearchResults ? 'Results' : 'Home') : 'Home'}</span>
+              Home
             </button>
-          )}
+          </nav>
         </div>
 
         {/* Search Bar with Live Suggestions Dropdown */}
@@ -301,7 +273,7 @@ const Nav = ({
           </form>
 
           {/* Dynamic Search Suggestions Dropdown */}
-          {isOpen && (
+          {isOpen && (isQueryMode || (recentSearches && recentSearches.length > 0)) && (
             <div
               className="search-suggestions-dropdown animate-fade-in"
               id="search-suggestions-menu"
@@ -482,33 +454,6 @@ const Nav = ({
                       </div>
                     </div>
                   )}
-
-                  {/* Trending Discoveries In Dropdown */}
-                  <div className="suggestions-trending-group">
-                    <div className="suggestions-header">
-                      <div className="suggestions-header-left">
-                        <span className="suggestions-header-icon">🔥</span>
-                        <span className="suggestions-header-label">Trending Discoveries</span>
-                      </div>
-                    </div>
-                    <div className="suggestions-chips-grid">
-                      {quickDiscoveries.map((item, idx) => {
-                        const globalIdx = (recentSearches?.length || 0) + idx;
-                        const isActive = activeIndex === globalIdx;
-                        return (
-                          <button
-                            key={item.query}
-                            type="button"
-                            className={`suggestion-chip ${isActive ? 'is-active' : ''}`}
-                            onClick={() => handleSelectTrending(item.query)}
-                            onMouseEnter={() => setActiveIndex(globalIdx)}
-                          >
-                            {item.label}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
                 </div>
               )}
             </div>
@@ -540,26 +485,6 @@ const Nav = ({
               <span className="watchlist-badge-count">{watchlistCount}</span>
             )}
           </button>
-        </div>
-      </div>
-
-      {/* Substrip for Popular Quick Searches */}
-      <div className="nav-substrip">
-        <div className="substrip-content">
-          <div className="substrip-left">
-            <span className="substrip-label">Trending Now:</span>
-            <div className="chips-scroll-container">
-              {quickDiscoveries.map((item) => (
-                <button
-                  key={item.query}
-                  className="quick-chip"
-                  onClick={() => onQuickSearch(item.query)}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </header>

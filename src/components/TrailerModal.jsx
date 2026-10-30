@@ -79,10 +79,11 @@ const TrailerModal = ({ isOpen, onClose, movie }) => {
 
   const knownVideoId = resolveModalTrailerId(movie);
   const hasTrailer = !trailerError;
+  const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
 
   const embedUrl = knownVideoId
-    ? `https://www.youtube-nocookie.com/embed/${knownVideoId}?autoplay=1&mute=0&enablejsapi=1&controls=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`
-    : `https://www.youtube-nocookie.com/embed?listType=search&list=${encodeURIComponent(`${movieTitle} ${movieYear} official trailer`)}&autoplay=1&mute=0&controls=1&rel=0&modestbranding=1&playsinline=1`;
+    ? `https://www.youtube-nocookie.com/embed/${knownVideoId}?autoplay=1&mute=0&enablejsapi=1&origin=${encodeURIComponent(currentOrigin)}&controls=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1`
+    : `https://www.youtube-nocookie.com/embed?listType=search&list=${encodeURIComponent(`${movieTitle} ${movieYear} official trailer`)}&autoplay=1&mute=0&enablejsapi=1&origin=${encodeURIComponent(currentOrigin)}&controls=1&rel=0&modestbranding=1&playsinline=1`;
 
   // Auto-unmute postMessage effect
   useEffect(() => {
@@ -91,6 +92,7 @@ const TrailerModal = ({ isOpen, onClose, movie }) => {
         try {
           iframeRef.current.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: '' }), '*');
           iframeRef.current.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo', args: '' }), '*');
+          setIsMuted(false);
         } catch {
           // Fail-safe
         }

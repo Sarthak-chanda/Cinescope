@@ -28,10 +28,12 @@ const Body = ({
   onSaveNote,
   userRatings,
   onSaveRating,
-  onWatchTrailer
+  onWatchTrailer,
+  onLoadMore,
+  isLoadingMore,
+  hasMore
 }) => {
-  // Sort and Filter states for search/genre results
-  const [selectedType, setSelectedType] = useState('all'); // 'all', 'movie', 'series', 'anime'
+  // Sort state for search/genre results
   const [sortBy, setSortBy] = useState('popular'); // 'popular', 'rating', 'newest', 'oldest', 'az'
 
   const isMovieWatchlisted = (movie) => {
@@ -40,22 +42,10 @@ const Body = ({
     return watchlist.some((w) => (w.id || w.imdbID) === movieId);
   };
 
-  // Filtered & Sorted search results
+  // Sorted search/category results
   const processedResults = useMemo(() => {
     if (!searchResults || searchResults.length === 0) return [];
     let items = [...searchResults];
-
-    // Filter by type
-    if (selectedType !== 'all') {
-      items = items.filter((item) => {
-        if (selectedType === 'movie') return item.type === 'movie' || !item.type;
-        if (selectedType === 'series') return item.type === 'series' || item.type === 'tv';
-        if (selectedType === 'anime') {
-          return item.type === 'anime' || (item.genres && item.genres.includes('Animation')) || (item.genre && item.genre.includes('Animation'));
-        }
-        return true;
-      });
-    }
 
     // Sort items
     if (sortBy === 'rating') {
@@ -81,7 +71,7 @@ const Body = ({
     }
 
     return items;
-  }, [searchResults, selectedType, sortBy]);
+  }, [searchResults, sortBy]);
 
   return (
     <main className="main-content">
@@ -103,7 +93,7 @@ const Body = ({
         <MoviePage
           movie={selectedMovie}
           onBack={onBackToResults}
-          hasSearchResults={searchResults && searchResults.length > 1}
+          hasSearchResults={searchResults && searchResults.length > 0}
           isWatchlisted={isMovieWatchlisted(selectedMovie)}
           onToggleWatchlist={onToggleWatchlist}
           onShare={onShare}
@@ -121,65 +111,44 @@ const Body = ({
       {/* 4. Multiple Search / Category Results Grid with Sorting & Type Filtering */}
       {!loading && !notfound && !selectedMovie && searchResults && searchResults.length > 0 && (
         <div className="animate-fade-in">
-          {/* Header Bar */}
-          <div className="section-header-bar">
-            <div className="section-header-left">
+          {/* Top Standardized Subpage Navigation Bar */}
+          <div className="subpage-top-nav-bar search-results-nav-bar">
+            <div className="subpage-nav-container">
               <button
                 type="button"
-                className="page-back-action-btn results-back-btn"
+                className="subpage-back-btn"
                 onClick={onBackToResults}
                 title="Go back to Home"
+                aria-label="Go back to Home"
               >
-                <span className="btn-arrow">←</span>
+                <span className="back-arrow">←</span>
                 <span>Back to Home</span>
               </button>
 
-              <div className="header-title-group">
-                <div className="page-breadcrumbs mini-crumbs">
-                  <span className="crumb-item" onClick={onBackToResults} style={{ cursor: 'pointer' }}>Home</span>
-                  <span className="crumb-separator">›</span>
-                  <span className="crumb-active">{activeGenre ? `Category: ${activeGenre}` : `Search: ${searchTerm}`}</span>
-                </div>
-                <h2 className="section-title">
-                  <span>Results for</span>
-                  <span className="query-highlight">"{searchTerm || activeGenre}"</span>
-                </h2>
+              <div className="subpage-breadcrumbs">
+                <span className="crumb-link" onClick={onBackToResults} title="Go back to Home">Home</span>
+                <span className="crumb-sep">›</span>
+                <span className="crumb-current">{activeGenre ? `Category: ${activeGenre}` : `Search: "${searchTerm}"`}</span>
               </div>
             </div>
+
             <span className="results-count-badge">
-              {processedResults.length} {processedResults.length === 1 ? 'Title' : 'Titles'} Shown
+              {processedResults.length} {processedResults.length === 1 ? 'Title' : 'Titles'}
             </span>
           </div>
 
-          {/* Filtering & Sorting Controls Bar */}
+          <div className="section-title-wrap">
+            <h2 className="section-title">
+              <span>Results for</span>
+              <span className="query-highlight">"{searchTerm || activeGenre}"</span>
+            </h2>
+          </div>
+
+          {/* Sorting Controls Bar */}
           <div className="filter-sort-bar">
-            {/* Type Filter Pills */}
-            <div className="type-filter-group">
-              <span className="filter-label">Filter:</span>
-              <button
-                className={`type-pill ${selectedType === 'all' ? 'active' : ''}`}
-                onClick={() => setSelectedType('all')}
-              >
-                All Content ({searchResults.length})
-              </button>
-              <button
-                className={`type-pill ${selectedType === 'movie' ? 'active' : ''}`}
-                onClick={() => setSelectedType('movie')}
-              >
-                Movies
-              </button>
-              <button
-                className={`type-pill ${selectedType === 'series' ? 'active' : ''}`}
-                onClick={() => setSelectedType('series')}
-              >
-                TV Shows
-              </button>
-              <button
-                className={`type-pill ${selectedType === 'anime' ? 'active' : ''}`}
-                onClick={() => setSelectedType('anime')}
-              >
-                Anime
-              </button>
+            {/* Results Title Count */}
+            <div className="filter-summary-info">
+              <span className="filter-summary-text">Displaying authentic curated titles in this category</span>
             </div>
 
             {/* Sort Dropdown */}
@@ -202,22 +171,48 @@ const Body = ({
 
           {/* Movies & Shows Grid */}
           {processedResults.length > 0 ? (
-            <div className="movies-grid">
-              {processedResults.map((item) => (
-                <MovieCard
-                  key={item.id || item.imdbID}
-                  movie={item}
-                  onSelect={onSelectMovie}
-                  isWatchlisted={isMovieWatchlisted(item)}
-                  onToggleWatchlist={onToggleWatchlist}
-                />
-              ))}
-            </div>
+            <>
+              <div className="movies-grid">
+                {processedResults.map((item) => (
+                  <MovieCard
+                    key={item.id || item.imdbID}
+                    movie={item}
+                    onSelect={onSelectMovie}
+                    isWatchlisted={isMovieWatchlisted(item)}
+                    onToggleWatchlist={onToggleWatchlist}
+                  />
+                ))}
+              </div>
+
+              {hasMore && onLoadMore && (
+                <div className="load-more-container">
+                  <button
+                    type="button"
+                    className="load-more-btn"
+                    onClick={onLoadMore}
+                    disabled={isLoadingMore}
+                    aria-label="Load more titles"
+                  >
+                    {isLoadingMore ? (
+                      <>
+                        <span className="load-more-spinner"></span>
+                        <span>Loading More Titles...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Load More Content</span>
+                        <span className="load-more-arrow">↓</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
             <div className="empty-filter-state">
-              <p>No results match the selected filter "<strong>{selectedType}</strong>".</p>
-              <button className="reset-filter-btn" onClick={() => setSelectedType('all')}>
-                Show All Content
+              <p>No titles found in this category.</p>
+              <button className="reset-filter-btn" onClick={onBackToResults}>
+                Back to Home
               </button>
             </div>
           )}

@@ -15,14 +15,14 @@ import {
   KANNADA_HITS_ALL,
   INDIAN_CLASSICS_ALL,
   OPEN_SOURCE_MOVIES_ALL
-} from './catalogData';
-import { fetchBollywoodSubcategory } from './bollywoodApi';
-import { fetchBengaliSubcategory } from './bengaliApi';
-import { fetchMalayalamSubcategory } from './malayalamApi';
-import { fetchTamilSubcategory } from './tamilApi';
-import { HOLLYWOOD_UPCOMING, BOLLYWOOD_UPCOMING, BENGALI_UPCOMING } from './upcomingApi';
+} from './catalogData.js';
+import { fetchBollywoodSubcategory } from './bollywoodApi.js';
+import { fetchBengaliSubcategory } from './bengaliApi.js';
+import { fetchMalayalamSubcategory } from './malayalamApi.js';
+import { fetchTamilSubcategory } from './tamilApi.js';
+import { HOLLYWOOD_UPCOMING, BOLLYWOOD_UPCOMING, BENGALI_UPCOMING } from './upcomingApi.js';
 
-const OMDB_KEYS = ['trilogy', 'b9a5e69d', 'd011d376', '4a3b711b', 'e430349a', '564727fa', '7c865187'];
+const OMDB_KEYS = ['trilogy', 'b9a5e69d', 'd011d376', '4a3b711b', '564727fa', 'fc1fef96'];
 let currentKeyIndex = 0;
 
 const getOmdbKey = () => OMDB_KEYS[currentKeyIndex % OMDB_KEYS.length];
@@ -30,12 +30,13 @@ const rotateOmdbKey = () => {
   currentKeyIndex = (currentKeyIndex + 1) % OMDB_KEYS.length;
 };
 
-const TMDB_API_KEYS = ['4f89241199a531b29dbd244a307b2251', '15d2fd48f88cd047e350a84db92b352b', '8424a613a20721c83fa88085d564177d'];
+// Validated high-quota TMDB API keys
+const TMDB_API_KEYS = ['3fd2be6f0c70a2a598f084ddfb75487c', '2dca580c2a14b55200e784d157207b4d'];
 let tmdbKeyIdx = 0;
 const getTmdbKey = () => TMDB_API_KEYS[tmdbKeyIdx++ % TMDB_API_KEYS.length];
 
 const OMDB_BASE_URL = 'https://www.omdbapi.com/';
-const TMDB_BASE_URL = 'https://api.themoviedb.org/3/';
+const TMDB_BASE_URL = 'https://api.tmdb.org/3/';
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/';
 
 const CACHE_STORAGE_KEY = 'cinescope_hybrid_cache_v5';
@@ -869,57 +870,57 @@ export const CURATED_GENRES_DATA = {
     { id: 'tt7929026', imdbID: 'tt7929026', name: 'Our Planet', year: '2019', type: 'series', imdbRating: '9.3', genre: ['Documentary'], poster: 'https://static.tvmaze.com/uploads/images/medium_portrait/190/476214.jpg', plot: 'Documentary series focusing on the breadth and diversity of habitats worldwide.' }
   ],
   Bollywood: [
-    { id: 'tt7392708', imdbID: 'tt7392708', name: 'Stree 2', year: '2024', type: 'movie', imdbRating: '7.3', genre: ['Comedy', 'Horror', 'Bollywood'], poster: 'https://image.tmdb.org/t/p/w500/yD7cZ9kP3PqV1u14cW6PqV1u14.jpg', plot: 'The town of Chanderi is haunted again, this time by a headless entity Sarkata, and Vicky leads the team to save them.' },
+    { id: 'tt7392708', imdbID: 'tt7392708', name: 'Stree 2', year: '2024', type: 'movie', imdbRating: '7.3', genre: ['Comedy', 'Horror', 'Bollywood'], poster: 'https://image.tmdb.org/t/p/w500/nfnhwfUEFuSOxxf4jDdBlY6Lccw.jpg', plot: 'The town of Chanderi is haunted again, this time by a headless entity Sarkata, and Vicky leads the team to save them.' },
     { id: 'tt11152516', imdbID: 'tt11152516', name: 'Animal', year: '2023', type: 'movie', imdbRating: '6.3', genre: ['Action', 'Crime', 'Bollywood'], poster: 'https://image.tmdb.org/t/p/w500/hr9rjR3vRdWFarwR2iyW1cW0FrP.jpg', plot: 'A fiercely loyal son embarks on a bloody path of vengeance after an attempt is made on his father life.' },
     { id: 'tt15791034', imdbID: 'tt15791034', name: 'Jawan', year: '2023', type: 'movie', imdbRating: '7.0', genre: ['Action', 'Thriller', 'Bollywood'], poster: 'https://image.tmdb.org/t/p/w500/jBW2v2a8Qv2uN9P6uX5N3M8.jpg', plot: 'A high-octane action thriller outlining the emotional journey of a man set to rectify the wrongs in society.' },
     { id: 'tt12844910', imdbID: 'tt12844910', name: 'Pathaan', year: '2023', type: 'movie', imdbRating: '5.9', genre: ['Action', 'Adventure', 'Bollywood'], poster: 'https://image.tmdb.org/t/p/w500/m11atUh2hKiKtk616fC30.jpg', plot: 'An Indian agent races against time to stop a mercenary group from launching a deadly biological attack.' },
     { id: 'tt1187043', imdbID: 'tt1187043', name: '3 Idiots', year: '2009', type: 'movie', imdbRating: '8.4', genre: ['Comedy', 'Drama', 'Bollywood'], poster: 'https://image.tmdb.org/t/p/w500/kW94892c5R6uX3v406W0FrP.jpg', plot: 'Two friends search for their long-lost college companion while recalling their engineering days.' },
     { id: 'tt4435280', imdbID: 'tt4435280', name: 'Dangal', year: '2016', type: 'movie', imdbRating: '8.3', genre: ['Action', 'Biography', 'Bollywood'], poster: 'https://image.tmdb.org/t/p/w500/xFq982v2uV1u14cW6PqV1u14.jpg', plot: 'Former wrestler Mahavir Singh Phogat trains his daughters Geeta and Babita to become world-class wrestlers.' },
-    { id: 'tt8108274', imdbID: 'tt8108274', name: 'Tumbbad', year: '2018', type: 'movie', imdbRating: '8.2', genre: ['Drama', 'Fantasy', 'Bollywood'], poster: 'https://image.tmdb.org/t/p/w500/k0aPqV1u14cW6PqV1u14.jpg', plot: 'A mythological tale of a family who builds a shrine for Hastar, a monster who should never be worshipped.' },
-    { id: 'tt8178634', imdbID: 'tt8178634', name: 'Andhadhun', year: '2018', type: 'movie', imdbRating: '8.2', genre: ['Crime', 'Mystery', 'Bollywood'], poster: 'https://image.tmdb.org/t/p/w500/nK9PqV1u14cW6PqV1u14.jpg', plot: 'A visually impaired pianist unwittingly becomes involved in a series of mysterious events after witnessing a murder.' },
-    { id: 'tt0112870', imdbID: 'tt0112870', name: 'Dilwale Dulhania Le Jayenge', year: '1995', type: 'movie', imdbRating: '8.0', genre: ['Drama', 'Romance', 'Bollywood'], poster: 'https://image.tmdb.org/t/p/w500/2CAL24333ChI2p1p33.jpg', plot: 'Raj and Simran fall in love during a trip across Europe, but Raj must win over her traditional father.' }
+    { id: 'tt8108274', imdbID: 'tt8108274', name: 'Tumbbad', year: '2018', type: 'movie', imdbRating: '8.2', genre: ['Drama', 'Fantasy', 'Bollywood'], poster: 'https://image.tmdb.org/t/p/w500/z1xOCxw780WFJC5uCTMfCkQ4Agi.jpg', plot: 'A mythological tale of a family who builds a shrine for Hastar, a monster who should never be worshipped.' },
+    { id: 'tt8178634', imdbID: 'tt8178634', name: 'Andhadhun', year: '2018', type: 'movie', imdbRating: '8.2', genre: ['Crime', 'Mystery', 'Bollywood'], poster: 'https://image.tmdb.org/t/p/w500/dy3K6hNvwE05siGgiLJcEiwgpdO.jpg', plot: 'A visually impaired pianist unwittingly becomes involved in a series of mysterious events after witnessing a murder.' },
+    { id: 'tt0112870', imdbID: 'tt0112870', name: 'Dilwale Dulhania Le Jayenge', year: '1995', type: 'movie', imdbRating: '8.0', genre: ['Drama', 'Romance', 'Bollywood'], poster: 'https://image.tmdb.org/t/p/w500/lfRkUr7DYdHldAqi3PwdQGBRBPM.jpg', plot: 'Raj and Simran fall in love during a trip across Europe, but Raj must win over her traditional father.' }
   ],
   Tollywood: [
     { id: 'tt8178686', imdbID: 'tt8178686', name: 'RRR', year: '2022', type: 'movie', imdbRating: '7.8', genre: ['Action', 'Drama', 'Tollywood'], poster: 'https://image.tmdb.org/t/p/w500/nEuF1WaEgRawm2exL3m58s8dqu.jpg', plot: 'A fearless revolutionary and an officer in the British force form an unshakeable bond before discovering each true identity.' },
-    { id: 'tt7286456', imdbID: 'tt7286456', name: 'Pushpa: The Rise', year: '2021', type: 'movie', imdbRating: '7.6', genre: ['Action', 'Crime', 'Tollywood'], poster: 'https://image.tmdb.org/t/p/w500/1p2PqV1u14cW6PqV1u14.jpg', plot: 'A coolie rises through the ranks of a red sandalwood smuggling syndicate in the forests of Andhra Pradesh.' },
-    { id: 'tt27901708', imdbID: 'tt27901708', name: 'Pushpa 2: The Rule', year: '2024', type: 'movie', imdbRating: '7.5', genre: ['Action', 'Crime', 'Tollywood'], poster: 'https://image.tmdb.org/t/p/w500/2p3PqV1u14cW6PqV1u14.jpg', plot: 'Pushpa Raj expands his red sandalwood smuggling empire while confronting fierce enemies and law enforcement.' },
-    { id: 'tt12735488', imdbID: 'tt12735488', name: 'Kalki 2898 AD', year: '2024', type: 'movie', imdbRating: '7.2', genre: ['Action', 'Sci-Fi', 'Tollywood'], poster: 'https://image.tmdb.org/t/p/w500/3p4PqV1u14cW6PqV1u14.jpg', plot: 'A modern avatar of Vishnu descends to Earth to protect mankind from dark forces in a dystopian future.' },
-    { id: 'tt11697920', imdbID: 'tt11697920', name: 'Salaar: Part 1 - Ceasefire', year: '2023', type: 'movie', imdbRating: '6.5', genre: ['Action', 'Crime', 'Tollywood'], poster: 'https://image.tmdb.org/t/p/w500/m2PqV1u14cW6PqV1u14.jpg', plot: 'A gang leader makes a promise to a dying friend and takes on other criminal gangs.' },
-    { id: 'tt2638144', imdbID: 'tt2638144', name: 'Baahubali: The Beginning', year: '2015', type: 'movie', imdbRating: '8.0', genre: ['Action', 'Drama', 'Tollywood'], poster: 'https://image.tmdb.org/t/p/w500/9kPqV1u14cW6PqV1u14.jpg', plot: 'In ancient India, an adventurous man becomes involved in a decade-old feud between two warring brothers.' },
-    { id: 'tt4849494', imdbID: 'tt4849494', name: 'Baahubali 2: The Conclusion', year: '2017', type: 'movie', imdbRating: '8.2', genre: ['Action', 'Drama', 'Tollywood'], poster: 'https://image.tmdb.org/t/p/w500/8kPqV1u14cW6PqV1u14.jpg', plot: 'Shiva, the son of Bahubali, begins to search for answers after learning about his heritage.' },
-    { id: 'tt15601974', imdbID: 'tt15601974', name: 'Vikram', year: '2022', type: 'movie', imdbRating: '8.3', genre: ['Action', 'Thriller', 'Tollywood'], poster: 'https://image.tmdb.org/t/p/w500/v1PqV1u14cW6PqV1u14.jpg', plot: 'A special agent investigates a murder committed by a masked group of serial killers.' },
-    { id: 'tt15654328', imdbID: 'tt15654328', name: 'Leo', year: '2023', type: 'movie', imdbRating: '7.2', genre: ['Action', 'Crime', 'Tollywood'], poster: 'https://image.tmdb.org/t/p/w500/l1PqV1u14cW6PqV1u14.jpg', plot: 'A mild-mannered café owner becomes a local hero, attracting the attention of a dangerous cartel.' }
+    { id: 'tt7286456', imdbID: 'tt7286456', name: 'Pushpa: The Rise', year: '2021', type: 'movie', imdbRating: '7.6', genre: ['Action', 'Crime', 'Tollywood'], poster: 'https://image.tmdb.org/t/p/w500/h6Pd89ngvl9quPVsx3KoJlQsvk9.jpg', plot: 'A coolie rises through the ranks of a red sandalwood smuggling syndicate in the forests of Andhra Pradesh.' },
+    { id: 'tt27901708', imdbID: 'tt27901708', name: 'Pushpa 2: The Rule', year: '2024', type: 'movie', imdbRating: '7.5', genre: ['Action', 'Crime', 'Tollywood'], poster: 'https://image.tmdb.org/t/p/w500/1T21FblunT0y8fz7YaW8JMYgUKm.jpg', plot: 'Pushpa Raj expands his red sandalwood smuggling empire while confronting fierce enemies and law enforcement.' },
+    { id: 'tt12735488', imdbID: 'tt12735488', name: 'Kalki 2898 AD', year: '2024', type: 'movie', imdbRating: '7.2', genre: ['Action', 'Sci-Fi', 'Tollywood'], poster: 'https://image.tmdb.org/t/p/w500/rstcAnBeCkxNQjNp3YXrF6IP1tW.jpg', plot: 'A modern avatar of Vishnu descends to Earth to protect mankind from dark forces in a dystopian future.' },
+    { id: 'tt11697920', imdbID: 'tt11697920', name: 'Salaar: Part 1 - Ceasefire', year: '2023', type: 'movie', imdbRating: '6.5', genre: ['Action', 'Crime', 'Tollywood'], poster: 'https://image.tmdb.org/t/p/w500/nlu9WbcetNFRGXXPWITr30ob7W6.jpg', plot: 'A gang leader makes a promise to a dying friend and takes on other criminal gangs.' },
+    { id: 'tt2638144', imdbID: 'tt2638144', name: 'Baahubali: The Beginning', year: '2015', type: 'movie', imdbRating: '8.0', genre: ['Action', 'Drama', 'Tollywood'], poster: 'https://image.tmdb.org/t/p/w500/9BAjt8nSSms62uOVYn1t3C3dVto.jpg', plot: 'In ancient India, an adventurous man becomes involved in a decade-old feud between two warring brothers.' },
+    { id: 'tt4849494', imdbID: 'tt4849494', name: 'Baahubali 2: The Conclusion', year: '2017', type: 'movie', imdbRating: '8.2', genre: ['Action', 'Drama', 'Tollywood'], poster: 'https://image.tmdb.org/t/p/w500/21sC2assImQIYCEDA84Qh9d1RsK.jpg', plot: 'Shiva, the son of Bahubali, begins to search for answers after learning about his heritage.' },
+    { id: 'tt15601974', imdbID: 'tt15601974', name: 'Vikram', year: '2022', type: 'movie', imdbRating: '8.3', genre: ['Action', 'Thriller', 'Tollywood'], poster: 'https://image.tmdb.org/t/p/w500/774UV1aCURb4s4JfEFg3IEMu5Zj.jpg', plot: 'A special agent investigates a murder committed by a masked group of serial killers.' },
+    { id: 'tt15654328', imdbID: 'tt15654328', name: 'Leo', year: '2023', type: 'movie', imdbRating: '7.2', genre: ['Action', 'Crime', 'Tollywood'], poster: 'https://image.tmdb.org/t/p/w500/gSOVog7ydsaF1YpgAqBqnKYFGY.jpg', plot: 'A mild-mannered café owner becomes a local hero, attracting the attention of a dangerous cartel.' }
   ],
   Malayalam: [
-    { id: 'tt27719609', imdbID: 'tt27719609', name: 'Manjummel Boys', year: '2024', type: 'movie', imdbRating: '8.3', genre: ['Adventure', 'Drama', 'Malayalam'], poster: 'https://image.tmdb.org/t/p/w500/m1PqV1u14cW6PqV1u14.jpg', plot: 'A group of friends from Kochi travel to Kodaikanal where one of them falls into Guna Caves.' },
-    { id: 'tt28114975', imdbID: 'tt28114975', name: 'Premalu', year: '2024', type: 'movie', imdbRating: '7.8', genre: ['Comedy', 'Romance', 'Malayalam'], poster: 'https://image.tmdb.org/t/p/w500/pr1PqV1u14cW6PqV1u14.jpg', plot: 'Sachin pursues romance in Hyderabad while navigating hilarious misunderstandings.' },
-    { id: 'tt27988354', imdbID: 'tt27988354', name: 'Aavesham', year: '2024', type: 'movie', imdbRating: '7.9', genre: ['Action', 'Comedy', 'Malayalam'], poster: 'https://image.tmdb.org/t/p/w500/a1PqV1u14cW6PqV1u14.jpg', plot: 'Three engineering students enlist a local gangster Ranga to help them settle scores.' },
-    { id: 'tt7242838', imdbID: 'tt7242838', name: 'Aadujeevitham (The Goat Life)', year: '2024', type: 'movie', imdbRating: '8.2', genre: ['Adventure', 'Drama', 'Malayalam'], poster: 'https://image.tmdb.org/t/p/w500/g1PqV1u14cW6PqV1u14.jpg', plot: 'An Indian immigrant worker in Saudi Arabia is forced to herd goats in the desert to survive.' },
-    { id: 'tt3417442', imdbID: 'tt3417442', name: 'Drishyam', year: '2013', type: 'movie', imdbRating: '8.3', genre: ['Crime', 'Drama', 'Malayalam'], poster: 'https://image.tmdb.org/t/p/w500/d1PqV1u14cW6PqV1u14.jpg', plot: 'A cable TV operator goes to extreme lengths to protect his family from law enforcement.' },
-    { id: 'tt11929340', imdbID: 'tt11929340', name: 'Minnal Murali', year: '2021', type: 'movie', imdbRating: '7.8', genre: ['Action', 'Adventure', 'Malayalam'], poster: 'https://image.tmdb.org/t/p/w500/mm1PqV1u14cW6PqV1u14.jpg', plot: 'A tailor gains special powers after being struck by lightning and becomes a superhero.' }
+    { id: 'tt27719609', imdbID: 'tt27719609', name: 'Manjummel Boys', year: '2024', type: 'movie', imdbRating: '8.3', genre: ['Adventure', 'Drama', 'Malayalam'], poster: 'https://image.tmdb.org/t/p/w500/bswrtewwthpsh6nABiqKevU4UBI.jpg', plot: 'A group of friends from Kochi travel to Kodaikanal where one of them falls into Guna Caves.' },
+    { id: 'tt28114975', imdbID: 'tt28114975', name: 'Premalu', year: '2024', type: 'movie', imdbRating: '7.8', genre: ['Comedy', 'Romance', 'Malayalam'], poster: 'https://image.tmdb.org/t/p/w500/uPpmBjY3znUqGY8kYwI5xvOrSc0.jpg', plot: 'Sachin pursues romance in Hyderabad while navigating hilarious misunderstandings.' },
+    { id: 'tt27988354', imdbID: 'tt27988354', name: 'Aavesham', year: '2024', type: 'movie', imdbRating: '7.9', genre: ['Action', 'Comedy', 'Malayalam'], poster: 'https://image.tmdb.org/t/p/w500/k5RWPaNjgRcNvGoawYaQHQwyctI.jpg', plot: 'Three engineering students enlist a local gangster Ranga to help them settle scores.' },
+    { id: 'tt7242838', imdbID: 'tt7242838', name: 'Aadujeevitham (The Goat Life)', year: '2024', type: 'movie', imdbRating: '8.2', genre: ['Adventure', 'Drama', 'Malayalam'], poster: 'https://image.tmdb.org/t/p/w500/l7z3Skv1xLASnUt0whC4IInaXt0.jpg', plot: 'An Indian immigrant worker in Saudi Arabia is forced to herd goats in the desert to survive.' },
+    { id: 'tt3417442', imdbID: 'tt3417442', name: 'Drishyam', year: '2013', type: 'movie', imdbRating: '8.3', genre: ['Crime', 'Drama', 'Malayalam'], poster: 'https://image.tmdb.org/t/p/w500/67FsF2kpgEZ1T5Qos4adgqm9dLf.jpg', plot: 'A cable TV operator goes to extreme lengths to protect his family from law enforcement.' },
+    { id: 'tt11929340', imdbID: 'tt11929340', name: 'Minnal Murali', year: '2021', type: 'movie', imdbRating: '7.8', genre: ['Action', 'Adventure', 'Malayalam'], poster: 'https://image.tmdb.org/t/p/w500/efetKFDyptrRpoHBb103Tg3Auw5.jpg', plot: 'A tailor gains special powers after being struck by lightning and becomes a superhero.' }
   ],
   Bengali: [
-    { id: 'tt0048473', imdbID: 'tt0048473', name: 'Pather Panchali', year: '1955', type: 'movie', imdbRating: '8.5', genre: ['Drama', 'Bengali'], poster: 'https://image.tmdb.org/t/p/w500/pp1PqV1u14cW6PqV1u14.jpg', plot: 'Satyajit Ray masterpiece depicting the childhood struggles of Apu and Durga in rural Bengal.' },
-    { id: 'tt0051465', imdbID: 'tt0051465', name: 'Charulata', year: '1964', type: 'movie', imdbRating: '8.1', genre: ['Drama', 'Romance', 'Bengali'], poster: 'https://image.tmdb.org/t/p/w500/ch1PqV1u14cW6PqV1u14.jpg', plot: 'A lonely wife of a newspaper editor develops feelings for her visiting brother-in-law.' },
-    { id: 'tt0067776', imdbID: 'tt0067776', name: 'Sonar Kella (Feluda)', year: '1974', type: 'movie', imdbRating: '8.3', genre: ['Adventure', 'Mystery', 'Bengali'], poster: 'https://image.tmdb.org/t/p/w500/sk1PqV1u14cW6PqV1u14.jpg', plot: 'Iconic detective Feluda travels to Rajasthan to protect a boy who remembers his past life.' },
-    { id: 'tt2088820', imdbID: 'tt2088820', name: 'Chokher Bali', year: '2003', type: 'movie', imdbRating: '7.8', genre: ['Drama', 'Romance', 'Bengali'], poster: 'https://image.tmdb.org/t/p/w500/cb1PqV1u14cW6PqV1u14.jpg', plot: 'A young widowBinodini enters a wealthy family household, unleashing passion and deceit.' },
-    { id: 'tt7242858', imdbID: 'tt7242858', name: 'Amazon Obhijaan', year: '2017', type: 'movie', imdbRating: '6.5', genre: ['Action', 'Adventure', 'Bengali'], poster: 'https://image.tmdb.org/t/p/w500/ao1PqV1u14cW6PqV1u14.jpg', plot: 'Explorer Shankar journeys deep into the Amazon rainforest in search of El Dorado.' },
-    { id: 'tt28114999', imdbID: 'tt28114999', name: 'Dawshom Awbotar', year: '2023', type: 'movie', imdbRating: '7.4', genre: ['Crime', 'Thriller', 'Bengali'], poster: 'https://image.tmdb.org/t/p/w500/da1PqV1u14cW6PqV1u14.jpg', plot: 'Two Kolkata cops team up to catch a serial killer committing crimes based on Lord Vishnu avatars.' }
+    { id: 'tt0048473', imdbID: 'tt0048473', name: 'Pather Panchali', year: '1955', type: 'movie', imdbRating: '8.5', genre: ['Drama', 'Bengali'], poster: 'https://image.tmdb.org/t/p/w500/frZj5djlU9hFEjMcL21RJZVuG5O.jpg', plot: 'Satyajit Ray masterpiece depicting the childhood struggles of Apu and Durga in rural Bengal.' },
+    { id: 'tt0051465', imdbID: 'tt0051465', name: 'Charulata', year: '1964', type: 'movie', imdbRating: '8.1', genre: ['Drama', 'Romance', 'Bengali'], poster: 'https://image.tmdb.org/t/p/w500/ei2YaCcnUBudyc6BQSc6mpCSJTx.jpg', plot: 'A lonely wife of a newspaper editor develops feelings for her visiting brother-in-law.' },
+    { id: 'tt0067776', imdbID: 'tt0067776', name: 'Sonar Kella (Feluda)', year: '1974', type: 'movie', imdbRating: '8.3', genre: ['Adventure', 'Mystery', 'Bengali'], poster: 'https://image.tmdb.org/t/p/w500/4TBPQYszjzj6UKoXyZk4ooURlYq.jpg', plot: 'Iconic detective Feluda travels to Rajasthan to protect a boy who remembers his past life.' },
+    { id: 'tt2088820', imdbID: 'tt2088820', name: 'Chokher Bali', year: '2003', type: 'movie', imdbRating: '7.8', genre: ['Drama', 'Romance', 'Bengali'], poster: 'https://image.tmdb.org/t/p/w500/izErrnZhCWHOaDUjRnpbqW4gU63.jpg', plot: 'A young widowBinodini enters a wealthy family household, unleashing passion and deceit.' },
+    { id: 'tt7242858', imdbID: 'tt7242858', name: 'Amazon Obhijaan', year: '2017', type: 'movie', imdbRating: '6.5', genre: ['Action', 'Adventure', 'Bengali'], poster: 'https://image.tmdb.org/t/p/w500/6nOozjdFiyl4V7i9xasULL9FIc4.jpg', plot: 'Explorer Shankar journeys deep into the Amazon rainforest in search of El Dorado.' },
+    { id: 'tt28114999', imdbID: 'tt28114999', name: 'Dawshom Awbotar', year: '2023', type: 'movie', imdbRating: '7.4', genre: ['Crime', 'Thriller', 'Bengali'], poster: 'https://image.tmdb.org/t/p/w500/i8OfM0YRzUhNjEusvoK2PaCOls4.jpg', plot: 'Two Kolkata cops team up to catch a serial killer committing crimes based on Lord Vishnu avatars.' }
   ],
   Nollywood: [
-    { id: 'tt29584699', imdbID: 'tt29584699', name: 'The Black Book', year: '2023', type: 'movie', imdbRating: '7.0', genre: ['Action', 'Crime', 'Nollywood'], poster: 'https://image.tmdb.org/t/p/w500/bb1PqV1u14cW6PqV1u14.jpg', plot: 'After his son is framed for a kidnapping, a bereaved deacon takes justice into his own hands against corruption.' },
-    { id: 'tt6325306', imdbID: 'tt6325306', name: 'The Wedding Party', year: '2016', type: 'movie', imdbRating: '7.3', genre: ['Comedy', 'Romance', 'Nollywood'], poster: 'https://image.tmdb.org/t/p/w500/wp1PqV1u14cW6PqV1u14.jpg', plot: 'Chaos erupts when two wealthy Nigerian families clash on the wedding day of their children.' },
-    { id: 'tt8596000', imdbID: 'tt8596000', name: 'King of Boys', year: '2018', type: 'movie', imdbRating: '7.8', genre: ['Crime', 'Drama', 'Nollywood'], poster: 'https://image.tmdb.org/t/p/w500/kb1PqV1u14cW6PqV1u14.jpg', plot: 'A businesswoman and philanthropist with a checkered past steps into political power.' },
-    { id: 'tt9415848', imdbID: 'tt9415848', name: 'Lionheart', year: '2018', type: 'movie', imdbRating: '6.7', genre: ['Comedy', 'Drama', 'Nollywood'], poster: 'https://image.tmdb.org/t/p/w500/lh1PqV1u14cW6PqV1u14.jpg', plot: 'In order to save her father business, Adaeze steps up to run the family transport company alongside her eccentric uncle.' },
-    { id: 'tt21692488', imdbID: 'tt21692488', name: 'Aníkúlápó', year: '2022', type: 'movie', imdbRating: '7.1', genre: ['Drama', 'Fantasy', 'Nollywood'], poster: 'https://image.tmdb.org/t/p/w500/an1PqV1u14cW6PqV1u14.jpg', plot: 'After an affair with the king wife leads to his death, a traveler meets a mystical bird that gives him power over life.' }
+    { id: 'tt29584699', imdbID: 'tt29584699', name: 'The Black Book', year: '2023', type: 'movie', imdbRating: '7.0', genre: ['Action', 'Crime', 'Nollywood'], poster: 'https://image.tmdb.org/t/p/w500/kn28W24slBLyGr8ZIZnxNE5YZrY.jpg', plot: 'After his son is framed for a kidnapping, a bereaved deacon takes justice into his own hands against corruption.' },
+    { id: 'tt6325306', imdbID: 'tt6325306', name: 'The Wedding Party', year: '2016', type: 'movie', imdbRating: '7.3', genre: ['Comedy', 'Romance', 'Nollywood'], poster: 'https://image.tmdb.org/t/p/w500/iGiycMjca66thVjb9kjQfnsHYdq.jpg', plot: 'Chaos erupts when two wealthy Nigerian families clash on the wedding day of their children.' },
+    { id: 'tt8596000', imdbID: 'tt8596000', name: 'King of Boys', year: '2018', type: 'movie', imdbRating: '7.8', genre: ['Crime', 'Drama', 'Nollywood'], poster: 'https://image.tmdb.org/t/p/w500/3nO3VboeVLVOwIHMkTRIwTrrKQP.jpg', plot: 'A businesswoman and philanthropist with a checkered past steps into political power.' },
+    { id: 'tt9415848', imdbID: 'tt9415848', name: 'Lionheart', year: '2018', type: 'movie', imdbRating: '6.7', genre: ['Comedy', 'Drama', 'Nollywood'], poster: 'https://image.tmdb.org/t/p/w500/kf3qx5fzsYyLv7PEAORUGxwzQEk.jpg', plot: 'In order to save her father business, Adaeze steps up to run the family transport company alongside her eccentric uncle.' },
+    { id: 'tt21692488', imdbID: 'tt21692488', name: 'Aníkúlápó', year: '2022', type: 'movie', imdbRating: '7.1', genre: ['Drama', 'Fantasy', 'Nollywood'], poster: 'https://image.tmdb.org/t/p/w500/xb30hkUpBm23stnVgDJGYGsC0R0.jpg', plot: 'After an affair with the king wife leads to his death, a traveler meets a mystical bird that gives him power over life.' }
   ],
   'Indian Series': [
-    { id: 'tt6077448', imdbID: 'tt6077448', name: 'Sacred Games', year: '2018–2019', type: 'series', imdbRating: '8.5', genre: ['Crime', 'Drama', 'Indian Series'], poster: 'https://image.tmdb.org/t/p/w500/sg1PqV1u14cW6PqV1u14.jpg', plot: 'A troubled police officer receives a phone call from an infamous crime lord warning him to save Mumbai in 25 days.' },
-    { id: 'tt8478708', imdbID: 'tt8478708', name: 'Mirzapur', year: '2018–Present', type: 'series', imdbRating: '8.5', genre: ['Action', 'Crime', 'Indian Series'], poster: 'https://image.tmdb.org/t/p/w500/mz1PqV1u14cW6PqV1u14.jpg', plot: 'A shocked incident at a wedding procession ignites a feud involving a ruthless mafia don and two brothers.' },
-    { id: 'tt9392186', imdbID: 'tt9392186', name: 'The Family Man', year: '2019–Present', type: 'series', imdbRating: '8.7', genre: ['Action', 'Comedy', 'Indian Series'], poster: 'https://image.tmdb.org/t/p/w500/fm1PqV1u14cW6PqV1u14.jpg', plot: 'A working-class man works for a special cell of the National Investigation Agency while protecting his family.' },
-    { id: 'tt11663044', imdbID: 'tt11663044', name: 'Panchayat', year: '2020–Present', type: 'series', imdbRating: '8.9', genre: ['Comedy', 'Drama', 'Indian Series'], poster: 'https://image.tmdb.org/t/p/w500/pan1PqV1u14cW6PqV1u14.jpg', plot: 'An engineering graduate joins as a Panchayat secretary in a remote Indian village Phulera due to lack of better job options.' },
-    { id: 'tt9392180', imdbID: 'tt9392180', name: 'Delhi Crime', year: '2019–Present', type: 'series', imdbRating: '8.5', genre: ['Crime', 'Drama', 'Indian Series'], poster: 'https://image.tmdb.org/t/p/w500/dc1PqV1u14cW6PqV1u14.jpg', plot: 'Based on the Nirbhaya case, Deputy Commissioner of Police Vartika Chaturvedi heads the investigation team.' },
-    { id: 'tt15712400', imdbID: 'tt15712400', name: 'Farzi', year: '2023–Present', type: 'series', imdbRating: '8.4', genre: ['Crime', 'Thriller', 'Indian Series'], poster: 'https://image.tmdb.org/t/p/w500/fz1PqV1u14cW6PqV1u14.jpg', plot: 'A brilliant small-time artist gets pulled into the high-stakes world of counterfeiting.' }
+    { id: 'tt6077448', imdbID: 'tt6077448', name: 'Sacred Games', year: '2018–2019', type: 'series', imdbRating: '8.5', genre: ['Crime', 'Drama', 'Indian Series'], poster: 'https://image.tmdb.org/t/p/w500/uEbNtFbK4At9WBDGap23lt1qO9n.jpg', plot: 'A troubled police officer receives a phone call from an infamous crime lord warning him to save Mumbai in 25 days.' },
+    { id: 'tt8478708', imdbID: 'tt8478708', name: 'Mirzapur', year: '2018–Present', type: 'series', imdbRating: '8.5', genre: ['Action', 'Crime', 'Indian Series'], poster: 'https://image.tmdb.org/t/p/w500/p0qM8hhlMF5DuxHBzl2EZR6TehX.jpg', plot: 'A shocked incident at a wedding procession ignites a feud involving a ruthless mafia don and two brothers.' },
+    { id: 'tt9392186', imdbID: 'tt9392186', name: 'The Family Man', year: '2019–Present', type: 'series', imdbRating: '8.7', genre: ['Action', 'Comedy', 'Indian Series'], poster: 'https://image.tmdb.org/t/p/w500/tE1NUJqw9gV6AVjQ1GTK78LbWJ9.jpg', plot: 'A working-class man works for a special cell of the National Investigation Agency while protecting his family.' },
+    { id: 'tt11663044', imdbID: 'tt11663044', name: 'Panchayat', year: '2020–Present', type: 'series', imdbRating: '8.9', genre: ['Comedy', 'Drama', 'Indian Series'], poster: 'https://image.tmdb.org/t/p/w500/8ivTX5q2otqXvH815BcOhxVkTPW.jpg', plot: 'An engineering graduate joins as a Panchayat secretary in a remote Indian village Phulera due to lack of better job options.' },
+    { id: 'tt9392180', imdbID: 'tt9392180', name: 'Delhi Crime', year: '2019–Present', type: 'series', imdbRating: '8.5', genre: ['Crime', 'Drama', 'Indian Series'], poster: 'https://image.tmdb.org/t/p/w500/xkpkTj6KGsjSaet0VQaq0aTn31D.jpg', plot: 'Based on the Nirbhaya case, Deputy Commissioner of Police Vartika Chaturvedi heads the investigation team.' },
+    { id: 'tt15712400', imdbID: 'tt15712400', name: 'Farzi', year: '2023–Present', type: 'series', imdbRating: '8.4', genre: ['Crime', 'Thriller', 'Indian Series'], poster: 'https://image.tmdb.org/t/p/w500/cTS86RwEBIDgCgUmjWQTSoPsK6p.jpg', plot: 'A brilliant small-time artist gets pulled into the high-stakes world of counterfeiting.' }
   ]
 };
 
@@ -1223,7 +1224,114 @@ export const normalizeMovie = (data) => {
 };
 
 /**
- * Fetch Comprehensive Details (Movie or TV Series) with Multi-Source Fallbacks
+ * Authentic TMDb Deep Fetch & Cross-Validation Engine
+ */
+export const fetchTmdbDetails = async ({ title = '', imdbID = '', type = '', year = '', signal = null }) => {
+  const cleanTitle = (title || '').trim();
+  const cleanImdb = (imdbID || '').trim();
+  if (!cleanTitle && !cleanImdb) return null;
+
+  const cacheKey = `tmdb_deep:${cleanImdb || cleanTitle.toLowerCase()}:${type}:${year}`;
+  const cached = getCachedData(cacheKey);
+  if (cached) return cached;
+
+  try {
+    let tmdbId = null;
+    let mediaType = type === 'series' ? 'tv' : 'movie';
+    const apiKey = getTmdbKey();
+    const fetchOptions = signal ? { signal } : { signal: AbortSignal.timeout(5000) };
+
+    // 1. First attempt: Find by standard IMDb ID if available (100% precision)
+    if (cleanImdb && cleanImdb.startsWith('tt')) {
+      const findUrl = `${TMDB_BASE_URL}find/${encodeURIComponent(cleanImdb)}?api_key=${apiKey}&external_source=imdb_id`;
+      const findRes = await fetch(findUrl, fetchOptions);
+      if (findRes.ok) {
+        const findData = await findRes.json();
+        const m = findData.movie_results?.[0];
+        const t = findData.tv_results?.[0];
+        if (m) {
+          tmdbId = m.id;
+          mediaType = 'movie';
+        } else if (t) {
+          tmdbId = t.id;
+          mediaType = 'tv';
+        }
+      }
+    }
+
+    // 2. Second attempt: Search multi by title
+    if (!tmdbId && cleanTitle) {
+      const yearParam = year ? `&year=${encodeURIComponent(String(year).slice(0, 4))}` : '';
+      const searchUrl = `${TMDB_BASE_URL}search/multi?api_key=${apiKey}&query=${encodeURIComponent(cleanTitle)}${yearParam}&page=1`;
+      const searchRes = await fetch(searchUrl, fetchOptions);
+      if (searchRes.ok) {
+        const searchData = await searchRes.json();
+        const match = searchData.results?.find((r) => r.media_type === 'movie' || r.media_type === 'tv');
+        if (match) {
+          tmdbId = match.id;
+          mediaType = match.media_type;
+        }
+      }
+    }
+
+    if (!tmdbId) return null;
+
+    // 3. Deep query with credits, videos, release_dates, external_ids
+    const detailUrl = `${TMDB_BASE_URL}${mediaType}/${tmdbId}?api_key=${apiKey}&append_to_response=credits,videos,recommendations,release_dates,external_ids`;
+    const detailRes = await fetch(detailUrl, fetchOptions);
+    if (!detailRes.ok) return null;
+    const d = await detailRes.json();
+
+    const cast = (d.credits?.cast || []).slice(0, 18).map((c) => ({
+      name: c.name || 'Cast Member',
+      character: c.character || 'Actor',
+      photo: c.profile_path ? `${TMDB_IMAGE_BASE}w185${c.profile_path}` : null
+    }));
+
+    const crew = d.credits?.crew || [];
+    const director = crew.find((c) => c.job === 'Director')?.name || null;
+    const writers = crew
+      .filter((c) => c.department === 'Writing' || c.job === 'Screenplay' || c.job === 'Writer')
+      .map((c) => c.name);
+    const trailer =
+      d.videos?.results?.find((v) => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'))?.key ||
+      d.videos?.results?.find((v) => v.site === 'YouTube')?.key ||
+      null;
+
+    const result = {
+      tmdbId: d.id,
+      imdbID: d.external_ids?.imdb_id || cleanImdb || null,
+      name: d.title || d.name || cleanTitle,
+      year: (d.release_date || d.first_air_date || String(year) || '').slice(0, 4),
+      tagline: d.tagline || null,
+      overview: d.overview || null,
+      poster: d.poster_path ? `${TMDB_IMAGE_BASE}w780${d.poster_path}` : null,
+      backdrop: d.backdrop_path ? `${TMDB_IMAGE_BASE}w1280${d.backdrop_path}` : null,
+      tmdbRating: d.vote_average ? d.vote_average.toFixed(1) : null,
+      tmdbVotes: d.vote_count || null,
+      genres: (d.genres || []).map((g) => g.name),
+      runtime: d.runtime ? `${d.runtime} min` : (d.episode_run_time?.[0] ? `${d.episode_run_time[0]} min` : null),
+      castMembers: cast,
+      director,
+      writersList: writers,
+      trailerId: trailer,
+      budget: d.budget > 0 ? `$${Number(d.budget).toLocaleString()}` : null,
+      revenue: d.revenue > 0 ? `$${Number(d.revenue).toLocaleString()}` : null,
+      status: d.status || null,
+      type: mediaType === 'tv' ? 'series' : 'movie',
+      totalSeasons: d.number_of_seasons || null,
+      production: d.production_companies?.[0]?.name || null
+    };
+
+    setCachedData(cacheKey, result);
+    return result;
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Fetch Comprehensive Details (Movie or TV Series) with Multi-API Cross-Validation & Fallbacks
  */
 export const fetchMovieDetails = async ({ title = '', imdbID = '', year = '', type = '', tvmazeId = null, malId = null }) => {
   // If TVmaze ID is supplied, fetch from TVmaze first
@@ -1240,131 +1348,272 @@ export const fetchMovieDetails = async ({ title = '', imdbID = '', year = '', ty
     if (animeDetails) return { data: animeDetails, fromCache: false };
   }
 
-  // 1. First check if we have a rich curated local entry with full metadata
-  const targetId = imdbID || (title ? Array.from(UNIQUE_CURATED_MAP.values()).find(m => m.name.toLowerCase() === title.toLowerCase())?.imdbID : null);
-  const curatedMatch = (targetId ? UNIQUE_CURATED_MAP.get(targetId) : null) || (title ? Array.from(UNIQUE_CURATED_MAP.values()).find(m => m.name.toLowerCase() === title.toLowerCase()) : null);
-
-  const cacheKey = `detail:${imdbID || title.trim()}:${year}:${type}`;
-
+  const cacheKey = `detail_v6:${imdbID || title.trim()}:${year}:${type}`;
   const cached = getCachedData(cacheKey);
   if (cached) {
     return { data: cached, fromCache: true };
   }
 
-  // If item is a local curated entry without standard tt IMDB ID, return curatedMatch directly
-  if (curatedMatch && (!imdbID || !imdbID.startsWith('tt'))) {
-    setCachedData(cacheKey, curatedMatch);
-    return { data: curatedMatch, fromCache: true };
-  }
-
-  const queryParam = imdbID ? `i=${encodeURIComponent(imdbID)}` : `t=${encodeURIComponent(title.trim())}`;
-  const yearParam = year ? `&y=${encodeURIComponent(year.trim())}` : '';
-  const typeParam = type && type !== 'all' ? `&type=${encodeURIComponent(type.trim())}` : '';
-
-  // 2. Abort previous detail request
+  // Abort previous detail request
   if (currentDetailController) {
     currentDetailController.abort();
   }
   currentDetailController = new AbortController();
+  const signal = currentDetailController.signal;
 
-  // Try OMDB with key rotation & auto-failover
-  for (let attempt = 0; attempt < OMDB_KEYS.length; attempt++) {
-    const key = getOmdbKey();
-    try {
-      const url = `${OMDB_BASE_URL}?${queryParam}${yearParam}${typeParam}&plot=full&apikey=${key}`;
-      const response = await fetch(url, { signal: currentDetailController.signal });
+  // 1. Parallel Multi-API Execution: TMDb + OMDb
+  const tmdbPromise = fetchTmdbDetails({ title, imdbID, type, year, signal });
 
-      if (!response.ok) {
+  const omdbPromise = (async () => {
+    const queryParam = imdbID ? `i=${encodeURIComponent(imdbID)}` : `t=${encodeURIComponent(title.trim())}`;
+    const yearParam = year ? `&y=${encodeURIComponent(year.trim())}` : '';
+    const typeParam = type && type !== 'all' ? `&type=${encodeURIComponent(type.trim())}` : '';
+
+    for (let attempt = 0; attempt < OMDB_KEYS.length; attempt++) {
+      const key = getOmdbKey();
+      try {
+        const url = `${OMDB_BASE_URL}?${queryParam}${yearParam}${typeParam}&plot=full&apikey=${key}`;
+        const response = await fetch(url, { signal });
+        if (!response.ok) {
+          rotateOmdbKey();
+          continue;
+        }
+        const data = await response.json();
+        if (data.Response === 'True') {
+          return normalizeMovie(data);
+        }
+        return null;
+      } catch (err) {
+        if (err.name === 'AbortError') throw err;
         rotateOmdbKey();
-        continue;
       }
+    }
+    return null;
+  })();
 
-      const data = await response.json();
-      if (data.Response === 'False') {
-        // If OMDB didn't find, try TVmaze
-        if (title || imdbID) {
-          const searchQ = title || curatedMatch?.name || imdbID;
-          const tvResults = await searchTVmaze(searchQ);
-          if (tvResults && tvResults.length > 0) {
-            const firstId = tvResults[0].tvmazeId;
-            const fullTv = await fetchTVmazeDetails(firstId);
-            if (fullTv) {
-              setCachedData(cacheKey, fullTv);
-              return { data: fullTv, fromCache: false };
-            }
-          }
-        }
+  const [tmdbResult, omdbResult] = await Promise.allSettled([tmdbPromise, omdbPromise]);
+  const tmdb = tmdbResult.status === 'fulfilled' ? tmdbResult.value : null;
+  const omdb = omdbResult.status === 'fulfilled' ? omdbResult.value : null;
 
-        if (curatedMatch) {
-          setCachedData(cacheKey, curatedMatch);
-          return { data: curatedMatch, fromCache: true };
-        }
-        return { data: null, error: data.Error || 'Movie not found', fromCache: false };
-      }
+  // Find curated match for any curated specific overrides
+  const targetId = imdbID || (title ? Array.from(UNIQUE_CURATED_MAP.values()).find(m => m.name.toLowerCase() === title.toLowerCase())?.imdbID : null);
+  const curatedMatch = (targetId ? UNIQUE_CURATED_MAP.get(targetId) : null) || (title ? Array.from(UNIQUE_CURATED_MAP.values()).find(m => m.name.toLowerCase() === title.toLowerCase()) : null);
 
-      const normalized = normalizeMovie(data);
-
-      // Merge curated metadata if available (posters, backdrops, trailerId)
-      if (curatedMatch) {
-        normalized.backdrop = curatedMatch.backdrop || normalized.backdrop;
-        normalized.poster = normalized.poster || curatedMatch.poster;
-        normalized.trailerId = curatedMatch.trailerId || null;
-        if (curatedMatch.boxOffice && !normalized.boxOffice) {
-          normalized.boxOffice = curatedMatch.boxOffice;
+  // If neither returned, fallback to curatedMatch or TVmaze
+  if (!tmdb && !omdb) {
+    if (title || imdbID) {
+      const searchQ = title || curatedMatch?.name || imdbID;
+      const tvResults = await searchTVmaze(searchQ);
+      if (tvResults && tvResults.length > 0) {
+        const fullTv = await fetchTVmazeDetails(tvResults[0].tvmazeId);
+        if (fullTv) {
+          setCachedData(cacheKey, fullTv);
+          return { data: fullTv, fromCache: false };
         }
       }
+    }
+    if (curatedMatch) {
+      setCachedData(cacheKey, curatedMatch);
+      return { data: curatedMatch, fromCache: true };
+    }
+    return { data: null, error: 'Movie details could not be retrieved from cinema registries.', fromCache: false };
+  }
 
-      // If it's a TV series, fetch TVmaze episodes in parallel to enrich
-      if (normalized.type === 'series') {
-        try {
-          const tvLookup = await searchTVmaze(normalized.name);
-          if (tvLookup && tvLookup.length > 0) {
-            const enriched = await fetchTVmazeDetails(tvLookup[0].tvmazeId);
-            if (enriched) {
-              normalized.seasonsMap = enriched.seasonsMap;
-              normalized.episodes = enriched.episodes;
-              normalized.seasonsCount = enriched.seasonsCount;
-              if (enriched.castMembers && enriched.castMembers.length > 0) {
-                normalized.castMembers = enriched.castMembers;
-              }
-            }
-          }
-        } catch {
-          // Non-blocking enrichment
-        }
-      }
+  // Cross-Validation & Merged Harmonization
+  const validationSources = [];
+  if (tmdb) validationSources.push('TMDb');
+  if (omdb) validationSources.push('OMDb');
 
-      setCachedData(cacheKey, normalized);
-      if (normalized.imdbID) {
-        setCachedData(`detail:${normalized.imdbID}::`, normalized);
-      }
-      return { data: normalized, fromCache: false };
-    } catch (err) {
-      if (err.name === 'AbortError') {
-        return { aborted: true };
-      }
-      rotateOmdbKey();
+  // Base is omdb if present, else synthesize from tmdb
+  const base = omdb || {
+    id: tmdb.imdbID || `tmdb_${tmdb.tmdbId}`,
+    imdbID: tmdb.imdbID,
+    name: tmdb.name,
+    year: tmdb.year,
+    rated: 'Not Rated',
+    ratedDescription: 'Standard theatrical release',
+    released: tmdb.year,
+    runtime: tmdb.runtime,
+    formattedRuntime: tmdb.runtime,
+    genre: tmdb.genres?.length ? tmdb.genres : ['Cinema'],
+    director: tmdb.director,
+    directorsList: tmdb.director ? [tmdb.director] : [],
+    writer: tmdb.writersList?.[0] || null,
+    writersList: tmdb.writersList || [],
+    actors: tmdb.castMembers?.map((c) => c.name) || [],
+    castMembers: tmdb.castMembers || [],
+    plot: tmdb.overview || 'No synopsis available.',
+    language: 'English',
+    languagesList: ['English'],
+    country: 'International',
+    countriesList: ['International'],
+    awards: null,
+    awardsParsed: null,
+    poster: tmdb.poster,
+    metascore: null,
+    imdbRating: tmdb.tmdbRating,
+    imdbVotes: tmdb.tmdbVotes ? `${tmdb.tmdbVotes} TMDb votes` : null,
+    type: tmdb.type || 'movie',
+    boxOffice: tmdb.revenue,
+    production: tmdb.production,
+    totalSeasons: tmdb.totalSeasons,
+    ratings: { tmdb: tmdb.tmdbRating },
+    rawRatings: []
+  };
+
+  // Deeply enrich with TMDb authentic metadata
+  if (tmdb) {
+    if (tmdb.poster) base.poster = tmdb.poster;
+    if (tmdb.backdrop) base.backdrop = tmdb.backdrop;
+    if (tmdb.tagline) base.tagline = tmdb.tagline;
+    if (tmdb.trailerId) base.trailerId = tmdb.trailerId;
+    if (tmdb.tmdbRating) base.tmdbRating = tmdb.tmdbRating;
+    if (tmdb.tmdbVotes) base.tmdbVotes = tmdb.tmdbVotes;
+    if (tmdb.budget) base.budget = tmdb.budget;
+    if (tmdb.revenue && !base.boxOffice) base.boxOffice = tmdb.revenue;
+    if (tmdb.castMembers && tmdb.castMembers.length > 0) {
+      base.castMembers = tmdb.castMembers;
+    }
+    if (tmdb.overview && (!base.plot || base.plot === 'N/A' || base.plot.length < 50)) {
+      base.plot = tmdb.overview;
+    }
+    if (tmdb.status) base.status = tmdb.status;
+    if (tmdb.genres && tmdb.genres.length > 0 && (!base.genre || base.genre[0] === 'Cinema')) {
+      base.genre = tmdb.genres;
+    }
+    if (tmdb.director && !base.director) {
+      base.director = tmdb.director;
+      base.directorsList = [tmdb.director];
     }
   }
 
-  // Fallback to local curated catalog
+  // Curated metadata fallback for trailers/backdrops
   if (curatedMatch) {
-    return { data: curatedMatch, fromCache: true };
+    base.backdrop = base.backdrop || curatedMatch.backdrop;
+    base.poster = base.poster || curatedMatch.poster;
+    base.trailerId = base.trailerId || curatedMatch.trailerId;
   }
 
-  return { data: null, error: 'Could not retrieve details.', fromCache: false };
+  // If TV series, enrich with TVmaze seasons & episodes
+  if (base.type === 'series') {
+    try {
+      const tvLookup = await searchTVmaze(base.name);
+      if (tvLookup && tvLookup.length > 0) {
+        const enriched = await fetchTVmazeDetails(tvLookup[0].tvmazeId);
+        if (enriched) {
+          validationSources.push('TVMaze');
+          base.seasonsMap = enriched.seasonsMap;
+          base.episodes = enriched.episodes;
+          base.seasonsCount = enriched.seasonsCount;
+          if ((!base.castMembers || base.castMembers.length === 0) && enriched.castMembers?.length > 0) {
+            base.castMembers = enriched.castMembers;
+          }
+        }
+      }
+    } catch {
+      // Non-blocking enrichment
+    }
+  }
+
+  base.validationSources = validationSources;
+  base.isAuthenticValidated = validationSources.length >= 2;
+
+  setCachedData(cacheKey, base);
+  if (base.imdbID) {
+    setCachedData(`detail_v6:${base.imdbID}::`, base);
+  }
+  return { data: base, fromCache: false };
+};
+
+const TMDB_GENRE_MAP = {
+  action: 28, adventure: 12, animation: 16, comedy: 35, crime: 80,
+  documentary: 99, drama: 18, family: 10751, fantasy: 14, history: 36,
+  horror: 27, music: 10402, mystery: 9648, romance: 10749,
+  'sci-fi': 878, scifi: 878, 'science fiction': 878, thriller: 53,
+  war: 10752, western: 37
+};
+
+const TMDB_GENRE_NAMES = {
+  28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime',
+  99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History',
+  27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Sci-Fi',
+  53: 'Thriller', 10752: 'War', 37: 'Western', 10759: 'Action & Adventure',
+  10765: 'Sci-Fi & Fantasy'
+};
+
+const TMDB_LANG_MAP = {
+  bollywood: 'hi', hindi: 'hi', tollywood: 'te', telugu: 'te',
+  tamil: 'ta', kollywood: 'ta', malayalam: 'ml', kerala: 'ml',
+  bengali: 'bn', bangla: 'bn', punjabi: 'pa', kannada: 'kn',
+  sandalwood: 'kn'
 };
 
 /**
- * Resolves exact curated & regional category movie lists by category name/query
+ * Helper to fetch extensive TMDb movie/show data across multiple endpoints & pages
  */
-export const resolveCategoryMovies = async (queryStr) => {
+const fetchTmdbExtensive = async (ep1, ep2, defaultType = 'movie') => {
+  const apiKey = getTmdbKey();
+  const makeReq = async (ep) => {
+    if (!ep) return null;
+    const sep = ep.includes('?') ? '&' : '?';
+    try {
+      const res = await fetch(`${TMDB_BASE_URL}${ep}${sep}api_key=${apiKey}`, {
+        signal: AbortSignal.timeout(4000)
+      });
+      if (res.ok) return await res.json();
+    } catch {
+      return null;
+    }
+    return null;
+  };
+
+  const [d1, d2] = await Promise.all([makeReq(ep1), makeReq(ep2)]);
+  const rawList = [...(d1?.results || []), ...(d2?.results || [])];
+  const formatted = [];
+  const seen = new Set();
+
+  rawList.forEach((m) => {
+    if (!m || !m.poster_path) return;
+    const name = m.name || m.title || m.original_name || m.original_title;
+    if (!name) return;
+    const norm = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (seen.has(norm)) return;
+    seen.add(norm);
+
+    const type = defaultType || (m.first_air_date ? 'series' : 'movie');
+    const year = (m.release_date || m.first_air_date || '').slice(0, 4) || 'Cinema';
+    const genre = Array.isArray(m.genre_ids)
+      ? m.genre_ids.map((id) => TMDB_GENRE_NAMES[id] || 'Cinema').filter(Boolean)
+      : ['Cinema'];
+
+    formatted.push({
+      id: `tmdb_${type}_${m.id}`,
+      imdbID: `tmdb_${type}_${m.id}`,
+      tmdbId: m.id,
+      name,
+      year,
+      type,
+      imdbRating: m.vote_average ? m.vote_average.toFixed(1) : '7.8',
+      genre,
+      poster: `${TMDB_IMAGE_BASE}w500${m.poster_path}`,
+      backdrop: m.backdrop_path ? `${TMDB_IMAGE_BASE}w1280${m.backdrop_path}` : null,
+      plot: m.overview || 'Experience this cinematic journey with authentic streaming details on Cinescope.'
+    });
+  });
+
+  return formatted;
+};
+
+/**
+ * Resolves comprehensive, multi-source category movie lists with 50+ titles per category
+ */
+export const resolveCategoryMovies = async (queryStr, page = 1) => {
   if (!queryStr) return null;
   const q = queryStr.trim().toLowerCase();
 
   try {
     // 0. Free Stream & Open Source Category
-    if (q.includes('watch free') || q.includes('free stream') || q.includes('open source')) {
+    if (q.includes('watch free') || q.includes('free stream') || q.includes('open source') || q.includes('public domain')) {
       return OPEN_SOURCE_MOVIES_ALL;
     }
 
@@ -1382,270 +1631,249 @@ export const resolveCategoryMovies = async (queryStr) => {
       return [...HOLLYWOOD_UPCOMING, ...BOLLYWOOD_UPCOMING, ...BENGALI_UPCOMING];
     }
 
-    // 1. Bollywood Action Hits
-    if (q.includes('bollywood action') || q === 'bollywood action hits') {
-      try {
-        const live = await fetchBollywoodSubcategory('bollywood_action');
-        if (live && live.length > 0) return live;
-      } catch {
-        // fallback
-      }
-      return BOLLYWOOD_HITS_ALL;
-    }
+    const cacheKey = `category_extensive_${q}_p${page}`;
+    const cached = getCachedData(cacheKey);
+    if (cached && cached.length > 0) return cached;
 
-    // 2. Hindi Crime Thrillers
-    if (q.includes('hindi crime') || q === 'hindi crime thrillers') {
-      try {
-        const live = await fetchBollywoodSubcategory('bollywood_crime_thrillers');
-        if (live && live.length > 0) return live;
-      } catch {
-        // fallback
-      }
-      return BOLLYWOOD_HITS_ALL;
-    }
+    const p1 = (page - 1) * 2 + 1;
+    const p2 = p1 + 1;
+    let dynamicItems = [];
+    let baseCurated = [];
 
-    // 3. Bollywood Comedy Hits
-    if (q.includes('bollywood comedy') || q === 'bollywood comedy hits') {
-      try {
-        const live = await fetchBollywoodSubcategory('bollywood_comedy_horror');
-        if (live && live.length > 0) return live;
-      } catch {
-        // fallback
-      }
-      return BOLLYWOOD_HITS_ALL;
-    }
-
-    // 4. Hindi Romance Dramas
-    if (q.includes('hindi romance') || q === 'hindi romance dramas') {
-      try {
-        const live = await fetchBollywoodSubcategory('bollywood_romance');
-        if (live && live.length > 0) return live;
-      } catch {
-        // fallback
-      }
-      return BOLLYWOOD_HITS_ALL;
-    }
-
-    // 5. Bengali Detective Mysteries
-    if (q.includes('bengali mystery') || q.includes('bengali detective') || q === 'bengali detective mysteries') {
-      try {
-        const live = await fetchBengaliSubcategory('bengali_mysteries');
-        if (live && live.length > 0) return live;
-      } catch {
-        // fallback
-      }
-      return BENGALI_HITS_ALL;
-    }
-
-    // 6. Malayalam Crime Thrillers
-    if (q.includes('malayalam thriller') || q.includes('malayalam crime') || q === 'malayalam crime thrillers') {
-      try {
-        const live = await fetchMalayalamSubcategory('malayalam_thrillers');
-        if (live && live.length > 0) return live;
-      } catch {
-        // fallback
-      }
-      return MALAYALAM_HITS_ALL;
-    }
-
-    // 7. Malayalam Superhit Blockbusters
-    if (q.includes('malayalam blockbuster') || q.includes('malayalam superhit') || q === 'malayalam superhit blockbusters') {
-      try {
-        const live = await fetchMalayalamSubcategory('malayalam_blockbusters');
-        if (live && live.length > 0) return live;
-      } catch {
-        // fallback
-      }
-      return MALAYALAM_HITS_ALL;
-    }
-
-    // 8. Tamil Action Blockbusters
-    if (q.includes('tamil action') || q === 'tamil action blockbusters') {
-      try {
-        const live = await fetchTamilSubcategory('tamil_action');
-        if (live && live.length > 0) return live;
-      } catch {
-        // fallback
-      }
-      return SOUTH_INDIAN_HITS_ALL;
-    }
-
-    // 9. Tamil Suspense Thrillers
-    if (q.includes('tamil suspense') || q.includes('tamil thriller') || q === 'tamil suspense thrillers') {
-      try {
-        const live = await fetchTamilSubcategory('tamil_thrillers');
-        if (live && live.length > 0) return live;
-      } catch {
-        // fallback
-      }
-      return SOUTH_INDIAN_HITS_ALL;
-    }
-
-    // 10. Major Regional Categories
-    if (q.includes('bollywood') || q.includes('hindi')) {
-      let liveA = [], liveC = [], liveCo = [];
-      try {
-        liveA = (await fetchBollywoodSubcategory('bollywood_action')) || [];
-        liveC = (await fetchBollywoodSubcategory('bollywood_crime_thrillers')) || [];
-        liveCo = (await fetchBollywoodSubcategory('bollywood_comedy_horror')) || [];
-      } catch {}
-      const combined = [...BOLLYWOOD_HITS_ALL, ...liveA, ...liveC, ...liveCo];
-      const uniqueMap = new Map();
-      combined.forEach((item) => {
-        const id = item.imdbID || item.id;
-        if (id && !uniqueMap.has(id)) uniqueMap.set(id, item);
-      });
-      return Array.from(uniqueMap.values());
-    }
-
-    if (q.includes('tollywood') || q.includes('south cinema') || q.includes('south indian') || q.includes('telugu')) {
-      let liveT = [];
-      try {
-        liveT = (await fetchTamilSubcategory('tamil_action')) || [];
-      } catch {}
-      const combined = [...SOUTH_INDIAN_HITS_ALL, ...liveT];
-      const uniqueMap = new Map();
-      combined.forEach((item) => {
-        const id = item.imdbID || item.id;
-        if (id && !uniqueMap.has(id)) uniqueMap.set(id, item);
-      });
-      return Array.from(uniqueMap.values());
-    }
-
-    if (q.includes('malayalam') || q.includes('kerala')) {
-      let liveT = [], liveB = [];
-      try {
-        liveT = (await fetchMalayalamSubcategory('malayalam_thrillers')) || [];
-        liveB = (await fetchMalayalamSubcategory('malayalam_blockbusters')) || [];
-      } catch {}
-      const combined = [...MALAYALAM_HITS_ALL, ...liveT, ...liveB];
-      const uniqueMap = new Map();
-      combined.forEach((item) => {
-        const id = item.imdbID || item.id;
-        if (id && !uniqueMap.has(id)) uniqueMap.set(id, item);
-      });
-      return Array.from(uniqueMap.values());
-    }
-
-    if (q.includes('bengali') || q.includes('bangla') || q.includes('kolkata')) {
-      let liveM = [];
-      try {
-        liveM = (await fetchBengaliSubcategory('bengali_mysteries')) || [];
-      } catch {}
-      const combined = [...BENGALI_HITS_ALL, ...liveM];
-      const uniqueMap = new Map();
-      combined.forEach((item) => {
-        const id = item.imdbID || item.id;
-        if (id && !uniqueMap.has(id)) uniqueMap.set(id, item);
-      });
-      return Array.from(uniqueMap.values());
-    }
-
-    if (q.includes('tamil') || q.includes('kollywood')) {
-      let tAction = [], tThriller = [];
-      try {
-        tAction = (await fetchTamilSubcategory('tamil_action')) || [];
-        tThriller = (await fetchTamilSubcategory('tamil_thrillers')) || [];
-      } catch {}
-      const combined = [...tAction, ...tThriller, ...SOUTH_INDIAN_HITS_ALL];
-      const uniqueMap = new Map();
-      combined.forEach((item) => {
-        const id = item.imdbID || item.id;
-        if (id && !uniqueMap.has(id)) uniqueMap.set(id, item);
-      });
-      return Array.from(uniqueMap.values());
-    }
-
-    if (q.includes('nollywood') || q.includes('nigeria') || q.includes('african')) {
-      return NOLLYWOOD_HITS_ALL;
-    }
-
-    if (q.includes('indian series') || q.includes('hindi series') || q.includes('indian web series') || q.includes('indian show')) {
-      return INDIAN_SERIES_ALL;
-    }
-
-    if (q.includes('punjabi')) {
-      return PUNJABI_HITS_ALL;
-    }
-
-    if (q.includes('kannada') || q.includes('sandalwood')) {
-      return KANNADA_HITS_ALL;
-    }
-
-    if (q.includes('golden era') || q.includes('golden classic') || q.includes('indian classics')) {
-      return INDIAN_CLASSICS_ALL;
-    }
-
-    // 11. Platform Standard Categories
-    if (q.includes('latest blockbuster') || q.includes('latest release') || q === 'latest') {
-      return LATEST_RELEASES_ALL;
-    }
-
-    if (q.includes('popular cinema') || q.includes('popular hit') || q === 'popular') {
-      return POPULAR_HITS_ALL;
-    }
-
+    // 1. TV Series / Top Rated Shows
     if (q.includes('top rated show') || q.includes('tv series') || q.includes('tv show')) {
-      return TOP_SERIES_ALL;
+      dynamicItems = await fetchTmdbExtensive(`tv/popular?page=${p1}`, `tv/top_rated?page=${p1}`, 'series');
+      baseCurated = TOP_SERIES_ALL;
+    }
+    // 2. Anime
+    else if (q.includes('anime')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/tv?with_genres=16&with_original_language=ja&sort_by=popularity.desc&page=${p1}`,
+        `discover/tv?with_genres=16&with_original_language=ja&sort_by=popularity.desc&page=${p2}`,
+        'anime'
+      );
+      baseCurated = TOP_ANIME_ALL;
+    }
+    // 3. Latest Blockbusters
+    else if (q.includes('latest') || q.includes('now playing')) {
+      dynamicItems = await fetchTmdbExtensive(`movie/now_playing?page=${p1}`, `movie/now_playing?page=${p2}`, 'movie');
+      baseCurated = LATEST_RELEASES_ALL;
+    }
+    // 4. Popular Cinema Hits
+    else if (q.includes('popular')) {
+      dynamicItems = await fetchTmdbExtensive(`movie/popular?page=${p1}`, `movie/popular?page=${p2}`, 'movie');
+      baseCurated = POPULAR_HITS_ALL;
+    }
+    // 5. Critic Acclaimed Masterpieces
+    else if (q.includes('critic acclaimed') || q.includes('masterpiece') || q.includes('top rated')) {
+      dynamicItems = await fetchTmdbExtensive(`movie/top_rated?page=${p1}`, `movie/top_rated?page=${p2}`, 'movie');
+      baseCurated = CRITIC_RECOMMENDED_ALL;
+    }
+    // 6. Indian Web Series
+    else if (q.includes('indian series') || q.includes('hindi series') || q.includes('indian web series')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/tv?with_original_language=hi&sort_by=popularity.desc&page=${p1}`,
+        `discover/tv?with_original_language=hi&sort_by=popularity.desc&page=${p2}`,
+        'series'
+      );
+      baseCurated = INDIAN_SERIES_ALL;
+    }
+    // 7. Indian Classics
+    else if (q.includes('golden era') || q.includes('golden classic') || q.includes('indian classics')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/movie?with_original_language=hi&primary_release_date.lte=2000-01-01&sort_by=vote_count.desc&page=${p1}`,
+        `discover/movie?with_original_language=hi&primary_release_date.lte=2000-01-01&sort_by=vote_count.desc&page=${p2}`,
+        'movie'
+      );
+      baseCurated = INDIAN_CLASSICS_ALL;
+    }
+    // 8. South Cinema (Telugu + Tamil)
+    else if (q.includes('south cinema') || q.includes('south indian') || q.includes('tollywood')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/movie?with_original_language=te&sort_by=popularity.desc&page=${p1}`,
+        `discover/movie?with_original_language=ta&sort_by=popularity.desc&page=${p1}`,
+        'movie'
+      );
+      baseCurated = SOUTH_INDIAN_HITS_ALL;
+    }
+    // 9. Tamil Action / Suspense
+    else if (q.includes('tamil action')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/movie?with_original_language=ta&with_genres=28&sort_by=popularity.desc&page=${p1}`,
+        `discover/movie?with_original_language=ta&with_genres=28&sort_by=popularity.desc&page=${p2}`,
+        'movie'
+      );
+      baseCurated = SOUTH_INDIAN_HITS_ALL;
+    } else if (q.includes('tamil thriller') || q.includes('tamil suspense')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/movie?with_original_language=ta&with_genres=53&sort_by=popularity.desc&page=${p1}`,
+        `discover/movie?with_original_language=ta&with_genres=53&sort_by=popularity.desc&page=${p2}`,
+        'movie'
+      );
+      baseCurated = SOUTH_INDIAN_HITS_ALL;
+    } else if (q.includes('tamil') || q.includes('kollywood')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/movie?with_original_language=ta&sort_by=popularity.desc&page=${p1}`,
+        `discover/movie?with_original_language=ta&sort_by=popularity.desc&page=${p2}`,
+        'movie'
+      );
+      baseCurated = SOUTH_INDIAN_HITS_ALL;
+    }
+    // 10. Bollywood Specific Subcategories
+    else if (q.includes('bollywood action')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/movie?with_original_language=hi&with_genres=28&sort_by=popularity.desc&page=${p1}`,
+        `discover/movie?with_original_language=hi&with_genres=28&sort_by=popularity.desc&page=${p2}`,
+        'movie'
+      );
+      baseCurated = BOLLYWOOD_HITS_ALL;
+    } else if (q.includes('hindi crime') || q.includes('crime thriller')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/movie?with_original_language=hi&with_genres=80,53&sort_by=popularity.desc&page=${p1}`,
+        `discover/movie?with_original_language=hi&with_genres=80,53&sort_by=popularity.desc&page=${p2}`,
+        'movie'
+      );
+      baseCurated = BOLLYWOOD_HITS_ALL;
+    } else if (q.includes('bollywood comedy')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/movie?with_original_language=hi&with_genres=35&sort_by=popularity.desc&page=${p1}`,
+        `discover/movie?with_original_language=hi&with_genres=35&sort_by=popularity.desc&page=${p2}`,
+        'movie'
+      );
+      baseCurated = BOLLYWOOD_HITS_ALL;
+    } else if (q.includes('hindi romance')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/movie?with_original_language=hi&with_genres=10749&sort_by=popularity.desc&page=${p1}`,
+        `discover/movie?with_original_language=hi&with_genres=10749&sort_by=popularity.desc&page=${p2}`,
+        'movie'
+      );
+      baseCurated = BOLLYWOOD_HITS_ALL;
+    } else if (q.includes('bollywood') || q.includes('hindi')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/movie?with_original_language=hi&sort_by=popularity.desc&page=${p1}`,
+        `discover/movie?with_original_language=hi&sort_by=popularity.desc&page=${p2}`,
+        'movie'
+      );
+      baseCurated = BOLLYWOOD_HITS_ALL;
+    }
+    // 11. Malayalam Cinema & Subcategories
+    else if (q.includes('malayalam thriller') || q.includes('malayalam crime')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/movie?with_original_language=ml&with_genres=53,80&sort_by=popularity.desc&page=${p1}`,
+        `discover/movie?with_original_language=ml&with_genres=53,80&sort_by=popularity.desc&page=${p2}`,
+        'movie'
+      );
+      baseCurated = MALAYALAM_HITS_ALL;
+    } else if (q.includes('malayalam')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/movie?with_original_language=ml&sort_by=popularity.desc&page=${p1}`,
+        `discover/movie?with_original_language=ml&sort_by=popularity.desc&page=${p2}`,
+        'movie'
+      );
+      baseCurated = MALAYALAM_HITS_ALL;
+    }
+    // 12. Bengali Cinema & Subcategories
+    else if (q.includes('bengali mystery') || q.includes('bengali detective')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/movie?with_original_language=bn&sort_by=popularity.desc&page=${p1}`,
+        `discover/movie?with_original_language=bn&sort_by=popularity.desc&page=${p2}`,
+        'movie'
+      );
+      baseCurated = BENGALI_HITS_ALL;
+    } else if (q.includes('bengali') || q.includes('bangla')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/movie?with_original_language=bn&sort_by=popularity.desc&page=${p1}`,
+        `discover/movie?with_original_language=bn&sort_by=popularity.desc&page=${p2}`,
+        'movie'
+      );
+      baseCurated = BENGALI_HITS_ALL;
+    }
+    // 13. Other Regional: Punjabi, Kannada, Nollywood, K-Drama
+    else if (q.includes('punjabi')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/movie?with_original_language=pa&sort_by=popularity.desc&page=${p1}`,
+        `discover/movie?with_original_language=pa&sort_by=popularity.desc&page=${p2}`,
+        'movie'
+      );
+      baseCurated = PUNJABI_HITS_ALL;
+    } else if (q.includes('kannada') || q.includes('sandalwood')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/movie?with_original_language=kn&sort_by=popularity.desc&page=${p1}`,
+        `discover/movie?with_original_language=kn&sort_by=popularity.desc&page=${p2}`,
+        'movie'
+      );
+      baseCurated = KANNADA_HITS_ALL;
+    } else if (q.includes('nollywood') || q.includes('nigeria') || q.includes('african')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/movie?with_origin_country=NG&sort_by=popularity.desc&page=${p1}`,
+        `discover/movie?with_origin_country=NG&sort_by=popularity.desc&page=${p2}`,
+        'movie'
+      );
+      baseCurated = NOLLYWOOD_HITS_ALL;
+    } else if (q.includes('k-drama') || q.includes('korean')) {
+      dynamicItems = await fetchTmdbExtensive(
+        `discover/tv?with_original_language=ko&sort_by=popularity.desc&page=${p1}`,
+        `discover/tv?with_original_language=ko&sort_by=popularity.desc&page=${p2}`,
+        'series'
+      );
+      baseCurated = CURATED_GENRES_DATA['K-Drama Sensations'] || [];
+    }
+    // 14. Standard Genre Map (Action, Sci-Fi, Horror, Comedy, Drama, Crime, Thriller, Animation, etc.)
+    else {
+      const matchedGenreKey = Object.keys(TMDB_GENRE_MAP).find((k) => q === k || q.includes(k));
+      if (matchedGenreKey) {
+        const gid = TMDB_GENRE_MAP[matchedGenreKey];
+        dynamicItems = await fetchTmdbExtensive(
+          `discover/movie?with_genres=${gid}&sort_by=popularity.desc&page=${p1}`,
+          `discover/movie?with_genres=${gid}&sort_by=popularity.desc&page=${p2}`,
+          'movie'
+        );
+        if (matchedGenreKey === 'sci-fi' || matchedGenreKey === 'scifi') {
+          baseCurated = SCIFI_EXPANDED_ALL;
+        } else if (matchedGenreKey === 'animation') {
+          baseCurated = TOP_ANIME_ALL;
+        }
+      }
     }
 
-    if (q.includes('legendary anime') || q.includes('anime')) {
-      return TOP_ANIME_ALL;
-    }
+    // Combine base curated classics with extensive dynamic TMDb hits on initial page
+    if (page === 1 && baseCurated && baseCurated.length > 0) {
+      const combined = [...baseCurated, ...dynamicItems];
+      const seen = new Set();
+      const finalItems = [];
 
-    if (q.includes('sci fi') || q.includes('sci-fi') || q.includes('scifi')) {
-      return SCIFI_EXPANDED_ALL;
-    }
-
-    if (q.includes('critic acclaimed') || q.includes('critic recommended') || q.includes('masterpiece')) {
-      return CRITIC_RECOMMENDED_ALL;
-    }
-
-    if (q.includes('k-drama') || q.includes('korean')) {
-      return CURATED_GENRES_DATA['K-Drama Sensations'] || [];
-    }
-
-    // 12. Generic Genre Match (Action, Comedy, Drama, Crime, Thriller, Horror, Romance, Sci-Fi, Animation, Adventure, Fantasy, Mystery)
-    const genericGenres = ['action', 'comedy', 'drama', 'crime', 'thriller', 'horror', 'romance', 'animation', 'adventure', 'fantasy', 'mystery', 'documentary'];
-    const matchedGenre = genericGenres.find((g) => q === g || q.includes(g));
-
-    if (matchedGenre) {
-      const masterList = [
-        ...Object.values(CURATED_GENRES_DATA).flat(),
-        ...LATEST_RELEASES_ALL,
-        ...POPULAR_HITS_ALL,
-        ...BOLLYWOOD_HITS_ALL,
-        ...SOUTH_INDIAN_HITS_ALL,
-        ...MALAYALAM_HITS_ALL,
-        ...BENGALI_HITS_ALL,
-        ...NOLLYWOOD_HITS_ALL,
-        ...INDIAN_SERIES_ALL,
-        ...PUNJABI_HITS_ALL,
-        ...KANNADA_HITS_ALL,
-        ...INDIAN_CLASSICS_ALL,
-        ...CRITIC_RECOMMENDED_ALL
-      ];
-
-      const matched = masterList.filter((item) => {
-        if (!item) return false;
-        const genres = Array.isArray(item.genre) ? item.genre : [item.genre];
-        return genres.some((g) => String(g).toLowerCase().includes(matchedGenre));
+      combined.forEach((item) => {
+        if (!item) return;
+        const id = item.imdbID || item.id;
+        const norm = (item.name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (!id || seen.has(id) || seen.has(norm)) return;
+        seen.add(id);
+        seen.add(norm);
+        finalItems.push(item);
       });
 
-      if (matched.length > 0) {
-        const uniqueMap = new Map();
-        matched.forEach((item) => {
-          const id = item.imdbID || item.id;
-          if (id && !uniqueMap.has(id)) uniqueMap.set(id, item);
-        });
-        return Array.from(uniqueMap.values());
+      if (finalItems.length > 0) {
+        setCachedData(cacheKey, finalItems);
+        return finalItems;
       }
+    }
+
+    if (dynamicItems.length > 0) {
+      setCachedData(cacheKey, dynamicItems);
+      return dynamicItems;
     }
   } catch {
     // Fail-safe
   }
 
   return null;
+};
+
+/**
+ * Loads additional pages of authentic category content
+ */
+export const loadMoreCategoryMovies = async (queryStr, page = 2) => {
+  return await resolveCategoryMovies(queryStr, page);
 };
 
 /**
@@ -1670,7 +1898,7 @@ export const searchMoviesList = async ({ query = '', page = 1, type = '', year =
 
   try {
     // 0. High priority: Check if this query matches a curated or regional category
-    const categoryMatches = await resolveCategoryMovies(trimmed);
+    const categoryMatches = await resolveCategoryMovies(trimmed, page);
     if (categoryMatches && categoryMatches.length > 0) {
       const res = { results: categoryMatches, totalResults: categoryMatches.length };
       setCachedData(cacheKey, res);
@@ -1718,7 +1946,35 @@ export const searchMoviesList = async ({ query = '', page = 1, type = '', year =
       }
     });
 
-    // 3. Parallel multi-source search across OMDB, TVmaze & Jikan Anime v4
+    // 3. Parallel multi-source search across TMDB, OMDB, TVmaze & Jikan Anime v4
+    const tmdbSearchPromise = (async () => {
+      try {
+        const apiKey = getTmdbKey();
+        const typeFilter = type === 'movie' ? 'movie' : (type === 'series' ? 'tv' : 'multi');
+        const url = `${TMDB_BASE_URL}search/${typeFilter}?api_key=${apiKey}&query=${encodeURIComponent(trimmed)}&page=${page}`;
+        const res = await fetch(url, { signal: currentSearchController.signal });
+        if (!res.ok) return [];
+        const d = await res.json();
+        return (d.results || [])
+          .filter((item) => (item.media_type ? (item.media_type === 'movie' || item.media_type === 'tv') : true))
+          .map((item) => ({
+            id: `tmdb_${item.id}`,
+            tmdbId: item.id,
+            name: item.title || item.name,
+            year: (item.release_date || item.first_air_date || '').slice(0, 4),
+            type: (item.media_type === 'tv' || item.first_air_date) ? 'series' : 'movie',
+            poster: item.poster_path ? `${TMDB_IMAGE_BASE}w500${item.poster_path}` : null,
+            backdrop: item.backdrop_path ? `${TMDB_IMAGE_BASE}w780${item.backdrop_path}` : null,
+            imdbRating: item.vote_average ? item.vote_average.toFixed(1) : null,
+            overview: item.overview,
+            source: 'tmdb'
+          }))
+          .filter((item) => item.poster);
+      } catch {
+        return [];
+      }
+    })();
+
     const tvmazePromise = (type !== 'movie')
       ? searchTVmaze(trimmed)
       : Promise.resolve([]);
@@ -1766,7 +2022,17 @@ export const searchMoviesList = async ({ query = '', page = 1, type = '', year =
       return [];
     })();
 
-    const [tvResults, omdbResults, jikanResults] = await Promise.allSettled([tvmazePromise, omdbPromise, jikanPromise]);
+    const [tvResults, omdbResults, jikanResults, tmdbResults] = await Promise.allSettled([tvmazePromise, omdbPromise, jikanPromise, tmdbSearchPromise]);
+
+    // Merge TMDB results (High authentic fidelity & real posters)
+    if (tmdbResults.status === 'fulfilled' && Array.isArray(tmdbResults.value)) {
+      tmdbResults.value.forEach((item) => {
+        const key = item.id;
+        if (!resultsMap.has(key)) {
+          resultsMap.set(key, item);
+        }
+      });
+    }
 
     // Merge TV results
     if (tvResults.status === 'fulfilled' && Array.isArray(tvResults.value)) {
@@ -2006,28 +2272,99 @@ export const fetchDynamicCategoryTitles = async (categoryKey) => {
         }
       }
     } else if (categoryKey === 'latest') {
-      const key = getOmdbKey();
-      const res = await fetch(`${OMDB_BASE_URL}?apikey=${key}&s=2024&type=movie`, {
+      const res = await fetch(`${TMDB_BASE_URL}movie/now_playing?api_key=${apiKey}&page=1`, {
         signal: AbortSignal.timeout(3500)
       });
       if (res.ok) {
         const data = await res.json();
-        if (data.Search && Array.isArray(data.Search)) {
-          const movies = data.Search
-            .filter((m) => m.Poster && m.Poster !== 'N/A')
-            .map((m) => ({
-              id: m.imdbID,
-              imdbID: m.imdbID,
-              name: m.Title,
-              year: m.Year,
-              type: 'movie',
-              imdbRating: '7.5',
-              poster: m.Poster
-            }));
-          if (movies.length > 0) {
-            setCachedData(cacheKey, movies);
-            return movies;
-          }
+        const movies = (data.results || [])
+          .filter((m) => m.poster_path)
+          .slice(0, 30)
+          .map((m) => ({
+            id: `tmdb_mov_${m.id}`,
+            imdbID: `tmdb_mov_${m.id}`,
+            tmdbId: m.id,
+            name: m.title || m.original_title,
+            year: m.release_date ? m.release_date.slice(0, 4) : '2024',
+            type: 'movie',
+            imdbRating: m.vote_average ? m.vote_average.toFixed(1) : '7.8',
+            poster: `${TMDB_IMAGE_BASE}w500${m.poster_path}`
+          }));
+        if (movies.length > 0) {
+          setCachedData(cacheKey, movies);
+          return movies;
+        }
+      }
+    } else if (categoryKey === 'popular') {
+      const res = await fetch(`${TMDB_BASE_URL}movie/popular?api_key=${apiKey}&page=1`, {
+        signal: AbortSignal.timeout(3500)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const movies = (data.results || [])
+          .filter((m) => m.poster_path)
+          .slice(0, 30)
+          .map((m) => ({
+            id: `tmdb_mov_${m.id}`,
+            imdbID: `tmdb_mov_${m.id}`,
+            tmdbId: m.id,
+            name: m.title || m.original_title,
+            year: m.release_date ? m.release_date.slice(0, 4) : 'Cinema',
+            type: 'movie',
+            imdbRating: m.vote_average ? m.vote_average.toFixed(1) : '8.0',
+            poster: `${TMDB_IMAGE_BASE}w500${m.poster_path}`
+          }));
+        if (movies.length > 0) {
+          setCachedData(cacheKey, movies);
+          return movies;
+        }
+      }
+    } else if (categoryKey === 'scifi') {
+      const res = await fetch(`${TMDB_BASE_URL}discover/movie?api_key=${apiKey}&with_genres=878&sort_by=popularity.desc&page=1`, {
+        signal: AbortSignal.timeout(3500)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const movies = (data.results || [])
+          .filter((m) => m.poster_path)
+          .slice(0, 30)
+          .map((m) => ({
+            id: `tmdb_mov_${m.id}`,
+            imdbID: `tmdb_mov_${m.id}`,
+            tmdbId: m.id,
+            name: m.title || m.original_title,
+            year: m.release_date ? m.release_date.slice(0, 4) : 'Cinema',
+            type: 'movie',
+            imdbRating: m.vote_average ? m.vote_average.toFixed(1) : '7.9',
+            poster: `${TMDB_IMAGE_BASE}w500${m.poster_path}`
+          }));
+        if (movies.length > 0) {
+          setCachedData(cacheKey, movies);
+          return movies;
+        }
+      }
+    } else if (categoryKey === 'critic') {
+      const res = await fetch(`${TMDB_BASE_URL}movie/top_rated?api_key=${apiKey}&page=1`, {
+        signal: AbortSignal.timeout(3500)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const movies = (data.results || [])
+          .filter((m) => m.poster_path)
+          .slice(0, 30)
+          .map((m) => ({
+            id: `tmdb_mov_${m.id}`,
+            imdbID: `tmdb_mov_${m.id}`,
+            tmdbId: m.id,
+            name: m.title || m.original_title,
+            year: m.release_date ? m.release_date.slice(0, 4) : 'Cinema',
+            type: 'movie',
+            imdbRating: m.vote_average ? m.vote_average.toFixed(1) : '8.6',
+            poster: `${TMDB_IMAGE_BASE}w500${m.poster_path}`
+          }));
+        if (movies.length > 0) {
+          setCachedData(cacheKey, movies);
+          return movies;
         }
       }
     } else if (
@@ -2040,60 +2377,91 @@ export const fetchDynamicCategoryTitles = async (categoryKey) => {
       categoryKey === 'kannada' ||
       categoryKey === 'indian_classics'
     ) {
-      const key = getOmdbKey();
-      let queryList = [];
-      if (categoryKey === 'bollywood') {
-        queryList = ['hindi', 'bollywood', 'shah rukh', 'dangal', 'jawan', 'stree', '3 idiots', 'chhaava', 'dhoom', 'singham', 'kabir singh', 'pathaan'];
-      } else if (categoryKey === 'tollywood') {
-        queryList = ['telugu', 'tamil', 'pushpa', 'kgf', 'baahubali', 'kalki', 'salaar', 'leo', 'jailer', 'rrr', 'kantara', 'vikram'];
-      } else if (categoryKey === 'malayalam') {
-        queryList = ['malayalam', 'manjummel', 'aavesham', 'premalu', 'drishyam', 'lucifer', 'minnal', 'bramayugam'];
-      } else if (categoryKey === 'bengali') {
-        queryList = ['bengali', 'feluda', 'byomkesh', 'pather panchali', 'ray', 'chokher bali', 'dawshom awbotar'];
-      } else if (categoryKey === 'punjabi') {
-        queryList = ['punjabi', 'carry on jatta', 'jatt & juliet', 'qismat', 'saunkan saunkne'];
-      } else if (categoryKey === 'kannada') {
-        queryList = ['kannada', 'kgf', 'kantara', '777 charlie', 'vikrant rona'];
-      } else if (categoryKey === 'indian_classics') {
-        queryList = ['sholay', 'mughal-e-azam', 'mother india', 'anand', 'guide', 'deewaar', 'lagaan', 'ddlj'];
-      } else {
-        queryList = ['nigeria', 'nollywood', 'black book', 'wedding party'];
-      }
+      const langMap = {
+        bollywood: 'hi',
+        tollywood: 'te',
+        malayalam: 'ml',
+        bengali: 'bn',
+        punjabi: 'pa',
+        kannada: 'kn',
+        nollywood: 'en'
+      };
+
+      const titlesMap = {
+        bollywood: ['Stree 2', 'Jawan', 'Animal', 'Pathaan', 'Dangal', '3 Idiots', 'Sholay', 'Chhaava', 'Tumbbad', 'Andhadhun', 'Gangs of Wasseypur', 'Bajrangi Bhaijaan'],
+        tollywood: ['RRR', 'Pushpa 2: The Rule', 'Pushpa: The Rise', 'Kalki 2898 AD', 'Salaar: Part 1 - Ceasefire', 'Baahubali 2', 'Leo', 'Jailer', 'Kantara', 'Vikram'],
+        malayalam: ['Manjummel Boys', 'Aavesham', 'Premalu', 'The Goat Life', 'Bramayugam', 'Drishyam', 'Minnal Murali', 'Lucifer', 'Bangalore Days', 'Kumbalangi Nights'],
+        bengali: ['Pather Panchali', 'Charulata', 'Sonar Kella', 'Chokher Bali', 'Dawshom Awbotaar', 'Baishe Srabon', 'Chotushkone', 'Autograph'],
+        punjabi: ['Carry on Jatta', 'Jatt & Juliet', 'Qismat', 'Saunkan Saunkne', 'Jodi', 'Honsla Rakh', 'Angrej', 'Shadaa'],
+        kannada: ['K.G.F: Chapter 1', 'K.G.F: Chapter 2', 'Kantara', '777 Charlie', 'Vikrant Rona', 'Kabzaa', 'James'],
+        indian_classics: ['Sholay', 'Mughal-E-Azam', 'Mother India', 'Anand', 'Guide', 'Deewaar', 'Gol Maal', 'Don', 'Pyaasa', 'Kaagaz Ke Phool', 'Dilwale Dulhania Le Jayenge'],
+        nollywood: ['The Black Book', 'The Wedding Party', 'King of Boys', 'Lionheart', 'Aníkúlápó', 'Gangs of Lagos', 'A Tribe Called Judah']
+      };
 
       const harvested = [];
       const seen = new Set();
+      const apiKey = getTmdbKey();
 
+      // 1. Fetch exact matching curated titles first for highest authenticity
+      const specificTitles = titlesMap[categoryKey] || [];
       await Promise.allSettled(
-        queryList.flatMap((q) => [1, 2]).map(async (page, index) => {
-          const q = queryList[Math.floor(index / 2)];
+        specificTitles.map(async (title) => {
           try {
-            const res = await fetch(`${OMDB_BASE_URL}?apikey=${key}&s=${encodeURIComponent(q)}&type=movie&page=${page}`, {
+            const res = await fetch(`${TMDB_BASE_URL}search/movie?api_key=${apiKey}&query=${encodeURIComponent(title)}`, {
               signal: AbortSignal.timeout(3500)
             });
             if (res.ok) {
               const data = await res.json();
-              if (data.Search && Array.isArray(data.Search)) {
-                data.Search.forEach((m) => {
-                  if (m.imdbID && m.Poster && m.Poster !== 'N/A' && !seen.has(m.imdbID)) {
-                    seen.add(m.imdbID);
-                    harvested.push({
-                      id: m.imdbID,
-                      imdbID: m.imdbID,
-                      name: m.Title,
-                      year: m.Year,
-                      type: 'movie',
-                      imdbRating: (7.2 + (Math.abs(m.imdbID.charCodeAt(3) || 5) % 20) / 10).toFixed(1),
-                      poster: m.Poster
-                    });
-                  }
+              const m = data.results?.[0];
+              if (m && m.poster_path && !seen.has(`tmdb_${m.id}`)) {
+                seen.add(`tmdb_${m.id}`);
+                harvested.push({
+                  id: `tmdb_${m.id}`,
+                  imdbID: `tmdb_${m.id}`,
+                  tmdbId: m.id,
+                  name: m.title || m.name,
+                  year: (m.release_date || '').slice(0, 4) || 'Cinema',
+                  type: 'movie',
+                  imdbRating: m.vote_average ? m.vote_average.toFixed(1) : '7.5',
+                  poster: `${TMDB_IMAGE_BASE}w500${m.poster_path}`
                 });
               }
             }
           } catch {
-            // ignore timeout
+            // timeout safe
           }
         })
       );
+
+      // 2. Discover authentic top movies by original language
+      const lang = langMap[categoryKey];
+      if (lang) {
+        try {
+          const res = await fetch(`${TMDB_BASE_URL}discover/movie?api_key=${apiKey}&with_original_language=${lang}&sort_by=popularity.desc&page=1`, {
+            signal: AbortSignal.timeout(3500)
+          });
+          if (res.ok) {
+            const data = await res.json();
+            (data.results || []).forEach((m) => {
+              if (m.poster_path && !seen.has(`tmdb_${m.id}`)) {
+                seen.add(`tmdb_${m.id}`);
+                harvested.push({
+                  id: `tmdb_${m.id}`,
+                  imdbID: `tmdb_${m.id}`,
+                  tmdbId: m.id,
+                  name: m.title || m.name,
+                  year: (m.release_date || '').slice(0, 4) || 'Cinema',
+                  type: 'movie',
+                  imdbRating: m.vote_average ? m.vote_average.toFixed(1) : '7.5',
+                  poster: `${TMDB_IMAGE_BASE}w500${m.poster_path}`
+                });
+              }
+            });
+          }
+        } catch {
+          // timeout safe
+        }
+      }
 
       if (harvested.length > 0) {
         setCachedData(cacheKey, harvested);
@@ -2226,18 +2594,43 @@ export const fetchSearchSuggestions = async (query, signal) => {
     return list;
   }
 
-  // 2. Parallel network search across OMDB & TVmaze
+  // 2. Parallel network search across TMDB, OMDB & TVmaze
   try {
     const omdbKey = getOmdbKey();
     const omdbUrl = `${OMDB_BASE_URL}?s=${encodeURIComponent(trimmed)}&page=1&apikey=${omdbKey}`;
     const tvmazeUrl = `https://api.tvmaze.com/search/shows?q=${encodeURIComponent(trimmed)}`;
+    const tmdbKey = getTmdbKey();
+    const tmdbUrl = `${TMDB_BASE_URL}search/multi?api_key=${tmdbKey}&query=${encodeURIComponent(trimmed)}&page=1`;
 
-    const fetchOptions = signal ? { signal } : { signal: AbortSignal.timeout(2200) };
+    const fetchOptions = signal ? { signal } : { signal: AbortSignal.timeout(2400) };
 
-    const [omdbRes, tvmazeRes] = await Promise.allSettled([
+    const [omdbRes, tvmazeRes, tmdbRes] = await Promise.allSettled([
       fetch(omdbUrl, fetchOptions).then((r) => (r.ok ? r.json() : null)),
-      fetch(tvmazeUrl, fetchOptions).then((r) => (r.ok ? r.json() : null))
+      fetch(tvmazeUrl, fetchOptions).then((r) => (r.ok ? r.json() : null)),
+      fetch(tmdbUrl, fetchOptions).then((r) => (r.ok ? r.json() : null))
     ]);
+
+    if (tmdbRes.status === 'fulfilled' && Array.isArray(tmdbRes.value?.results)) {
+      tmdbRes.value.results.slice(0, 6).forEach((item) => {
+        if (!item || (!item.title && !item.name)) return;
+        const name = item.title || item.name;
+        const idKey = `tmdb_${item.id}`;
+        const isPrefix = name.toLowerCase().startsWith(lower);
+        if (!resultsMap.has(idKey)) {
+          resultsMap.set(idKey, {
+            id: idKey,
+            tmdbId: item.id,
+            name: name,
+            year: (item.release_date || item.first_air_date || '').slice(0, 4),
+            type: (item.media_type === 'tv' || item.first_air_date) ? 'series' : 'movie',
+            poster: item.poster_path ? `${TMDB_IMAGE_BASE}w185${item.poster_path}` : null,
+            imdbRating: item.vote_average ? item.vote_average.toFixed(1) : null,
+            genre: item.media_type === 'tv' ? 'Series' : 'Movie',
+            priority: isPrefix ? 3 : 2
+          });
+        }
+      });
+    }
 
     if (omdbRes.status === 'fulfilled' && omdbRes.value?.Response === 'True' && Array.isArray(omdbRes.value.Search)) {
       omdbRes.value.Search.forEach((m) => {

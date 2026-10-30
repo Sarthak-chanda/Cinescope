@@ -110,8 +110,8 @@ export const SPOTLIGHT_MOVIES_DATA = [
     cast: 'Paul Mescal, Pedro Pascal, Denzel Washington',
     genres: ['Action', 'Adventure', 'Drama'],
     mood: 'Hollywood Cinema',
-    poster: 'https://images.weserv.nl/?url=https://m.media-amazon.com/images/M/MV5BN2JkMDc5MGQtZjg3YS00NmFiLWIyZmQtZTJmNTM5MjVmYTQ4XkEyXkFqcGc@._V1_SX300.jpg',
-    secondaryPoster: 'https://m.media-amazon.com/images/M/MV5BN2JkMDc5MGQtZjg3YS00NmFiLWIyZmQtZTJmNTM5MjVmYTQ4XkEyXkFqcGc@._V1_SX300.jpg',
+    poster: 'https://image.tmdb.org/t/p/w500/2cxhvwyEwRlysAmRH4iodkvo0z5.jpg',
+    secondaryPoster: 'https://image.tmdb.org/t/p/original/tOqIwliWMovSIZ9DyvHcHI7p2im.jpg',
     tagline: 'What we do in life echoes in eternity.',
     plot: 'Years after witnessing the death of Maximus, Lucius enters the Colosseum to fight for the restoration of Rome\'s glory.',
     liveViewers: 3680

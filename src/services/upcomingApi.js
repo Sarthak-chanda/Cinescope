@@ -4,9 +4,8 @@
  */
 
 const TMDB_API_KEYS = [
-  '4f89241199a531b29dbd244a307b2251',
-  '15d2fd48f88cd047e350a84db92b352b',
-  '8424a613a20721c83fa88085d564177d'
+  '3fd2be6f0c70a2a598f084ddfb75487c',
+  '2dca580c2a14b55200e784d157207b4d'
 ];
 let keyIndex = 0;
 const getTmdbKey = () => TMDB_API_KEYS[keyIndex % TMDB_API_KEYS.length];
@@ -21,7 +20,7 @@ export const HOLLYWOOD_UPCOMING = [
     type: 'upcoming',
     imdbRating: '9.4',
     genre: ['Crime', 'Drama', 'Mystery'],
-    poster: 'https://image.tmdb.org/t/p/w500/b33nnKl1GSFbao8l3MieM4Ur0T8.jpg',
+    poster: 'https://image.tmdb.org/t/p/w500/r5fl4aMsmTjgc8DdDqQaM84roWp.jpg',
     plot: 'Bruce Wayne delves deeper into Gotham\'s criminal underworld as corrupt institutions crumble.',
     trailerId: 'mqqft2x_Aa4',
     status: 'OCT 2, 2026'
@@ -35,7 +34,7 @@ export const HOLLYWOOD_UPCOMING = [
     type: 'upcoming',
     imdbRating: '9.1',
     genre: ['Sci-Fi', 'Adventure', 'Action'],
-    poster: 'https://image.tmdb.org/t/p/w500/db32W1BHeadYmU6cSmzWk5uY25b.jpg',
+    poster: 'https://image.tmdb.org/t/p/w500/gg17R8AJ21naNHy8oVjSrm6EDRI.jpg',
     plot: 'Rey rebuilds the New Jedi Order fifteen years after the events of The Rise of Skywalker.',
     trailerId: 'LEjhY15eCx0',
     status: 'DEC 18, 2026'
@@ -63,7 +62,7 @@ export const HOLLYWOOD_UPCOMING = [
     type: 'upcoming',
     imdbRating: '9.6',
     genre: ['Animation', 'Action', 'Sci-Fi'],
-    poster: 'https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj7sfd8.jpg',
+    poster: 'https://image.tmdb.org/t/p/w500/9KAe39xqyZnv9J4W3DRGdQqX82h.jpg',
     plot: 'Miles Morales navigates the multiverse to save his father and reconcile with Gwen Stacy.',
     trailerId: 'cqGjhVJWtEg',
     status: 'MARCH 2027'
@@ -77,7 +76,7 @@ export const HOLLYWOOD_UPCOMING = [
     type: 'upcoming',
     imdbRating: '8.9',
     genre: ['Animation', 'Adventure', 'Family'],
-    poster: 'https://image.tmdb.org/t/p/w500/mDKMoXt1gYsNg53VPvyaygEgOfE.jpg',
+    poster: 'https://image.tmdb.org/t/p/w500/1j14CjJzRLIfYiPZZXh1FNhYAjn.jpg',
     plot: 'Elsa and Anna embark on an icy quest beyond Arendelle to unlock ancient elemental secrets.',
     trailerId: 'Kdr5oedn7q8',
     status: 'NOV 2027'
@@ -91,7 +90,7 @@ export const HOLLYWOOD_UPCOMING = [
     type: 'upcoming',
     imdbRating: '9.5',
     genre: ['Sci-Fi', 'Drama', 'Adventure'],
-    poster: 'https://image.tmdb.org/t/p/w500/x1Ph94si0TJvRnn250v2e95rqu.jpg',
+    poster: 'https://image.tmdb.org/t/p/w500/glt0v4I89rMWstDNCaFXc5SNyO1.jpg',
     plot: 'Denis Villeneuve concludes Paul Atreides\' journey as Emperor of Arrakis twelve years later.',
     trailerId: 'Way9Dexny3w',
     status: 'DEC 2027'
@@ -105,7 +104,7 @@ export const HOLLYWOOD_UPCOMING = [
     type: 'upcoming',
     imdbRating: '8.8',
     genre: ['Action', 'Crime', 'Thriller'],
-    poster: 'https://image.tmdb.org/t/p/w500/fiVW06jE7z9YnO4trviMGlCfNio.jpg',
+    poster: 'https://image.tmdb.org/t/p/w500/xaRzhQZ3zK5lN6vEetG8PD17KPF.jpg',
     plot: 'Dom Toretto and his crew face Dante Reyes in the epic series finale.',
     trailerId: '32RAq6JzY-w',
     status: 'APRIL 2027'
@@ -119,7 +118,7 @@ export const HOLLYWOOD_UPCOMING = [
     type: 'upcoming',
     imdbRating: '9.0',
     genre: ['Animation', 'Family', 'Comedy'],
-    poster: 'https://image.tmdb.org/t/p/w500/uXDfjJBDP4ijW5hWSBrPrlKpxab.jpg',
+    poster: 'https://image.tmdb.org/t/p/w500/sfQtVlIHljToOwYjhe21KPGzZWK.jpg',
     plot: 'Woody, Buzz Lightyear, and the gang face their newest challenge: electronics and smart tablets.',
     trailerId: '5sE270m018M',
     status: 'JUNE 2027'
@@ -133,7 +132,7 @@ export const HOLLYWOOD_UPCOMING = [
     type: 'upcoming',
     imdbRating: '9.2',
     genre: ['Animation', 'Comedy', 'Fantasy'],
-    poster: 'https://image.tmdb.org/t/p/w500/kDp1vUBnMpeYrAKbLVPmB1sYm24.jpg',
+    poster: 'https://image.tmdb.org/t/p/w500/m9jLiemA7t2umlXKptDwtIUHU8l.jpg',
     plot: 'Shrek, Donkey, and Fiona return for a hilarious new adventure in Far Far Away.',
     trailerId: 'pkZXflMmU1Y',
     status: 'JULY 2027'
@@ -220,7 +219,7 @@ export const BOLLYWOOD_UPCOMING = [
     type: 'upcoming',
     imdbRating: '9.4',
     genre: ['Sci-Fi', 'Mythology', 'Pan-India'],
-    poster: 'https://image.tmdb.org/t/p/w500/7WsyChLLEzcqIFv2VdM1Hn2uUR7.jpg',
+    poster: 'https://image.tmdb.org/t/p/w500/jFkZXnKCYJYFtx2D5dcspjgoZdD.jpg',
     plot: 'Prabhas and Amitabh Bachchan clash against Supreme Yaskin in Nag Ashwin\'s dystopian finale.',
     trailerId: 'MGRm4IzK1SQ',
     status: 'MID 2027'
@@ -321,7 +320,7 @@ export const enrichUpcomingPosters = async (movieList) => {
     movieList.map(async (movie) => {
       try {
         const query = encodeURIComponent(movie.name.split(':')[0].split('(')[0].trim());
-        const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}&page=1`, {
+        const res = await fetch(`https://api.tmdb.org/3/search/movie?api_key=${apiKey}&query=${query}&page=1`, {
           signal: AbortSignal.timeout(2500)
         });
         if (res.ok) {
@@ -354,7 +353,7 @@ export const fetchLiveTMDBUpcoming = async (region = 'Hollywood') => {
     const apiKey = getTmdbKey();
     const lang = reg.includes('bollywood') ? 'hi-IN' : reg.includes('bengali') ? 'bn-IN' : 'en-US';
     const res = await fetch(
-      `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=${lang}&primary_release_date.gte=2026-08-15&sort_by=popularity.desc&page=1`,
+      `https://api.tmdb.org/3/discover/movie?api_key=${apiKey}&language=${lang}&primary_release_date.gte=2026-08-15&sort_by=popularity.desc&page=1`,
       { signal: AbortSignal.timeout(3000) }
     );
 

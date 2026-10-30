@@ -15,10 +15,10 @@ export const BENGALI_CATEGORIES = [
     subtitle: 'Feluda, Byomkesh Bakshi, and thrilling Kolkata suspense sagas',
     queries: ['feluda', 'byomkesh', 'sonar kella', 'baishe srabon', 'dawshom awbotar', 'chotushkone', 'ebong kiriti', 'shobdo'],
     fallback: [
-      { id: 'tt0067776', imdbID: 'tt0067776', name: 'Sonar Kella (Feluda)', year: '1974', type: 'movie', imdbRating: '8.3', genre: ['Adventure', 'Mystery'], poster: 'https://image.tmdb.org/t/p/w500/sk1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt28114999', imdbID: 'tt28114999', name: 'Dawshom Awbotar', year: '2023', type: 'movie', imdbRating: '7.4', genre: ['Crime', 'Thriller'], poster: 'https://image.tmdb.org/t/p/w500/da1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt2088850', imdbID: 'tt2088850', name: 'Baishe Srabon', year: '2011', type: 'movie', imdbRating: '8.1', genre: ['Crime', 'Thriller'], poster: 'https://image.tmdb.org/t/p/w500/bs1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt3417452', imdbID: 'tt3417452', name: 'Chotushkone', year: '2014', type: 'movie', imdbRating: '8.2', genre: ['Mystery', 'Thriller'], poster: 'https://image.tmdb.org/t/p/w500/ct1PqV1u14cW6PqV1u14.jpg' }
+      { id: 'tt0067776', imdbID: 'tt0067776', name: 'Sonar Kella (Feluda)', year: '1974', type: 'movie', imdbRating: '8.3', genre: ['Adventure', 'Mystery'], poster: 'https://image.tmdb.org/t/p/w500/4TBPQYszjzj6UKoXyZk4ooURlYq.jpg' },
+      { id: 'tt28114999', imdbID: 'tt28114999', name: 'Dawshom Awbotar', year: '2023', type: 'movie', imdbRating: '7.4', genre: ['Crime', 'Thriller'], poster: 'https://image.tmdb.org/t/p/w500/i8OfM0YRzUhNjEusvoK2PaCOls4.jpg' },
+      { id: 'tt2088850', imdbID: 'tt2088850', name: 'Baishe Srabon', year: '2011', type: 'movie', imdbRating: '8.1', genre: ['Crime', 'Thriller'], poster: 'https://image.tmdb.org/t/p/w500/l01wF0ImU8I2Mr1lb5zODooqnht.jpg' },
+      { id: 'tt3417452', imdbID: 'tt3417452', name: 'Chotushkone', year: '2014', type: 'movie', imdbRating: '8.2', genre: ['Mystery', 'Thriller'], poster: 'https://image.tmdb.org/t/p/w500/6NhorrHcB3GYDqgYiXQmDDQnZtu.jpg' }
     ]
   },
   {
@@ -27,8 +27,8 @@ export const BENGALI_CATEGORIES = [
     subtitle: 'Satyajit Ray masterpieces, Ritwik Ghatak sagas, and vintage gems',
     queries: ['pather panchali', 'charulata', 'apur sansar', 'goopy gyne bagha byne', 'meghe dhaka tara', 'nayak satyajit'],
     fallback: [
-      { id: 'tt0048473', imdbID: 'tt0048473', name: 'Pather Panchali', year: '1955', type: 'movie', imdbRating: '8.5', genre: ['Drama'], poster: 'https://image.tmdb.org/t/p/w500/pp1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt0051465', imdbID: 'tt0051465', name: 'Charulata', year: '1964', type: 'movie', imdbRating: '8.1', genre: ['Drama', 'Romance'], poster: 'https://image.tmdb.org/t/p/w500/ch1PqV1u14cW6PqV1u14.jpg' }
+      { id: 'tt0048473', imdbID: 'tt0048473', name: 'Pather Panchali', year: '1955', type: 'movie', imdbRating: '8.5', genre: ['Drama'], poster: 'https://image.tmdb.org/t/p/w500/frZj5djlU9hFEjMcL21RJZVuG5O.jpg' },
+      { id: 'tt0051465', imdbID: 'tt0051465', name: 'Charulata', year: '1964', type: 'movie', imdbRating: '8.1', genre: ['Drama', 'Romance'], poster: 'https://image.tmdb.org/t/p/w500/ei2YaCcnUBudyc6BQSc6mpCSJTx.jpg' }
     ]
   },
   {
@@ -37,9 +37,9 @@ export const BENGALI_CATEGORIES = [
     subtitle: 'Acclaimed modern Kolkata storytelling, family sagas, and romantic cinema',
     queries: ['chokher bali', 'autograph bengali', 'amazon obhijaan', 'belaseshe', 'praktan', 'bramhachari bengali'],
     fallback: [
-      { id: 'tt2088820', imdbID: 'tt2088820', name: 'Chokher Bali', year: '2003', type: 'movie', imdbRating: '7.8', genre: ['Drama', 'Romance'], poster: 'https://image.tmdb.org/t/p/w500/cb1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt7242858', imdbID: 'tt7242858', name: 'Amazon Obhijaan', year: '2017', type: 'movie', imdbRating: '6.5', genre: ['Action', 'Adventure'], poster: 'https://image.tmdb.org/t/p/w500/ao1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt2088848', imdbID: 'tt2088848', name: 'Autograph', year: '2010', type: 'movie', imdbRating: '8.0', genre: ['Drama'], poster: 'https://image.tmdb.org/t/p/w500/au1PqV1u14cW6PqV1u14.jpg' }
+      { id: 'tt2088820', imdbID: 'tt2088820', name: 'Chokher Bali', year: '2003', type: 'movie', imdbRating: '7.8', genre: ['Drama', 'Romance'], poster: 'https://image.tmdb.org/t/p/w500/izErrnZhCWHOaDUjRnpbqW4gU63.jpg' },
+      { id: 'tt7242858', imdbID: 'tt7242858', name: 'Amazon Obhijaan', year: '2017', type: 'movie', imdbRating: '6.5', genre: ['Action', 'Adventure'], poster: 'https://image.tmdb.org/t/p/w500/6nOozjdFiyl4V7i9xasULL9FIc4.jpg' },
+      { id: 'tt2088848', imdbID: 'tt2088848', name: 'Autograph', year: '2010', type: 'movie', imdbRating: '8.0', genre: ['Drama'], poster: 'https://image.tmdb.org/t/p/w500/HuGG6S8vAyB17ABft7DDtinTa.jpg' }
     ]
   }
 ];

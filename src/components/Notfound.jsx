@@ -32,11 +32,13 @@ const Notfound = ({ searchTerm, errorMessage, onQuickSearch, onBackToHome }) => 
         <div style={{ marginBottom: '1.5rem' }}>
           <button
             type="button"
-            className="page-back-action-btn notfound-home-btn"
+            className="subpage-back-btn notfound-home-btn"
             onClick={onBackToHome}
+            title="Return to Home"
+            aria-label="Return to Home"
           >
-            <span className="btn-arrow">←</span>
-            <span>Return to Home Page</span>
+            <span className="back-arrow">←</span>
+            <span>Return to Home</span>
           </button>
         </div>
       )}

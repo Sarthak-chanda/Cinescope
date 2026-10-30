@@ -5,7 +5,7 @@ import WatchlistModal from './components/WatchlistModal';
 import TrailerModal from './components/TrailerModal';
 import CinemaStreamModal from './components/CinemaStreamModal';
 import InitialCinemaLoader from './components/InitialCinemaLoader';
-import { fetchMovieDetails, searchMoviesList, loadWishlistFromLocalMemory, saveWishlistToLocalMemory } from './services/movieApi';
+import { fetchMovieDetails, searchMoviesList, loadMoreCategoryMovies, loadWishlistFromLocalMemory, saveWishlistToLocalMemory } from './services/movieApi';
 import './App.css';
 
 const THEME_KEY = 'cinescope_theme_v4';
@@ -41,6 +41,8 @@ const App = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [totalResults, setTotalResults] = useState(0);
   const [activeGenre, setActiveGenre] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isWatchlistOpen, setIsWatchlistOpen] = useState(false);
   const [toasts, setToasts] = useState([]);
 
@@ -219,6 +221,7 @@ const App = () => {
     setLoading(true);
     setNotfound(false);
     setErrorMessage('');
+    setCurrentPage(1);
     saveRecentSearch(trimmed);
 
     try {
@@ -310,6 +313,7 @@ const App = () => {
 
     setActiveGenre(genreQuery);
     setSearchTerm('');
+    setCurrentPage(1);
     setLoading(true);
     setNotfound(false);
     setErrorMessage('');
@@ -338,6 +342,47 @@ const App = () => {
       setLoading(false);
     }
   }, []);
+
+  /**
+   * Load more content for active category or search query
+   */
+  const handleLoadMore = useCallback(async () => {
+    if (isLoadingMore) return;
+    const nextPage = currentPage + 1;
+    setIsLoadingMore(true);
+
+    try {
+      const query = activeGenre || searchTerm;
+      if (!query) return;
+
+      let newItems = [];
+      if (activeGenre) {
+        newItems = await loadMoreCategoryMovies(activeGenre, nextPage);
+      } else {
+        const res = await searchMoviesList({ query, page: nextPage });
+        newItems = res?.results || [];
+      }
+
+      if (newItems && newItems.length > 0) {
+        setSearchResults((prev) => {
+          const seen = new Set(prev.map((m) => m.id || m.imdbID));
+          const toAdd = newItems.filter((m) => {
+            const id = m.id || m.imdbID;
+            return id && !seen.has(id);
+          });
+          return [...prev, ...toAdd];
+        });
+        setCurrentPage(nextPage);
+        showToast(`Loaded ${newItems.length} more titles!`, '🎬');
+      } else {
+        showToast('All available titles loaded.', '✓');
+      }
+    } catch {
+      showToast('Could not load more titles.', '⚠️');
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [isLoadingMore, currentPage, activeGenre, searchTerm]);
 
   // Handle URL Hash Navigation
   useEffect(() => {
@@ -653,6 +698,9 @@ const App = () => {
         userRatings={userRatings}
         onSaveRating={handleSaveRating}
         onWatchTrailer={handleWatchTrailer}
+        onLoadMore={handleLoadMore}
+        isLoadingMore={isLoadingMore}
+        hasMore={searchResults && searchResults.length > 0 && searchResults.length < 300}
       />
 
       {/* Watchlist Slide-Over Modal */}

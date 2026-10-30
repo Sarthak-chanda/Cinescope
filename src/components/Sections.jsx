@@ -234,6 +234,9 @@ const Sections = ({
           liveSeries,
           liveAnime,
           liveLatest,
+          livePopular,
+          liveScifi,
+          liveCritic,
           liveBolly,
           liveTolly,
           liveMalayalam,
@@ -256,6 +259,9 @@ const Sections = ({
           fetchDynamicCategoryTitles('series'),
           fetchDynamicCategoryTitles('anime'),
           fetchDynamicCategoryTitles('latest'),
+          fetchDynamicCategoryTitles('popular'),
+          fetchDynamicCategoryTitles('scifi'),
+          fetchDynamicCategoryTitles('critic'),
           fetchDynamicCategoryTitles('bollywood'),
           fetchDynamicCategoryTitles('tollywood'),
           fetchDynamicCategoryTitles('malayalam'),
@@ -286,6 +292,15 @@ const Sections = ({
         }
         if (liveLatest.status === 'fulfilled' && Array.isArray(liveLatest.value) && liveLatest.value.length > 0) {
           setLatestMovies((prev) => [...prev, ...liveLatest.value.filter((m) => !prev.some((p) => (p.id || p.imdbID) === (m.id || m.imdbID)))]);
+        }
+        if (livePopular && livePopular.status === 'fulfilled' && Array.isArray(livePopular.value) && livePopular.value.length > 0) {
+          setPopularMovies((prev) => [...prev, ...livePopular.value.filter((m) => !prev.some((p) => (p.id || p.imdbID) === (m.id || m.imdbID)))]);
+        }
+        if (liveScifi && liveScifi.status === 'fulfilled' && Array.isArray(liveScifi.value) && liveScifi.value.length > 0) {
+          setScifiMovies((prev) => [...prev, ...liveScifi.value.filter((m) => !prev.some((p) => (p.id || p.imdbID) === (m.id || m.imdbID)))]);
+        }
+        if (liveCritic && liveCritic.status === 'fulfilled' && Array.isArray(liveCritic.value) && liveCritic.value.length > 0) {
+          setCriticMovies((prev) => [...prev, ...liveCritic.value.filter((m) => !prev.some((p) => (p.id || p.imdbID) === (m.id || m.imdbID)))]);
         }
         if (liveBolly.status === 'fulfilled' && Array.isArray(liveBolly.value) && liveBolly.value.length > 0) {
           setBollywoodMovies((prev) => [...prev, ...liveBolly.value.filter((m) => !prev.some((p) => (p.id || p.imdbID) === (m.id || m.imdbID)))]);

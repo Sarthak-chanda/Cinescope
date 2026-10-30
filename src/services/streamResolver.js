@@ -6,7 +6,7 @@
  * 3. TMDB Watch Providers API (Legal free & subscription platform watch links)
  */
 
-const TMDB_API_KEY = '4f89241199a531b29dbd244a307b2251';
+const TMDB_API_KEY = '3fd2be6f0c70a2a598f084ddfb75487c';
 
 export const resolveMovieStreamSources = async (movie) => {
   if (!movie) return { sources: [], defaultSource: null };
@@ -86,7 +86,7 @@ export const resolveMovieStreamSources = async (movie) => {
       const tmdbId = movie.tmdbId || (movie.imdbID ? await findTmdbIdByImdb(movie.imdbID) : null);
       if (tmdbId) {
         const provRes = await fetch(
-          `https://api.themoviedb.org/3/movie/${tmdbId}/watch/providers?api_key=${TMDB_API_KEY}`,
+          `https://api.tmdb.org/3/movie/${tmdbId}/watch/providers?api_key=${TMDB_API_KEY}`,
           { signal: AbortSignal.timeout(2500) }
         );
         if (provRes.ok) {
@@ -136,7 +136,7 @@ export const resolveMovieStreamSources = async (movie) => {
 const findTmdbIdByImdb = async (imdbID) => {
   try {
     const res = await fetch(
-      `https://api.themoviedb.org/3/find/${imdbID}?api_key=${TMDB_API_KEY}&external_source=imdb_id`,
+      `https://api.tmdb.org/3/find/${imdbID}?api_key=${TMDB_API_KEY}&external_source=imdb_id`,
       { signal: AbortSignal.timeout(2000) }
     );
     if (res.ok) {

@@ -1,14 +1,14 @@
 // Dedicated Bollywood & Hindi Media API Engine
 // Custom API service fetching and caching Hindi Movies, Shows, Classics, and Thrillers across OMDb, TVmaze, and Wikipedia.
 
-const OMDB_KEYS = ['trilogy', 'b9a5e69d', 'd011d376', '4a3b711b', 'e430349a', '564727fa'];
+const OMDB_KEYS = ['trilogy', 'b9a5e69d', 'd011d376', '4a3b711b', '564727fa', 'fc1fef96'];
 let keyIdx = 0;
 const getOmdbKey = () => OMDB_KEYS[keyIdx % OMDB_KEYS.length];
 
 const OMDB_BASE = 'https://www.omdbapi.com/';
-const TMDB_BASE = 'https://api.themoviedb.org/3/';
+const TMDB_BASE = 'https://api.tmdb.org/3/';
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/';
-const TMDB_KEY = '4f89241199a531b29dbd244a307b2251';
+const TMDB_KEY = '3fd2be6f0c70a2a598f084ddfb75487c';
 
 const BOLLYWOOD_CACHE_KEY = 'cinescope_bollywood_api_v1';
 const memoryCache = new Map();
@@ -21,11 +21,11 @@ export const BOLLYWOOD_CATEGORIES = [
     subtitle: 'Massive Hindi action thrillers, spy universe hits, and explosive blockbusters',
     queries: ['jawan', 'pathaan', 'animal', 'singham', 'war hindi', 'dhoom', 'krrish', 'tiger 3', 'chhaava', 'gadar 2'],
     fallback: [
-      { id: 'tt15791034', imdbID: 'tt15791034', name: 'Jawan', year: '2023', type: 'movie', imdbRating: '7.0', genre: ['Action', 'Thriller'], poster: 'https://image.tmdb.org/t/p/w500/jBW2v2a8Qv2uN9P6uX5N3M8.jpg' },
-      { id: 'tt11152516', imdbID: 'tt11152516', name: 'Animal', year: '2023', type: 'movie', imdbRating: '6.3', genre: ['Action', 'Crime'], poster: 'https://image.tmdb.org/t/p/w500/hr9rjR3vRdWFarwR2iyW1cW0FrP.jpg' },
-      { id: 'tt12844910', imdbID: 'tt12844910', name: 'Pathaan', year: '2023', type: 'movie', imdbRating: '5.9', genre: ['Action', 'Adventure'], poster: 'https://image.tmdb.org/t/p/w500/m11atUh2hKiKtk616fC30.jpg' },
-      { id: 'tt8291224', imdbID: 'tt8291224', name: 'Uri: The Surgical Strike', year: '2019', type: 'movie', imdbRating: '8.2', genre: ['Action', 'Drama'], poster: 'https://image.tmdb.org/t/p/w500/ur1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt10888594', imdbID: 'tt10888594', name: 'War', year: '2019', type: 'movie', imdbRating: '6.5', genre: ['Action', 'Thriller'], poster: 'https://image.tmdb.org/t/p/w500/wr1PqV1u14cW6PqV1u14.jpg' }
+      { id: 'tt15791034', imdbID: 'tt15791034', name: 'Jawan', year: '2023', type: 'movie', imdbRating: '7.0', genre: ['Action', 'Thriller'], poster: 'https://image.tmdb.org/t/p/w500/jFt1gS4BGHlK8xt76Y81Alp4dbt.jpg' },
+      { id: 'tt11152516', imdbID: 'tt11152516', name: 'Animal', year: '2023', type: 'movie', imdbRating: '6.3', genre: ['Action', 'Crime'], poster: 'https://image.tmdb.org/t/p/w500/hr9rjR3J0xBBKmlJ4n3gHId9ccx.jpg' },
+      { id: 'tt12844910', imdbID: 'tt12844910', name: 'Pathaan', year: '2023', type: 'movie', imdbRating: '5.9', genre: ['Action', 'Adventure'], poster: 'https://image.tmdb.org/t/p/w500/arf00BkwvXo0CFKbaD9OpqdE4Nu.jpg' },
+      { id: 'tt8291224', imdbID: 'tt8291224', name: 'Uri: The Surgical Strike', year: '2019', type: 'movie', imdbRating: '8.2', genre: ['Action', 'Drama'], poster: 'https://image.tmdb.org/t/p/w500/yNySAgpAnWmPpYinim9E0tUzJWG.jpg' },
+      { id: 'tt10888594', imdbID: 'tt10888594', name: 'War', year: '2019', type: 'movie', imdbRating: '6.5', genre: ['Action', 'Thriller'], poster: 'https://image.tmdb.org/t/p/w500/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg' }
     ]
   },
   {
@@ -35,10 +35,10 @@ export const BOLLYWOOD_CATEGORIES = [
     queries: ['mirzapur', 'sacred games', 'family man', 'panchayat', 'farzi', 'delhi crime', 'asur', 'scam 1992'],
     isTMDB: true,
     fallback: [
-      { id: 'tt6473300', imdbID: 'tt6473300', name: 'Mirzapur', year: '2018–Present', type: 'series', imdbRating: '8.5', genre: ['Action', 'Crime'], poster: 'https://image.tmdb.org/t/p/w500/mr1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt6077448', imdbID: 'tt6077448', name: 'Sacred Games', year: '2018–2019', type: 'series', imdbRating: '8.5', genre: ['Crime', 'Drama'], poster: 'https://image.tmdb.org/t/p/w500/sg1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt9628080', imdbID: 'tt9628080', name: 'The Family Man', year: '2019–Present', type: 'series', imdbRating: '8.7', genre: ['Action', 'Comedy'], poster: 'https://image.tmdb.org/t/p/w500/fm1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt12004706', imdbID: 'tt12004706', name: 'Panchayat', year: '2020–Present', type: 'series', imdbRating: '8.9', genre: ['Comedy', 'Drama'], poster: 'https://image.tmdb.org/t/p/w500/pa1PqV1u14cW6PqV1u14.jpg' }
+      { id: 'tt6473300', imdbID: 'tt6473300', name: 'Mirzapur', year: '2018–Present', type: 'series', imdbRating: '8.5', genre: ['Action', 'Crime'], poster: 'https://image.tmdb.org/t/p/w500/p0qM8hhlMF5DuxHBzl2EZR6TehX.jpg' },
+      { id: 'tt6077448', imdbID: 'tt6077448', name: 'Sacred Games', year: '2018–2019', type: 'series', imdbRating: '8.5', genre: ['Crime', 'Drama'], poster: 'https://image.tmdb.org/t/p/w500/uEbNtFbK4At9WBDGap23lt1qO9n.jpg' },
+      { id: 'tt9628080', imdbID: 'tt9628080', name: 'The Family Man', year: '2019–Present', type: 'series', imdbRating: '8.7', genre: ['Action', 'Comedy'], poster: 'https://image.tmdb.org/t/p/w500/tE1NUJqw9gV6AVjQ1GTK78LbWJ9.jpg' },
+      { id: 'tt12004706', imdbID: 'tt12004706', name: 'Panchayat', year: '2020–Present', type: 'series', imdbRating: '8.9', genre: ['Comedy', 'Drama'], poster: 'https://image.tmdb.org/t/p/w500/8ivTX5q2otqXvH815BcOhxVkTPW.jpg' }
     ]
   },
   {
@@ -47,9 +47,9 @@ export const BOLLYWOOD_CATEGORIES = [
     subtitle: 'Edge-of-the-seat mystery, dark noir & intense investigative cinema',
     queries: ['andhadhun', 'drishyam', 'drishyam 2', 'badla', 'kahaani', 'tumbbad', 'article 15', 'special 26'],
     fallback: [
-      { id: 'tt8108198', imdbID: 'tt8108198', name: 'Andhadhun', year: '2018', type: 'movie', imdbRating: '8.2', genre: ['Crime', 'Mystery'], poster: 'https://image.tmdb.org/t/p/w500/ad1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt4430212', imdbID: 'tt4430212', name: 'Drishyam', year: '2015', type: 'movie', imdbRating: '8.2', genre: ['Crime', 'Drama'], poster: 'https://image.tmdb.org/t/p/w500/dr1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt8228288', imdbID: 'tt8228288', name: 'Tumbbad', year: '2018', type: 'movie', imdbRating: '8.2', genre: ['Drama', 'Fantasy'], poster: 'https://image.tmdb.org/t/p/w500/tb1PqV1u14cW6PqV1u14.jpg' }
+      { id: 'tt8108198', imdbID: 'tt8108198', name: 'Andhadhun', year: '2018', type: 'movie', imdbRating: '8.2', genre: ['Crime', 'Mystery'], poster: 'https://image.tmdb.org/t/p/w500/dy3K6hNvwE05siGgiLJcEiwgpdO.jpg' },
+      { id: 'tt4430212', imdbID: 'tt4430212', name: 'Drishyam', year: '2015', type: 'movie', imdbRating: '8.2', genre: ['Crime', 'Drama'], poster: 'https://image.tmdb.org/t/p/w500/67FsF2kpgEZ1T5Qos4adgqm9dLf.jpg' },
+      { id: 'tt8228288', imdbID: 'tt8228288', name: 'Tumbbad', year: '2018', type: 'movie', imdbRating: '8.2', genre: ['Drama', 'Fantasy'], poster: 'https://image.tmdb.org/t/p/w500/z1xOCxw780WFJC5uCTMfCkQ4Agi.jpg' }
     ]
   },
   {
@@ -58,8 +58,8 @@ export const BOLLYWOOD_CATEGORIES = [
     subtitle: 'Hilarious Indian comedies and superhit horror-comedy universe hits',
     queries: ['stree', 'stree 2', 'bhool bhulaiyaa', 'bhool bhulaiyaa 2', 'bhediya', 'golmaal', 'hera pheri', 'chup chup ke'],
     fallback: [
-      { id: 'tt8228020', imdbID: 'tt8228020', name: 'Stree', year: '2018', type: 'movie', imdbRating: '7.5', genre: ['Comedy', 'Horror'], poster: 'https://image.tmdb.org/t/p/w500/st1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt0478148', imdbID: 'tt0478148', name: 'Hera Pheri', year: '2000', type: 'movie', imdbRating: '8.2', genre: ['Comedy', 'Crime'], poster: 'https://image.tmdb.org/t/p/w500/hp1PqV1u14cW6PqV1u14.jpg' }
+      { id: 'tt8228020', imdbID: 'tt8228020', name: 'Stree', year: '2018', type: 'movie', imdbRating: '7.5', genre: ['Comedy', 'Horror'], poster: 'https://image.tmdb.org/t/p/w500/euhgW6hpDYw7nxFDjqHn0eKvQPX.jpg' },
+      { id: 'tt0478148', imdbID: 'tt0478148', name: 'Hera Pheri', year: '2000', type: 'movie', imdbRating: '8.2', genre: ['Comedy', 'Crime'], poster: 'https://image.tmdb.org/t/p/w500/23MKGUPT5laTStim4TaGhfgSltu.jpg' }
     ]
   },
   {
@@ -68,8 +68,8 @@ export const BOLLYWOOD_CATEGORIES = [
     subtitle: 'Iconic Hindi love stories, musical masterpieces, and romantic dramas',
     queries: ['ddlj', 'jab we met', 'yeh jawaani hai deewani', 'rockstar', 'sita ramam', 'aashiqui 2', 'shershaah', 'laila majnu'],
     fallback: [
-      { id: 'tt0112870', imdbID: 'tt0112870', name: 'Dilwale Dulhania Le Jayenge', year: '1995', type: 'movie', imdbRating: '8.0', genre: ['Drama', 'Romance'], poster: 'https://image.tmdb.org/t/p/w500/dd1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt1093370', imdbID: 'tt1093370', name: 'Jab We Met', year: '2007', type: 'movie', imdbRating: '7.9', genre: ['Comedy', 'Romance'], poster: 'https://image.tmdb.org/t/p/w500/jw1PqV1u14cW6PqV1u14.jpg' }
+      { id: 'tt0112870', imdbID: 'tt0112870', name: 'Dilwale Dulhania Le Jayenge', year: '1995', type: 'movie', imdbRating: '8.0', genre: ['Drama', 'Romance'], poster: 'https://image.tmdb.org/t/p/w500/lfRkUr7DYdHldAqi3PwdQGBRBPM.jpg' },
+      { id: 'tt1093370', imdbID: 'tt1093370', name: 'Jab We Met', year: '2007', type: 'movie', imdbRating: '7.9', genre: ['Comedy', 'Romance'], poster: 'https://image.tmdb.org/t/p/w500/sQ7A7jyTbkK90vjd8yCRuoyL9CK.jpg' }
     ]
   },
   {
@@ -78,10 +78,10 @@ export const BOLLYWOOD_CATEGORIES = [
     subtitle: 'Legendary vintage Hindi cinema classics from 1950 to 1990',
     queries: ['sholay', 'mughal-e-azam', 'mother india', 'anand', 'guide', 'deewaar', 'don 1978', 'mister india'],
     fallback: [
-      { id: 'tt0073707', imdbID: 'tt0073707', name: 'Sholay', year: '1975', type: 'movie', imdbRating: '8.1', genre: ['Action', 'Adventure'], poster: 'https://image.tmdb.org/t/p/w500/sh1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt0054098', imdbID: 'tt0054098', name: 'Mughal-E-Azam', year: '1960', type: 'movie', imdbRating: '8.1', genre: ['Drama', 'Romance'], poster: 'https://image.tmdb.org/t/p/w500/mg1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt0050724', imdbID: 'tt0050724', name: 'Mother India', year: '1957', type: 'movie', imdbRating: '8.0', genre: ['Drama'], poster: 'https://image.tmdb.org/t/p/w500/mi1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt0066763', imdbID: 'tt0066763', name: 'Anand', year: '1971', type: 'movie', imdbRating: '8.2', genre: ['Drama'], poster: 'https://image.tmdb.org/t/p/w500/an1PqV1u14cW6PqV1u14.jpg' }
+      { id: 'tt0073707', imdbID: 'tt0073707', name: 'Sholay', year: '1975', type: 'movie', imdbRating: '8.1', genre: ['Action', 'Adventure'], poster: 'https://image.tmdb.org/t/p/w500/ya9bwgqA4eNl5bQ9QqS0jcmRoBS.jpg' },
+      { id: 'tt0054098', imdbID: 'tt0054098', name: 'Mughal-E-Azam', year: '1960', type: 'movie', imdbRating: '8.1', genre: ['Drama', 'Romance'], poster: 'https://image.tmdb.org/t/p/w500/lKfNZUh9CRp1EHjxgNGtrbvm55.jpg' },
+      { id: 'tt0050724', imdbID: 'tt0050724', name: 'Mother India', year: '1957', type: 'movie', imdbRating: '8.0', genre: ['Drama'], poster: 'https://image.tmdb.org/t/p/w500/AlfM9yLcK1rhv73iNbDiOU9vnnu.jpg' },
+      { id: 'tt0066763', imdbID: 'tt0066763', name: 'Anand', year: '1971', type: 'movie', imdbRating: '8.2', genre: ['Drama'], poster: 'https://image.tmdb.org/t/p/w500/a0inCjOHm5Y8MEjxUPfXA9iPZmv.jpg' }
     ]
   }
 ];

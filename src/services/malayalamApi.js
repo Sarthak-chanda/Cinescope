@@ -15,8 +15,8 @@ export const MALAYALAM_CATEGORIES = [
     subtitle: 'Realistic Kerala police procedurals, investigation sagas, and suspense thrillers',
     queries: ['drishyam', 'anjaam pathiraa', 'joseph malayalam', 'kannur squad', 'kishkindha kaandam', 'forensic malayalam', 'cold case malayalam', 'jana gana mana'],
     fallback: [
-      { id: 'tt3417442', imdbID: 'tt3417442', name: 'Drishyam', year: '2013', type: 'movie', imdbRating: '8.3', genre: ['Crime', 'Drama'], poster: 'https://image.tmdb.org/t/p/w500/d1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt11270832', imdbID: 'tt11270832', name: 'Bramayugam', year: '2024', type: 'movie', imdbRating: '7.9', genre: ['Horror', 'Mystery'], poster: 'https://image.tmdb.org/t/p/w500/br1PqV1u14cW6PqV1u14.jpg' }
+      { id: 'tt3417442', imdbID: 'tt3417442', name: 'Drishyam', year: '2013', type: 'movie', imdbRating: '8.3', genre: ['Crime', 'Drama'], poster: 'https://image.tmdb.org/t/p/w500/67FsF2kpgEZ1T5Qos4adgqm9dLf.jpg' },
+      { id: 'tt11270832', imdbID: 'tt11270832', name: 'Bramayugam', year: '2024', type: 'movie', imdbRating: '7.9', genre: ['Horror', 'Mystery'], poster: 'https://image.tmdb.org/t/p/w500/snQLwRrfQAl5YFKVefZq9Lbscki.jpg' }
     ]
   },
   {
@@ -25,12 +25,12 @@ export const MALAYALAM_CATEGORIES = [
     subtitle: 'Record-breaking Mollywood box office hits, survival sagas, and action entertainers',
     queries: ['manjummel boys', 'aavesham', 'premalu', 'aadujeevitham', 'lucifer malayalam', 'minnal murali', '2018 malayalam', 'arm malayalam', 'bramayugam'],
     fallback: [
-      { id: 'tt27719609', imdbID: 'tt27719609', name: 'Manjummel Boys', year: '2024', type: 'movie', imdbRating: '8.3', genre: ['Adventure', 'Drama'], poster: 'https://image.tmdb.org/t/p/w500/m1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt28114975', imdbID: 'tt28114975', name: 'Premalu', year: '2024', type: 'movie', imdbRating: '7.8', genre: ['Comedy', 'Romance'], poster: 'https://image.tmdb.org/t/p/w500/pr1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt27988354', imdbID: 'tt27988354', name: 'Aavesham', year: '2024', type: 'movie', imdbRating: '7.9', genre: ['Action', 'Comedy'], poster: 'https://image.tmdb.org/t/p/w500/a1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt7242838', imdbID: 'tt7242838', name: 'Aadujeevitham (The Goat Life)', year: '2024', type: 'movie', imdbRating: '8.2', genre: ['Adventure', 'Drama'], poster: 'https://image.tmdb.org/t/p/w500/g1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt11929340', imdbID: 'tt11929340', name: 'Minnal Murali', year: '2021', type: 'movie', imdbRating: '7.8', genre: ['Action', 'Superhero'], poster: 'https://image.tmdb.org/t/p/w500/mm1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt9737876', imdbID: 'tt9737876', name: 'Lucifer', year: '2019', type: 'movie', imdbRating: '7.5', genre: ['Action', 'Crime'], poster: 'https://image.tmdb.org/t/p/w500/lc1PqV1u14cW6PqV1u14.jpg' }
+      { id: 'tt27719609', imdbID: 'tt27719609', name: 'Manjummel Boys', year: '2024', type: 'movie', imdbRating: '8.3', genre: ['Adventure', 'Drama'], poster: 'https://image.tmdb.org/t/p/w500/bswrtewwthpsh6nABiqKevU4UBI.jpg' },
+      { id: 'tt28114975', imdbID: 'tt28114975', name: 'Premalu', year: '2024', type: 'movie', imdbRating: '7.8', genre: ['Comedy', 'Romance'], poster: 'https://image.tmdb.org/t/p/w500/uPpmBjY3znUqGY8kYwI5xvOrSc0.jpg' },
+      { id: 'tt27988354', imdbID: 'tt27988354', name: 'Aavesham', year: '2024', type: 'movie', imdbRating: '7.9', genre: ['Action', 'Comedy'], poster: 'https://image.tmdb.org/t/p/w500/k5RWPaNjgRcNvGoawYaQHQwyctI.jpg' },
+      { id: 'tt7242838', imdbID: 'tt7242838', name: 'Aadujeevitham (The Goat Life)', year: '2024', type: 'movie', imdbRating: '8.2', genre: ['Adventure', 'Drama'], poster: 'https://image.tmdb.org/t/p/w500/l7z3Skv1xLASnUt0whC4IInaXt0.jpg' },
+      { id: 'tt11929340', imdbID: 'tt11929340', name: 'Minnal Murali', year: '2021', type: 'movie', imdbRating: '7.8', genre: ['Action', 'Superhero'], poster: 'https://image.tmdb.org/t/p/w500/efetKFDyptrRpoHBb103Tg3Auw5.jpg' },
+      { id: 'tt9737876', imdbID: 'tt9737876', name: 'Lucifer', year: '2019', type: 'movie', imdbRating: '7.5', genre: ['Action', 'Crime'], poster: 'https://image.tmdb.org/t/p/w500/fXgY2RCzoIJPhPDoyKRjaaqjIZs.jpg' }
     ]
   },
   {
@@ -39,8 +39,8 @@ export const MALAYALAM_CATEGORIES = [
     subtitle: 'Soulful Kerala family stories, romantic comedies, and coming-of-age journeys',
     queries: ['kumbalangi nights', 'bangalore days', 'premam', 'maheshinte prathikaaram', 'charlie malayalam', 'sudani from nigeria', 'hridayam'],
     fallback: [
-      { id: 'tt3417448', imdbID: 'tt3417448', name: 'Bangalore Days', year: '2014', type: 'movie', imdbRating: '8.3', genre: ['Comedy', 'Drama'], poster: 'https://image.tmdb.org/t/p/w500/bd1PqV1u14cW6PqV1u14.jpg' },
-      { id: 'tt2088844', imdbID: 'tt2088844', name: 'Kumbalangi Nights', year: '2019', type: 'movie', imdbRating: '8.5', genre: ['Comedy', 'Drama'], poster: 'https://image.tmdb.org/t/p/w500/kn1PqV1u14cW6PqV1u14.jpg' }
+      { id: 'tt3417448', imdbID: 'tt3417448', name: 'Bangalore Days', year: '2014', type: 'movie', imdbRating: '8.3', genre: ['Comedy', 'Drama'], poster: 'https://image.tmdb.org/t/p/w500/iFMyZw1DTGvZ8hPa0eTseSFiRT1.jpg' },
+      { id: 'tt2088844', imdbID: 'tt2088844', name: 'Kumbalangi Nights', year: '2019', type: 'movie', imdbRating: '8.5', genre: ['Comedy', 'Drama'], poster: 'https://image.tmdb.org/t/p/w500/lJ3RvIirE2C7gdBKvPRaoQ3iCo2.jpg' }
     ]
   }
 ];

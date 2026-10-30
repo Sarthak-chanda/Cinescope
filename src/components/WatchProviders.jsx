@@ -274,33 +274,18 @@ const WatchProviders = ({ movieTitle, movie, onWatchTrailer }) => {
       {/* Header */}
       <div className="providers-header">
         <div className="providers-title-group">
-          <span className="providers-icon" aria-hidden="true">🍿</span>
+          <span className="providers-icon" aria-hidden="true">🎬</span>
           <div>
             <div className="providers-title-row">
-              <h4 className="providers-title">Where to Stream & Watch</h4>
-              <span className="providers-live-tag">
-                <span className="live-dot" /> Live Data
-              </span>
+              <h4 className="providers-title">Watch Now</h4>
             </div>
             <span className="providers-subtitle">
-              Actual streaming & purchase options in {currentCountryMeta.flag} {currentCountryMeta.name}
+              Streaming, rental & purchase platforms in {currentCountryMeta.flag} {currentCountryMeta.name}
             </span>
           </div>
         </div>
 
         <div className="providers-header-actions">
-          {currentCountryData?.link && (
-            <a
-              href={currentCountryData.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="justwatch-verify-link"
-              title="Verified by JustWatch"
-            >
-              <span>JustWatch ↗</span>
-            </a>
-          )}
-
           {onWatchTrailer && (
             <button
               className="play-trailer-pill-btn"
