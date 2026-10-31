@@ -2077,6 +2077,10 @@
   filter: blur(85px);
   opacity: 0.65;
   pointer-events: none;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: strict;
 }
 
 .moving-blur-orb.orb-1 {
@@ -5389,6 +5393,8 @@
   cursor: grab;
   user-select: none;
   width: calc(100% + 1rem);
+  will-change: scroll-position;
+  contain: layout style;
 }
 
 .movie-cards-drag-row:active {
@@ -5481,10 +5487,13 @@
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: layout style paint;
 }
 
 .movie-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-5px) translateZ(0);
   border-color: rgba(99, 102, 241, 0.4);
   box-shadow: 0 16px 32px -6px rgba(0, 0, 0, 0.65), 0 0 16px rgba(99, 102, 241, 0.25);
 }
@@ -5502,6 +5511,8 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .movie-card:hover .movie-card-poster {
@@ -9605,6 +9616,10 @@
   pointer-events: none;
   opacity: 0.6;
   animation: orbDrift 14s ease-in-out infinite alternate;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: strict;
 }
 
 .moving-blur-orb.orb-1 {

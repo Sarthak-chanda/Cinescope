@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import { formatTimelineYear } from '../services/movieApi';
 
+const optimizePosterUrl = (url) => {
+  if (!url || typeof url !== 'string') return '';
+  if (url.includes('image.tmdb.org/t/p/w500/')) {
+    return url.replace('/t/p/w500/', '/t/p/w342/');
+  }
+  return url;
+};
+
 const MovieCard = ({
   movie,
   onSelect,
@@ -9,13 +17,13 @@ const MovieCard = ({
   onToggleWatchlist,
   onImageError
 }) => {
-  const [currentPoster, setCurrentPoster] = useState(movie?.poster || '');
+  const [currentPoster, setCurrentPoster] = useState(() => optimizePosterUrl(movie?.poster));
   const [imageFailed, setImageFailed] = useState(false);
   const [triedFallback, setTriedFallback] = useState(false);
 
   React.useEffect(() => {
     if (movie?.poster) {
-      setCurrentPoster(movie.poster);
+      setCurrentPoster(optimizePosterUrl(movie.poster));
       setImageFailed(false);
       setTriedFallback(false);
     }
@@ -74,7 +82,7 @@ const MovieCard = ({
             const data = await res.json();
             const hit = data.results?.[0];
             if (hit?.poster_path) {
-              const tmdbPoster = `https://image.tmdb.org/t/p/w500${hit.poster_path}`;
+              const tmdbPoster = `https://image.tmdb.org/t/p/w342${hit.poster_path}`;
               if (tmdbPoster !== currentPoster) {
                 setCurrentPoster(tmdbPoster);
                 return;
@@ -155,4 +163,11 @@ const MovieCard = ({
   );
 };
 
-export default MovieCard;
+export default React.memo(MovieCard, (prev, next) => {
+  return (
+    prev.movie?.id === next.movie?.id &&
+    prev.movie?.imdbID === next.movie?.imdbID &&
+    prev.movie?.poster === next.movie?.poster &&
+    prev.isWatchlisted === next.isWatchlisted
+  );
+});

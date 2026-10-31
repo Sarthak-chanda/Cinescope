@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, Suspense, lazy } from 'react';
 import Nav from './components/Nav';
 import Body from './components/Body';
-import WatchlistModal from './components/WatchlistModal';
-import TrailerModal from './components/TrailerModal';
-import CinemaStreamModal from './components/CinemaStreamModal';
 import InitialCinemaLoader from './components/InitialCinemaLoader';
 import { fetchMovieDetails, searchMoviesList, loadMoreCategoryMovies, loadWishlistFromLocalMemory, saveWishlistToLocalMemory } from './services/movieApi';
 import './App.css';
+
+const WatchlistModal = lazy(() => import('./components/WatchlistModal'));
+const TrailerModal = lazy(() => import('./components/TrailerModal'));
+const CinemaStreamModal = lazy(() => import('./components/CinemaStreamModal'));
 
 const THEME_KEY = 'cinescope_theme_v4';
 const WATCHLIST_KEY = 'cinescope_watchlist_v4';
@@ -704,28 +705,34 @@ const App = () => {
         hasMore={searchResults && searchResults.length > 0 && searchResults.length < 300}
       />
 
-      {/* Watchlist Slide-Over Modal */}
-      <WatchlistModal
-        isOpen={isWatchlistOpen}
-        onClose={() => setIsWatchlistOpen(false)}
-        watchlist={watchlist}
-        onSelectMovie={handleSelectMovie}
-        onRemoveFromWatchlist={handleRemoveFromWatchlist}
-      />
+      {/* Lazy Modals loaded on-demand */}
+      <Suspense fallback={null}>
+        {isWatchlistOpen && (
+          <WatchlistModal
+            isOpen={isWatchlistOpen}
+            onClose={() => setIsWatchlistOpen(false)}
+            watchlist={watchlist}
+            onSelectMovie={handleSelectMovie}
+            onRemoveFromWatchlist={handleRemoveFromWatchlist}
+          />
+        )}
 
-      {/* Live Cinema Stream Player Modal */}
-      <CinemaStreamModal
-        isOpen={isStreamOpen}
-        onClose={() => setIsStreamOpen(false)}
-        movie={streamMovie}
-      />
+        {isStreamOpen && (
+          <CinemaStreamModal
+            isOpen={isStreamOpen}
+            onClose={() => setIsStreamOpen(false)}
+            movie={streamMovie}
+          />
+        )}
 
-      {/* Trailer Streaming Modal */}
-      <TrailerModal
-        isOpen={isTrailerOpen}
-        onClose={() => setIsTrailerOpen(false)}
-        movie={trailerMovie}
-      />
+        {isTrailerOpen && (
+          <TrailerModal
+            isOpen={isTrailerOpen}
+            onClose={() => setIsTrailerOpen(false)}
+            movie={trailerMovie}
+          />
+        )}
+      </Suspense>
 
       {/* Toast Notifications */}
       <div className="toast-container" aria-live="polite">

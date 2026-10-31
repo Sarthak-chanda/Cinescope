@@ -246,6 +246,8 @@ const HeroSection = ({
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const dragStartX = useRef(0);
+  const dragCurrentX = useRef(0);
+  const dragRafId = useRef(null);
   const isPointerDown = useRef(false);
 
   const totalSpotlights = SPOTLIGHT_MOVIES_DATA.length;
@@ -297,27 +299,41 @@ const HeroSection = ({
   const handleStartDrag = (clientX) => {
     isPointerDown.current = true;
     dragStartX.current = clientX;
+    dragCurrentX.current = clientX;
     setDragOffset(0);
     setIsDragging(true);
   };
 
   const handleMoveDrag = (clientX) => {
     if (!isPointerDown.current) return;
-    const diff = clientX - dragStartX.current;
-    setDragOffset(diff);
+    dragCurrentX.current = clientX;
+    if (!dragRafId.current) {
+      dragRafId.current = requestAnimationFrame(() => {
+        dragRafId.current = null;
+        if (isPointerDown.current) {
+          const diff = dragCurrentX.current - dragStartX.current;
+          setDragOffset(diff);
+        }
+      });
+    }
   };
 
   const handleEndDrag = () => {
     if (!isPointerDown.current) return;
     isPointerDown.current = false;
+    if (dragRafId.current) {
+      cancelAnimationFrame(dragRafId.current);
+      dragRafId.current = null;
+    }
     setIsDragging(false);
 
+    const diff = dragCurrentX.current - dragStartX.current;
     const threshold = 35;
-    if (dragOffset < -threshold) {
+    if (diff < -threshold) {
       playSound('whoosh');
       setSpotlightIndex((prev) => (prev + 1) % totalSpotlights);
       setTimerKey((k) => k + 1);
-    } else if (dragOffset > threshold) {
+    } else if (diff > threshold) {
       playSound('whoosh');
       setSpotlightIndex((prev) => (prev - 1 + totalSpotlights) % totalSpotlights);
       setTimerKey((k) => k + 1);
@@ -331,7 +347,10 @@ const HeroSection = ({
       setTimerKey((k) => k + 1);
     }, ROTATION_INTERVAL);
 
-    return () => clearInterval(rotationTimer);
+    return () => {
+      clearInterval(rotationTimer);
+      if (dragRafId.current) cancelAnimationFrame(dragRafId.current);
+    };
   }, [totalSpotlights]);
 
   const isWatchlisted = (movie) => {

@@ -28,13 +28,14 @@ import {
   OPEN_SOURCE_MOVIES_ALL
 } from '../services/catalogData';
 
-// Custom hook for natural, responsive, 1:1 physical drag scrolling
+// Custom hook for natural, responsive, 1:1 physical drag scrolling (on-demand listeners for 60fps)
 const useNaturalDragScroll = () => {
   const rowRef = React.useRef(null);
   const isDown = React.useRef(false);
   const startX = React.useRef(0);
   const scrollLeftPos = React.useRef(0);
   const dragDistance = React.useRef(0);
+  const cleanupListeners = React.useRef(null);
 
   const onMouseDown = (e) => {
     if (e.button !== 0 || !rowRef.current) return;
@@ -45,37 +46,44 @@ const useNaturalDragScroll = () => {
 
     rowRef.current.style.cursor = 'grabbing';
     rowRef.current.style.scrollBehavior = 'auto';
-  };
 
-  React.useEffect(() => {
-    const handleGlobalMouseMove = (e) => {
+    const handleGlobalMouseMove = (moveEvt) => {
       if (!isDown.current || !rowRef.current) return;
-      const x = e.pageX - rowRef.current.offsetLeft;
+      const x = moveEvt.pageX - rowRef.current.offsetLeft;
       const walk = x - startX.current;
       dragDistance.current = Math.abs(walk);
 
-      if (dragDistance.current > 3) {
-        e.preventDefault();
+      if (dragDistance.current > 3 && moveEvt.cancelable) {
+        moveEvt.preventDefault();
       }
 
       rowRef.current.scrollLeft = scrollLeftPos.current - walk;
     };
 
     const handleGlobalMouseUp = () => {
-      if (!isDown.current) return;
       isDown.current = false;
       if (rowRef.current) {
         rowRef.current.style.cursor = 'grab';
         rowRef.current.style.scrollBehavior = 'smooth';
       }
+      window.removeEventListener('mousemove', handleGlobalMouseMove);
+      window.removeEventListener('mouseup', handleGlobalMouseUp);
+      cleanupListeners.current = null;
     };
 
     window.addEventListener('mousemove', handleGlobalMouseMove, { passive: false });
     window.addEventListener('mouseup', handleGlobalMouseUp);
-
-    return () => {
+    cleanupListeners.current = () => {
       window.removeEventListener('mousemove', handleGlobalMouseMove);
       window.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+  };
+
+  React.useEffect(() => {
+    return () => {
+      if (cleanupListeners.current) {
+        cleanupListeners.current();
+      }
     };
   }, []);
 

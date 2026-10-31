@@ -1,13 +1,22 @@
 import React, { useState } from 'react';
 import { playSound } from '../services/soundEffects';
 
-// Natural 1:1 drag scroll hook
+const optimizePosterUrl = (url) => {
+  if (!url || typeof url !== 'string') return '';
+  if (url.includes('image.tmdb.org/t/p/w500/')) {
+    return url.replace('/t/p/w500/', '/t/p/w342/');
+  }
+  return url;
+};
+
+// Natural 1:1 drag scroll hook (on-demand listeners for 60fps)
 const useUpcomingDragScroll = () => {
   const rowRef = React.useRef(null);
   const isDown = React.useRef(false);
   const startX = React.useRef(0);
   const scrollLeftPos = React.useRef(0);
   const dragDistance = React.useRef(0);
+  const cleanupListeners = React.useRef(null);
 
   const onMouseDown = (e) => {
     if (e.button !== 0 || !rowRef.current) return;
@@ -18,37 +27,44 @@ const useUpcomingDragScroll = () => {
 
     rowRef.current.style.cursor = 'grabbing';
     rowRef.current.style.scrollBehavior = 'auto';
-  };
 
-  React.useEffect(() => {
-    const handleGlobalMouseMove = (e) => {
+    const handleGlobalMouseMove = (moveEvt) => {
       if (!isDown.current || !rowRef.current) return;
-      const x = e.pageX - rowRef.current.offsetLeft;
+      const x = moveEvt.pageX - rowRef.current.offsetLeft;
       const walk = x - startX.current;
       dragDistance.current = Math.abs(walk);
 
-      if (dragDistance.current > 3) {
-        e.preventDefault();
+      if (dragDistance.current > 3 && moveEvt.cancelable) {
+        moveEvt.preventDefault();
       }
 
       rowRef.current.scrollLeft = scrollLeftPos.current - walk;
     };
 
     const handleGlobalMouseUp = () => {
-      if (!isDown.current) return;
       isDown.current = false;
       if (rowRef.current) {
         rowRef.current.style.cursor = 'grab';
         rowRef.current.style.scrollBehavior = 'smooth';
       }
+      window.removeEventListener('mousemove', handleGlobalMouseMove);
+      window.removeEventListener('mouseup', handleGlobalMouseUp);
+      cleanupListeners.current = null;
     };
 
     window.addEventListener('mousemove', handleGlobalMouseMove, { passive: false });
     window.addEventListener('mouseup', handleGlobalMouseUp);
-
-    return () => {
+    cleanupListeners.current = () => {
       window.removeEventListener('mousemove', handleGlobalMouseMove);
       window.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+  };
+
+  React.useEffect(() => {
+    return () => {
+      if (cleanupListeners.current) {
+        cleanupListeners.current();
+      }
     };
   }, []);
 
@@ -109,10 +125,11 @@ export const UpcomingMovieRow = ({
                 <div className="upcoming-poster-stage">
                   {!hasErr ? (
                     <img
-                      src={m.poster}
+                      src={optimizePosterUrl(m.poster)}
                       alt={m.name}
                       className="upcoming-poster-img"
                       loading="lazy"
+                      decoding="async"
                       onError={() => {
                         setImgErrors((prev) => ({ ...prev, [movieId]: true }));
                       }}
